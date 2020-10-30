@@ -13,30 +13,28 @@
 
 ## Features
 
-| Sticker Creator |                Feature           |
-| :-----------: | :--------------------------------: |
-|       ✅       | Send Photo with Caption          |
-|       ✅       | Reply A Photo                    |
-|       ✅       | Image Url                        |
-|       ✅       | Animated sticker using giphy url |
-|       ✅       | sticker with no background       |
+| Creator |Yes|
+| ------------- | ------------- |
+| Respond img to sticker|✅|
+| Respond img to sticker no bg|✅|
+| Resopond url to sticker|✅|
+| Resopond gif to sticker|✅|
+| Make a meme from photo|✅|
 
-| Other  |                     Feature                     |
-| :------------: | :---------------------------------------------: |
-|       ✅        |   Create Custom meme (top text & bottom text)  |
-|       ✅        |   Translate text (quote only)                  |
-|       ✅        |   check data on the spread of Covid-19 in certain locations|
-|       ✅        |   Check Shipping info (indonesia only)         |
-|       ✅        |   Anti Spam                                   |
+| Others |Yes|
+| ------------- | ------------- |
+| Translate teks|✅|
+| Get covid info from map|✅|
 
+| Groups |Yes|
+| ------------- | ------------- |
+| Add user|✅|
+| Kick user|✅|
+| Promote User|✅|
+| Demote User|✅|
+| Delete bot msg|✅|
+| Tagall/mentions all|✅|
 
-| Grup Only  |                     Feature                     |
-| :------------: | :---------------------------------------------: |
-|       ✅        |   Promote User                  |
-|       ✅        |   Demote User                   |
-|       ✅        |   Kick User                     |
-|       ✅        |   Delete bot message            |
-|       ✅        |   Mention/Tag All User      |
 
 ## To-Do
  - Add Media Downloader
