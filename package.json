@@ -1,20 +1,20 @@
 {
-  "name": "whatsapp-bot-sticker-creator",
-  "version": "10.0.0",
-  "description": "Whatsapp Bot - sticker creator",
+  "name": "whatsapp-bot",
+  "version": "1.0.0",
+  "description": "Whatsapp Bot - Node Js",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "author": "Yoga Sakti",
+  "author": "ArugaZ",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YogaSakti/imageToSticker.git"
+    "url": "https://github.com/ArugaZ/whatsapp-bot.git"
   },
   "bugs": {
-    "url": "https://github.com/YogaSakti/imageToSticker/issues"
+    "url": "https://github.com/ArugaZ/whatsapp-bot/issues"
   },
-  "homepage": "https://github.com/YogaSakti/imageToSticker",
+  "homepage": "https://github.com/ArugaZ/whatsapp-bot",
   "license": "ISC",
   "dependencies": {
     "@open-wa/wa-automate": "^2.0.25",
