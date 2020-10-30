@@ -1,15 +1,10 @@
 <div align="center">
  
-# Whatsapp Bot - sticker creator
-[![Codefactor](https://www.codefactor.io/repository/github/yogasakti/imagetosticker/badge)](https://www.codefactor.io/repository/github/yogasakti/imagetosticker)
+# Whatsapp Bot - Node Js
 <details>
  <summary>🥟 Help me!</summary>
-
- [Saweria](https://saweria.co/donate/yogasakti)
  
- [Trakteer](https://trakteer.id/red-emperor)
- 
- [Paypal.me](https://paypal.me/yshputra)
+ [Trakteer](https://trakteer.id/arugabot)
  
 </details>
 </div>
@@ -24,17 +19,7 @@
 |       ✅       | Reply A Photo                    |
 |       ✅       | Image Url                        |
 |       ✅       | Animated sticker using giphy url |
-|       https://bit.ly/3hmgD4R       | sticker with no background       |
-|       https://bit.ly/3hmgD4R       | sticker meme      |
-
-
-| Downloader |                     Feature                |
-| :------------: | :---------------------------------------------: |
-|       ✅        |   Tiktok Downloader (No WM & WM)              |
-|       ✅        |   Twitter Video Downloader                    |
-|       ✅        |   Facebook Video Downloader (SD & HD)         |
-|       ✅      |   Instagram Video Downloader                  |
-
+|       ✅       | sticker with no background       |
 
 | Other  |                     Feature                     |
 | :------------: | :---------------------------------------------: |
@@ -42,7 +27,7 @@
 |       ✅        |   Translate text (quote only)                  |
 |       ✅        |   check data on the spread of Covid-19 in certain locations|
 |       ✅        |   Check Shipping info (indonesia only)         |
-|      BETA        |   Anti Spam                                   |
+|       ✅        |   Anti Spam                                   |
 
 
 | Grup Only  |                     Feature                     |
@@ -51,9 +36,10 @@
 |       ✅        |   Demote User                   |
 |       ✅        |   Kick User                     |
 |       ✅        |   Delete bot message            |
-|       https://bit.ly/3hmgD4R        |   Mention All User      |
+|       ✅        |   Mention/Tag All User      |
 
 ## To-Do
+ - Add Media Downloader
  - Add More Feature
  - More refactoring
  
@@ -67,7 +53,7 @@ This project require NodeJS v12.
 Clone this project
 
 ```bash
-> git clone https://github.com/YogaSakti/imageToSticker.git
+> git clone https://github.com/ArugaZ/whatsapp-bot.git
 > cd imageToSticker
 ```
 
@@ -94,3 +80,7 @@ Fix Stuck on linux, install google chrome stable:
 > wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 > sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
+
+## Thanks to
+- [WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
+- [YogaSakti](https://github.com/YogaSakti/imageToSticker)
