@@ -114,7 +114,7 @@ const start = (aruga = new Client()) => {
     try {
         const { type, id, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
-        const { name, formattedTitle } = chat
+        var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
         pushname = pushname || verifiedName || formattedName // verifiedName is the name of someone who uses a business account
         const botNumber = await aruga.getHostNumber() + '@c.us'
@@ -426,13 +426,13 @@ const start = (aruga = new Client()) => {
             console.log(`Request Status Zona Penyebaran Covid-19 (${quotedMsg.lat}, ${quotedMsg.lng}).`)
             const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
             if (zoneStatus.kode !== 200) aruga.sendText(from, 'Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
-            let data = ''
-            for (let i = 0; i < zoneStatus.data.length; i++) {
-                const { zone, region } = zoneStatus.data[i]
+            let datax = ''
+            for (let i = 0; i < zoneStatus.datax.length; i++) {
+                const { zone, region } = zoneStatus.datax[i]
                 const _zone = zone == 'green' ? 'Hijau* (Aman) \n' : zone == 'yellow' ? 'Kuning* (Waspada) \n' : 'Merah* (Bahaya) \n'
-                data += `${i + 1}. Kel. *${region}* Berstatus *Zona ${_zone}`
+                datax += `${i + 1}. Kel. *${region}* Berstatus *Zona ${_zone}`
             }
-            const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${data}`
+            const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${datax}`
             aruga.sendText(from, text)
             break
         // Group Commands (group admin only)
