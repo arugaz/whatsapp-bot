@@ -1,4 +1,3 @@
-const fs = require('fs')
 /**
  * Get Client Options
  * @param  {Function} start function
