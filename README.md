@@ -24,6 +24,7 @@ Clone this project
 Install the dependencies:
 
 ```bash
+> npm install gify-cli -g
 > npm install
 ```
 
