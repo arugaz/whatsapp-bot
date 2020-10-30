@@ -124,7 +124,7 @@ const start = (aruga = new Client()) => {
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 
         // Bot Prefix
-        body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption) && caption.startsWith(prefix)) ? caption : ''
+        body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/ +/).slice(1)
@@ -132,6 +132,7 @@ const start = (aruga = new Client()) => {
         const uaOverride = process.env.UserAgent
         const url = args.length !== 0 ? args[0] : ''
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
+	    const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
 
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
@@ -211,6 +212,7 @@ const start = (aruga = new Client()) => {
         }
         case 'stickergif':
         case 'stikergif':
+            {
             if (isMedia || isQuotedVideo) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     var mediaData = await decryptMedia(message, uaOverride)
@@ -228,7 +230,8 @@ const start = (aruga = new Client()) => {
                 } else {
 		    aruga.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
 	        }
-	        break
+            break
+        }
         case 'stikergiphy':
         case 'stickergiphy':
 	 {
