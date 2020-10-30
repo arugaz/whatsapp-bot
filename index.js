@@ -85,15 +85,16 @@ const start = (aruga = new Client()) => {
     // ketika seseorang masuk/keluar dari group
     aruga.onGlobalParicipantsChanged((event) => {
         // kondisi ketika seseorang diinvite/join group lewat link
-        // if (event.action === 'add' || event.action === 'invite') aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+        if (event.action === 'add' || event.action === 'invite') aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
 
         // kondisi ketika seseorang dikick/keluar dari group
-	    // if (event.action === 'remove' || event.action === 'leave') aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you`)
+	    if (event.action === 'remove' || event.action === 'leave') aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you`)
     })
 
     aruga.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot
-	    // await aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan').then(() => aruga.contactBlock(callData.peerJid))
+        aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan')
+        //aruga.contactBlock(callData.peerJid)
     })
 
     // ketika seseorang mengirim pesan
