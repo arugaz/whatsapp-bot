@@ -58,6 +58,13 @@ after running it you need to scan the qr
 | Respond giphy url to sticker|✅|
 | Make a meme from photo|✅|
 
+| Islam |Yes|
+| ------------- | ------------- |
+| Info Surah|✅|
+| Surah|✅|
+| Tafsir Alquran|✅|
+| Alquran Audio/Voice|✅|
+
 | Others |Yes|
 | ------------- | ------------- |
 | Teks to Sound/Voice|✅|
