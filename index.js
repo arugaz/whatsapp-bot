@@ -270,7 +270,7 @@ const start = (aruga = new Client()) => {
                     aruga.reply(from, hehex, id)
                 })
             } catch(err) {
-
+                aruga.reply(from, err, id)
             }
             break
         case 'infosurah':
