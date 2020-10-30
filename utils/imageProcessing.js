@@ -21,5 +21,8 @@ module.exports = resizeImage = (buff, encode) => new Promise(async (resolve, rej
             const resizedBase64 = `data:${mime};base64,${resizedImageData}`
             resolve(resizedBase64)
         })
-        .catch(error => reject(error))
+        .catch(err => {
+          console.error(err)
+          reject(err)
+        })
 })

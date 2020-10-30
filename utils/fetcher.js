@@ -14,7 +14,7 @@ const fetchJson = (url, options) =>
     new Promise((resolve, reject) =>
         fetch(url, options)
             .then(response => response.json())
-            .then(json => resolve(json))
+            .then(resolve)
             .catch(err => {
                 console.error(err)
                 reject(err)
@@ -31,7 +31,7 @@ const fetchText = (url, options) => {
     return new Promise((resolve, reject) => {
         return fetch(url, options)
             .then(response => response.text())
-            .then(text => resolve(text))
+            .then(resolve)
             .catch(err => {
                 console.error(err)
                 reject(err)
@@ -89,7 +89,10 @@ const uploadImages = (buffData, type) => {
                     resolve('https://telegra.ph' + res[0].src)
                 })
                 .then(() => fs.unlinkSync(filePath))
-                .catch(err => reject(err))
+                .catch((err) => {
+                  console.error(err)
+                  reject(err)
+                })
         })
     })
 }
