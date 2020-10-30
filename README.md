@@ -1,7 +1,7 @@
 <div align="center">
  
 # Whatsapp Bot - Node Js
-[![CodeFactor](https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/badge)](https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/)
+[![CodeFactor](https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/badge/master)](https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/master)
 <details>
  <summary>🥟 Help me!</summary>
  
