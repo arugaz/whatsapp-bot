@@ -8,13 +8,10 @@ const fs = require('fs-extra')
 const axios = require('axios')
 
 const { 
-    RemoveBgResult,
-    removeBackgroundFromImageBase64, 
-    removeBackgroundFromImageFile
+    removeBackgroundFromImageBase64
 } = require('remove.bg')
 
 const {
-    spawan,
     exec
 } = require('child_process')
 
@@ -35,7 +32,6 @@ const {
 } = require('./utils')
 
 const options = require('./utils/options')
-const mentionList = require('./utils/mention')
 const { uploadImages } = require('./utils/fetcher')
 
 const { 
@@ -64,7 +60,7 @@ const start = (aruga = new Client()) => {
 
     // ketika bot diinvite ke dalam group
     aruga.onAddedToGroup(async (chat) => {
-	const group = await aruga.getAllGroups()
+	const groups = await aruga.getAllGroups()
 	// kodisi ketika batas group bot telah tercapat, ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
 	await aruga.sendText(chat.id, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`).then(() => {
@@ -97,8 +93,7 @@ const start = (aruga = new Client()) => {
 
     aruga.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot
-	    // await aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan')
-        // .then(() => aruga.contactBlock(callData.peerJid))
+	    // await aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan').then(() => aruga.contactBlock(callData.peerJid))
     })
 
     // ketika seseorang mengirim pesan
@@ -120,7 +115,6 @@ const start = (aruga = new Client()) => {
         const botNumber = await aruga.getHostNumber() + '@c.us'
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
-        const groupMembers = isGroupMsg ? await aruga.getGroupMembersId(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 
@@ -435,18 +429,24 @@ const start = (aruga = new Client()) => {
             const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${datax}`
             aruga.sendText(from, text)
             break
+        case 'shortlink':
+            if (args.length == 0) return aruga.reply(from, `ketik ${prefix}shortlink <url>`, message.id)
+            if (!isUrl(args[0])) return aruga.reply(from, 'Maaf, url yang kamu kirim tidak valid.', message.id)
+            const shortlink = await urlShortener(args[0]);
+            await aruga.sendText(from, shortlink);
+             break
         // Group Commands (group admin only)
-	case 'add':
+	    case 'add':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
             if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
-	    if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
-            try {
-                await aruga.addParticipant(from,`${args[0]}@c.us`)
-		.then(() => aruga.reply(from, 'Hai selamat datang', id))
-            } catch {
-                aruga.reply(from, 'Tidak dapat menambahkan target', id)
-            }
+	        if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
+                try {
+                    await aruga.addParticipant(from,`${args[0]}@c.us`)
+		            .then(() => aruga.reply(from, 'Hai selamat datang', id))
+                } catch {
+                    aruga.reply(from, 'Tidak dapat menambahkan target', id)
+                }
             break
         case 'kick':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
