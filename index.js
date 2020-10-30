@@ -162,8 +162,8 @@ const start = (aruga = new Client()) => {
             await aruga.sendText(from, menuId.textDonasi())
             break
         case 'ownerbot':
-            await client.sendContact(from, ownerNumber)
-            .then(() => client.sedText(from, 'Jika kalian ingin request fitur silahkan chat nomor owner!'))
+            await aruga.sendContact(from, ownerNumber)
+            .then(() => aruga.sedText(from, 'Jika kalian ingin request fitur silahkan chat nomor owner!'))
             break
         // Sticker Creator
         case 'sticker':
@@ -187,10 +187,10 @@ const start = (aruga = new Client()) => {
 		// kamu dapat mengambil api key dari website remove.bg dan ubahnya disini 'API-KEY'
                 var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API-KEY', size: 'auto', type: 'auto', outFile })
                     await fs.writeFile(outFile, result.base64img)
-                    await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
+                    await aruga.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
                     console.log(err)
-	   	    await client.reply(from, 'maaf batas penggunaan hari ini sudah maksimal', message.id)
+	   	    await aruga.reply(from, 'maaf batas penggunaan hari ini sudah maksimal', message.id)
                 }
             }
             } else if (args.length === 1) {
@@ -208,19 +208,19 @@ const start = (aruga = new Client()) => {
             if (isMedia || isQuotedVideo) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     var mediaData = await decryptMedia(message, uaOverride)
-                    client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
+                    aruga.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
                     var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
                         var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
-                        await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        await aruga.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
 			
                     })
                   } else {
-                    client.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif* max 10 sec!`, id)
+                    aruga.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif* max 10 sec!`, id)
                    }
                 } else {
-		    client.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
+		    aruga.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
 	        }
 	        break
         case 'stikergiphy':
@@ -303,10 +303,10 @@ const start = (aruga = new Client()) => {
             if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
 	    if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan ${prefix}add\nPenggunaan: ${prefix}add <nomor>\ncontoh: ${prefix}add 628xxx`, id)
             try {
-                await client.addParticipant(from,`${args[0]}@c.us`)
-		.then(() => client.reply(from, 'Hai selamat datang', id))
+                await aruga.addParticipant(from,`${args[0]}@c.us`)
+		.then(() => aruga.reply(from, 'Hai selamat datang', id))
             } catch {
-                client.reply(from, 'Tidak dapat menambahkan target', id)
+                aruga.reply(from, 'Tidak dapat menambahkan target', id)
             }
             break
         case 'kick':
