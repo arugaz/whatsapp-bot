@@ -44,6 +44,10 @@ const {
     prefix
 } = JSON.parse(fs.readFileSync('./settings/setting.json'))
 
+const {
+    apiNoBg
+} = JSON.parse(fs.readFileSync('./settings/api.json'))
+
 const start = (aruga = new Client()) => {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('ARUGA BOT', { font: 'Ghost', horizontalLayout: 'default' })))
@@ -59,23 +63,25 @@ const start = (aruga = new Client()) => {
 
     // ketika bot diinvite ke dalam group
     aruga.onAddedToGroup(async (chat) => {
-	const Group = await aruga.getAllGroups()
+	const group = await aruga.getAllGroups()
 	// kodisi ketika batas group bot telah tercapat, ubah di file settings/setting.json
-	if (Groups.length > groupLimit) {
+	if (groups.length > groupLimit) {
 	await aruga.sendText(chat.id, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`).then(() => {
 	      aruga.leaveGroup(chat.id)
 	      aruga.deleteChat(chat.id)
-	}) 
+	  }) 
 	} else {
 	// kondisi ketika batas member group belum tercapai, ubah di file settings/setting.json
-	if (chat.groupMetadata.participants.length < memberLimit) {
-	await aruga.sendText(chat.id, `Sorry, Sorry, BOT comes out if the group members do not exceed ${memberLimit} people`).then(() => {
+	    if (chat.groupMetadata.participants.length < memberLimit) {
+	    await aruga.sendText(chat.id, `Sorry, Sorry, BOT comes out if the group members do not exceed ${memberLimit} people`).then(() => {
 	      aruga.leaveGroup(chat.id)
 	      aruga.deleteChat(chat.id)
-	})
-	} else {
-	if(!chat.isReadOnly) aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
-	}
+	    })
+	    } else {
+        await aruga.simulateTyping(chat.id, true).then(() => {
+          aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+        })
+	    }
 	}
     })
 
@@ -184,13 +190,13 @@ const start = (aruga = new Client()) => {
                 var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                 var base64img = imageBase64
                 var outFile = './media/noBg.png'
-		// kamu dapat mengambil api key dari website remove.bg dan ubahnya disini 'API-KEY'
-                var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API-KEY', size: 'auto', type: 'auto', outFile })
+		        // kamu dapat mengambil api key dari website remove.bg dan ubahnya difolder settings/api.json
+                var result = await removeBackgroundFromImageBase64({ base64img, apiKey: apiNoBg, size: 'auto', type: 'auto', outFile })
                     await fs.writeFile(outFile, result.base64img)
                     await aruga.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
                     console.log(err)
-	   	    await aruga.reply(from, 'maaf batas penggunaan hari ini sudah maksimal', message.id)
+	   	    await aruga.reply(from, 'maaf batas penggunaan hari ini sudah maksimal', id)
                 }
             }
             } else if (args.length === 1) {
@@ -274,6 +280,19 @@ const start = (aruga = new Client()) => {
             console.log('Memeriksa No Resi', args[1], 'dengan ekspedisi', args[0])
             cekResi(args[0], args[1]).then((result) => aruga.sendText(from, result))
             break
+        case 'tts':
+            if (args.length == 0) return client.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`)
+            const ttsGB = require('node-gtts')(args[0])
+            const dataText = body.slice(9)
+                if (dataText === '') return client.reply(from, 'apa teksnya syg..', id)
+                try {
+                    ttsGB.save('./media/tts.mp3', dataText, function () {
+                    client.sendPtt(from, './media/tts.mp3', id)
+                    })
+                } catch (err) {
+                    client.reply(from, err, id)
+                }
+            break
         case 'translate':
             if (args.length != 1) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan reply sebuah pesan dengan caption ${prefix}translate <kode_bahasa>\ncontoh ${prefix}translate id`, id)
             if (!quotedMsg) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan reply sebuah pesan dengan caption ${prefix}translate <kode_bahasa>\ncontoh ${prefix}translate id`, id)
@@ -354,8 +373,8 @@ const start = (aruga = new Client()) => {
             break
         case 'tagall':
         case 'everyone':
-            if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup! [Group Only]', message.id)
-            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup! [Admin Group Only]', message.id)
+            if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup! [Group Only]', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup! [Admin Group Only]', id)
             const groupMem = await aruga.getGroupMembers(groupId)
             let hehex = '╔══✪〘 Mention All 〙✪══\n'
             for (let i = 0; i < groupMem.length; i++) {
