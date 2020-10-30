@@ -257,6 +257,22 @@ const start = (aruga = new Client()) => {
             break
         }
         //Islam Command
+        case 'listsurah':
+            try {
+                axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/quran.json')
+                .then((response) => {
+                    let hehex = '╔══✪〘 List Surah 〙✪══\n'
+                    for (let i = 0; i < response.data.length; i++) {
+                        hehex += '╠➥  '
+                        hehex += response.data[i].name.toLowerCase() + '\n'
+                            }
+                        hehex += '╚═〘 *A R U G A  B O T* 〙'
+                    aruga.reply(from, hehex, id)
+                })
+            } catch(err) {
+
+            }
+            break
         case 'infosurah':
             if (args.length == 0) return aruga.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
                 var responseh = await axios.get('https://api.quran.sutanlab.id/surah')
@@ -342,7 +358,7 @@ const start = (aruga = new Client()) => {
                   } 
                   pesan = ""
                   if(isNaN(ayat)) {
-                    var responsih2 = await axios.get('https://raw.githubusercontent.com/penggguna/QuranJSON/master/surah/'+nmr+'.json')
+                    var responsih2 = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah/'+nmr+'.json')
                     var {name, name_translations, number_of_ayah, number_of_surah,  recitations} = responsih2.data
                     pesan = pesan + "Audio Quran Surah ke-"+number_of_surah+" "+name+" ("+name_translations.ar+") "+ "dengan jumlah "+ number_of_ayah+" ayat\n"
                     pesan = pesan + "Dilantunkan oleh "+recitations[0].name+" : "+recitations[0].audio_url+"\n"
