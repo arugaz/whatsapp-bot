@@ -71,6 +71,7 @@ after running it you need to scan the qr
 | Teks to Sound/Voice|✅|
 | Translate teks|✅|
 | Get covid info from map|✅|
+| Shortlink|✅|
 
 | Groups |Yes|
 | ------------- | ------------- |
