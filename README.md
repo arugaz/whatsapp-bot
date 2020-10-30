@@ -58,6 +58,7 @@ after running it you need to scan the qr
 
 | Others |Yes|
 | ------------- | ------------- |
+| Teks to Sound/Voice|✅|
 | Translate teks|✅|
 | Get covid info from map|✅|
 
