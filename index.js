@@ -1,4 +1,4 @@
-﻿require('dotenv').config()
+require('dotenv').config()
 const { create, decryptMedia, Client } = require('@open-wa/wa-automate')
 
 const moment = require('moment-timezone')
@@ -11,6 +11,11 @@ const {
     removeBackgroundFromImageBase64, 
     removeBackgroundFromImageFile
 } = require('remove.bg')
+
+const {
+    spawan,
+    exec
+} = require('child_process')
 
 const { 
     menuId, 
@@ -198,6 +203,26 @@ const start = (aruga = new Client()) => {
             }
             break
         }
+        case 'stickergif':
+        case 'stikergif':
+            if (isMedia || isQuotedVideo) {
+                if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
+                    var mediaData = await decryptMedia(message, uaOverride)
+                    client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
+                    var filename = `./media/stickergif.${mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
+                        await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+			
+                    })
+                  } else {
+                    client.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif* max 10 sec!`, id)
+                   }
+                } else {
+		    client.reply(from, `[❗] Kirim gif dengan caption *${prefix}stickergif*`, id)
+	        }
+	        break
         case 'stikergiphy':
         case 'stickergiphy':
 	 {
