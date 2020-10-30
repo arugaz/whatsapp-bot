@@ -41,7 +41,9 @@ after running it you need to scan the qr
 - Change ownerNumber on settings/setting.json
 - Change groupLimit on settings/setting.json
 - Change memberLimit on settings/setting.json
-- Change prefix on on settings/setting.json
+- Change prefix on settings/setting.json
+
+- Change all apiKey settings/api.json
 
 ---
 
