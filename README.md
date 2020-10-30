@@ -61,6 +61,7 @@ after running it you need to scan the qr
 
 | Islam |Yes|
 | ------------- | ------------- |
+| List Surah|✅|
 | Info Surah|✅|
 | Surah|✅|
 | Tafsir Alquran|✅|
