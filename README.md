@@ -51,8 +51,9 @@ after running it you need to scan the qr
 | ------------- | ------------- |
 | Respond img to sticker|✅|
 | Respond img to sticker no bg|✅|
-| Resopond url to sticker|✅|
-| Resopond gif to sticker|✅|
+| Respond url to sticker|✅|
+| Respond gif to sticker|✅|
+| Respond giphy url to sticker|✅|
 | Make a meme from photo|✅|
 
 | Others |Yes|
