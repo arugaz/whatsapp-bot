@@ -205,7 +205,7 @@ const start = (aruga = new Client()) => {
                     ? aruga.sendText(from, 'Maaf, link yang kamu kirim tidak memuat gambar.')
                     : aruga.reply(from, 'Here\'s your sticker')).then(() => console.log(`Sticker Processed for ${processTime(t, moment())} Second`))
             } else {
-                await aruga.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\n1.Kirim gambar dengan caption\n${prefix}sticker atau ${prefix}sticker nobg\n\n2.Kirim pesan dengan ${prefix}sticker <link_gambar>`, id)
+                await aruga.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background>\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
             }
             break
         }
@@ -281,16 +281,16 @@ const start = (aruga = new Client()) => {
             cekResi(args[0], args[1]).then((result) => aruga.sendText(from, result))
             break
         case 'tts':
-            if (args.length == 0) return client.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`)
+            if (args.length == 0) return aruga.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`)
             const ttsGB = require('node-gtts')(args[0])
             const dataText = body.slice(9)
-                if (dataText === '') return client.reply(from, 'apa teksnya syg..', id)
+                if (dataText === '') return aruga.reply(from, 'apa teksnya syg..', id)
                 try {
                     ttsGB.save('./media/tts.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts.mp3', id)
+                    aruga.sendPtt(from, './media/tts.mp3', id)
                     })
                 } catch (err) {
-                    client.reply(from, err, id)
+                    aruga.reply(from, err, id)
                 }
             break
         case 'translate':
@@ -382,7 +382,7 @@ const start = (aruga = new Client()) => {
                 hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
             }
             hehex += '╚═〘 *A R U G A  B O T* 〙'
-            await aruga.sendTextWithMentions(from, hehe)
+            await aruga.sendTextWithMentions(from, hehex)
             break
         case 'botstat': {
             const loadedMsg = await aruga.getAmountOfLoadedMessages()
