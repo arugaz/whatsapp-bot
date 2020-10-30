@@ -7,6 +7,12 @@ const figlet = require('figlet')
 const fs = require('fs-extra')
 
 const { 
+    RemoveBgResult,
+    removeBackgroundFromImageBase64, 
+    removeBackgroundFromImageFile
+} = require('remove.bg')
+
+const { 
     menuId, 
     cekResi, 
     urlShortener, 
@@ -172,9 +178,9 @@ const start = (aruga = new Client()) => {
                 var mediaData = await decryptMedia(message, uaOverride)
                 var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                 var base64img = imageBase64
-                //console.log(base64img)
                 var outFile = './media/noBg.png'
-                var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'CdQZfU1q92CKLu6cTyhWGtkQ', size: 'auto', type: 'auto', outFile })
+		// kamu dapat mengambil api key dari website remove.bg dan ubahnya disini 'API-KEY'
+                var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API-KEY', size: 'auto', type: 'auto', outFile })
                     await fs.writeFile(outFile, result.base64img)
                     await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
