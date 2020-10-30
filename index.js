@@ -139,7 +139,7 @@ const start = (aruga = new Client()) => {
         case 'menu':
         case 'help':
             await aruga.sendText(from, menuId.textMenu(pushname))
-                .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*` : null)
+                .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
         case 'menuadmin':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
