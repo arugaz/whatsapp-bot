@@ -120,6 +120,7 @@ const start = (aruga = new Client()) => {
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+        const isOwnerBot = ownerNumber == sender.id
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -155,13 +156,14 @@ const start = (aruga = new Client()) => {
         case 'menu':
         case 'help':
             await aruga.sendText(from, menuId.textMenu(pushname))
-                .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
+            .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
         case 'menuadmin':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
             await aruga.sendText(from, menuId.textAdmin())
             break
+            
         case 'donate':
         case 'donasi':
             await aruga.sendText(from, menuId.textDonasi())
@@ -568,8 +570,8 @@ const start = (aruga = new Client()) => {
             break
         case 'tagall':
         case 'everyone':
-            if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup! [Group Only]', id)
-            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup! [Admin Group Only]', id)
+            if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
             const groupMem = await aruga.getGroupMembers(groupId)
             let hehex = '╔══✪〘 Mention All 〙✪══\n'
             for (let i = 0; i < groupMem.length; i++) {
@@ -586,6 +588,53 @@ const start = (aruga = new Client()) => {
             aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
             break
         }
+        //Owner Group
+        case 'kickall': //mengeluarkan semua member
+        if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+        let isOwner = chat.groupMetadata.owner == sender.id
+        if (!isOwner) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai oleh owner grup!', id)
+        if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+            const allMem = await aruga.getGroupMembers(groupId)
+            for (let i = 0; i < allMem.length; i++) {
+                if (groupAdmins.includes(allMem[i].id)) {
+
+                } else {
+                    await aruga.removeParticipant(groupId, allMem[i].id)
+                }
+            }
+            aruga.reply(from, 'Succes kick all member', id)
+        break
+
+        //Owner Bot
+        case 'bc': //untuk broadcast atau promosi
+            if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+            let msg = body.slice(4)
+            const chatz = await aruga.getAllChatIds()
+            for (let ids of chatz) {
+                var cvk = await aruga.getChatById(ids)
+                if (!cvk.isReadOnly && cvk.isReadOnly) await aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
+            }
+            aruga.reply(from, 'Broadcast Success!', id)
+            break
+        case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
+            if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot', id)
+            const allChats = await aruga.getAllChatIds()
+            const allGroups = await aruga.getAllGroups()
+            for (let gclist of allGroups) {
+                await aruga.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChats.length}`)
+                await aruga.leaveGroup(gclist.contact.id)
+                await aruga.deleteChat(gclist.contact.id)
+            }
+            aruga.reply(from, 'Success leave all group!', id)
+            break
+        case 'clearall': //menghapus seluruh pesan diakun bot
+            if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot', id)
+            const allChatz = await aruga.getAllChats()
+            for (let dchat of allChatz) {
+                await aruga.deleteChat(dchat.id)
+            }
+            aruga.reply(from, 'Succes clear all chat!', id)
+            break
         default:
             console.log(color('[ERROR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'Unregistered Command from', color(pushname))
             break
