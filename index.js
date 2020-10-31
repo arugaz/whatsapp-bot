@@ -22,7 +22,8 @@ const {
     urlShortener, 
     meme, 
     translate, 
-    getLocationData 
+    getLocationData,
+    wallpaper
 } = require('./lib')
 
 const { 
@@ -452,6 +453,13 @@ const start = (aruga = new Client()) => {
         case 'memes':
             const randmeme = await meme.random()
             aruga.sendFileFromUrl(from, randmeme, '', '', id)
+            break
+        
+        // Search Any
+        case 'images':
+            const cariwall = body.slice(8)
+            const hasilwall = await wallpaper.walls(cariwall)
+            aruga.sendFileFromUrl(from, hasilwall, '', '', id)
             break
         // Other Command
         case 'resi':
