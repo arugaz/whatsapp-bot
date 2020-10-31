@@ -6,6 +6,7 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
 const figlet = require('figlet')
 const fs = require('fs-extra')
 const axios = require('axios')
+const fetch = require('node-fetch')
 
 const { 
     removeBackgroundFromImageBase64
@@ -33,6 +34,7 @@ const {
 
 const options = require('./utils/options')
 const { uploadImages } = require('./utils/fetcher')
+const { random } = require('./lib/meme')
 
 const { 
     ownerNumber, 
@@ -93,8 +95,8 @@ const start = (aruga = new Client()) => {
 
     aruga.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot
-        aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan')
-        //aruga.contactBlock(callData.peerJid)
+        aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan, block dlu gan.')
+        aruga.contactBlock(callData.peerJid)
     })
 
     // ketika seseorang mengirim pesan
@@ -256,6 +258,22 @@ const start = (aruga = new Client()) => {
             }
             break
         }
+        case 'meme':
+            if ((isMedia || isQuotedImage) && args.length >= 2) {
+                const top = arg.split('|')[0]
+                const bottom = arg.split('|')[1]
+                const encryptMedia = isQuotedImage ? quotedMsg : message
+                const mediaData = await decryptMedia(encryptMedia, uaOverride)
+                const getUrl = await uploadImages(mediaData, false)
+                const ImageBase64 = await meme.custom(getUrl, top, bottom)
+                aruga.sendFile(from, ImageBase64, 'image.png', '', null, true)
+                    .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
+                    .catch((err) => console.error(err))
+            } else {
+                await aruga.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}meme <teks_atas> | <teks_bawah>\ncontoh: ${prefix}meme teks atas | teks bawah`, id)
+            }
+            break
+
         //Islam Command
         case 'listsurah':
             try {
@@ -387,23 +405,53 @@ const start = (aruga = new Client()) => {
                   }
               }
               break
+        
+        // Random Kata
+        case 'fakta':
+            fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitnix = body.split('\n')
+                let randomnix = splitnix[Math.floor(Math.random() * splitnix.length)]
+                aruga.reply(from, randomnix, id)
+            })
+            break
+        case 'katabijak':
+            fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/katabijax.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitbijak = body.split('\n')
+                let randombijak = splitbijak[Math.floor(Math.random() * splitbijak.length)]
+                aruga.reply(from, randombijak, id)
+            })
+            break
+        case 'pantun':
+            fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitpantun = body.split('\n')
+                let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
+                aruga.reply(from, randompantun.replace(/aruga-line/g,"\n"), id)
+            })
+            break
 
-        // Other Command
-        case 'meme':
-            if ((isMedia || isQuotedImage) && args.length >= 2) {
-                const top = arg.split('|')[0]
-                const bottom = arg.split('|')[1]
-                const encryptMedia = isQuotedImage ? quotedMsg : message
-                const mediaData = await decryptMedia(encryptMedia, uaOverride)
-                const getUrl = await uploadImages(mediaData, false)
-                const ImageBase64 = await meme.custom(getUrl, top, bottom)
-                aruga.sendFile(from, ImageBase64, 'image.png', '', null, true)
-                    .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
-                    .catch((err) => console.error(err))
+        //Random Images
+        case 'anime':
+            if (args.length == 0) return aruga.reply(from, `Untuk menggunakan ${prefix}anime\nSilahkan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`, id)
+            if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko') {
+                fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/anime/' + args[0] + '.txt')
+                .then(res => res.text())
+                .then(body => {
+                    let randomnime = body.split('\n')
+                    let randomnimex = randomnime[Math.floor(Math.random() * randomnime.length)]
+                    aruga.sendFileFromUrl(from, randomnimex, '', 'Nee..', id)
+                })
             } else {
-                await aruga.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}meme <teks_atas> | <teks_bawah>\ncontoh: ${prefix}meme teks atas | teks bawah`, id)
+                aruga.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
             }
             break
+
+        // Other Command
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
             const kurirs = ['jne', 'pos', 'tiki', 'wahana', 'jnt', 'rpx', 'sap', 'sicepat', 'pcp', 'jet', 'dse', 'first', 'ninja', 'lion', 'idl', 'rex']
