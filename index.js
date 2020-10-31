@@ -23,7 +23,7 @@ const {
     meme, 
     translate, 
     getLocationData,
-    wallpaper
+    images
 } = require('./lib')
 
 const { 
@@ -460,7 +460,7 @@ const start = (aruga = new Client()) => {
         // Search Any
         case 'images':
             const cariwall = body.slice(8)
-            const hasilwall = await wallpaper.walls(cariwall)
+            const hasilwall = await images.fdci(cariwall)
             aruga.sendFileFromUrl(from, hasilwall, '', '', id)
             break
         // Other Command
