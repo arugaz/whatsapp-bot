@@ -50,6 +50,10 @@ after running it you need to scan the qr
 
 ## Features
 
+| Premium |Yes|
+| ------------- | ------------- |
+| pornhub downloads|premium kak|
+
 | Creator |Yes|
 | ------------- | ------------- |
 | Respond img to sticker|✅|
