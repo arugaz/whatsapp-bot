@@ -67,6 +67,10 @@ after running it you need to scan the qr
 | Tafsir Alquran|✅|
 | Alquran Audio/Voice|✅|
 
+| Searchs |Yes|
+| ------------- | ------------- |
+| images |✅|
+
 | Random text |Yes|
 | ------------- | ------------- |
 | Pantun pakboy|✅|
@@ -76,7 +80,7 @@ after running it you need to scan the qr
 | Random image |Yes|
 | ------------- | ------------- |
 | Anime |✅|
-| waifu, husbu, random, neko||
+| Memes |✅|
 
 
 | Others |Yes|
