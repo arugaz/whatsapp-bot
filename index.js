@@ -259,12 +259,12 @@ const start = (aruga = new Client()) => {
         //Islam Command
         case 'listsurah':
             try {
-                axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/quran.json')
+                axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                 .then((response) => {
                     let hehex = '╔══✪〘 List Surah 〙✪══\n'
-                    for (let i = 0; i < response.data.length; i++) {
-                        hehex += '╠➥  '
-                        hehex += response.data[i].name.toLowerCase() + '\n'
+                    for (let i = 0; i < response.data.data.length; i++) {
+                        hehex += '╠➥ '
+                        hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                             }
                         hehex += '╚═〘 *A R U G A  B O T* 〙'
                     aruga.reply(from, hehex, id)
@@ -275,7 +275,7 @@ const start = (aruga = new Client()) => {
             break
         case 'infosurah':
             if (args.length == 0) return aruga.reply(from, `*_${prefix}infosurah <nama surah>_*\nMenampilkan informasi lengkap mengenai surah tertentu. Contoh penggunan: ${prefix}infosurah al-baqarah`, message.id)
-                var responseh = await axios.get('https://api.quran.sutanlab.id/surah')
+                var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                 var { data } = responseh.data
                 var idx = data.findIndex(function(post, index) {
                   if((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase())||(post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -287,7 +287,7 @@ const start = (aruga = new Client()) => {
               break
         case 'surah':
             if (args.length == 0) return aruga.reply(from, `*_${prefix}surah <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1\n\n*_${prefix}surah <nama surah> <ayat> en/id_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahannya dalam bahasa Inggris / Indonesia. Contoh penggunaan : ${prefix}surah al-baqarah 1 id`, message.id)
-                var responseh = await axios.get('https://api.quran.sutanlab.id/surah')
+                var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                 var { data } = responseh.data
                 var idx = data.findIndex(function(post, index) {
                   if((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase())||(post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -316,7 +316,7 @@ const start = (aruga = new Client()) => {
               break
         case 'tafsir':
             if (args.length == 0) return aruga.reply(from, `*_${prefix}tafsir <nama surah> <ayat>_*\nMenampilkan ayat Al-Quran tertentu beserta terjemahan dan tafsirnya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}tafsir al-baqarah 1`, message.id)
-                var responsh = await axios.get('https://api.quran.sutanlab.id/surah')
+                var responsh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                 var {data} = responsh.data
                 var idx = data.findIndex(function(post, index) {
                   if((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase())||(post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -337,7 +337,7 @@ const start = (aruga = new Client()) => {
             if (args.length == 0) return aruga.reply(from, `*_${prefix}ALaudio <nama surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
               ayat = "ayat"
               bhs = ""
-                var responseh = await axios.get('https://api.quran.sutanlab.id/surah')
+                var responseh = await axios.get('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/islam/surah.json')
                 var surah = responseh.data
                 var idx = surah.data.findIndex(function(post, index) {
                   if((post.name.transliteration.id.toLowerCase() == args[0].toLowerCase())||(post.name.transliteration.en.toLowerCase() == args[0].toLowerCase()))
@@ -482,7 +482,7 @@ const start = (aruga = new Client()) => {
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
             if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
             if (mentionedJidList.length !== 1) return aruga.reply(from, 'Maaf, hanya bisa mempromote 1 user', id)
-            if (!groupAdmins.includes(mentionedJidList[0])) return await aruga.reply(from, 'Maaf, user tersebut bukan admin.', id)
+            if (groupAdmins.includes(mentionedJidList[0])) return await aruga.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
             if (mentionedJidList[0] === botNumber) return await aruga.reply(from, 'Maaf, format pesan salah.\nTidak dapat mempromote akun bot sendiri', id)
             await aruga.promoteParticipant(groupId, mentionedJidList[0])
             await aruga.sendTextWithMentions(from, `Request diterima, menambahkan @${mentionedJidList[0].replace('@c.us', '')} sebagai admin.`)
@@ -492,7 +492,7 @@ const start = (aruga = new Client()) => {
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
             if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
             if (mentionedJidList.length !== 1) return aruga.reply(from, 'Maaf, hanya bisa mendemote 1 user', id)
-            if (!groupAdmins.includes(mentionedJidList[0])) return await aruga.reply(from, 'Maaf, user tersebut bukan admin.', id)
+            if (!groupAdmins.includes(mentionedJidList[0])) return await aruga.reply(from, 'Maaf, user tersebut belum menjadi admin.', id)
             if (mentionedJidList[0] === botNumber) return await aruga.reply(from, 'Maaf, format pesan salah.\nTidak dapat mendemote akun bot sendiri', id)
             await aruga.demoteParticipant(groupId, mentionedJidList[0])
             await aruga.sendTextWithMentions(from, `Request diterima, menghapus jabatan @${mentionedJidList[0].replace('@c.us', '')}.`)
