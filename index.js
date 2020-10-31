@@ -34,7 +34,6 @@ const {
 
 const options = require('./utils/options')
 const { uploadImages } = require('./utils/fetcher')
-const { random } = require('./lib/meme')
 
 const { 
     ownerNumber, 
@@ -450,7 +449,10 @@ const start = (aruga = new Client()) => {
                 aruga.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
             }
             break
-
+        case 'memes':
+            const randmeme = await meme.random()
+            aruga.sendFileFromUrl(from, randmeme, '', '', id)
+            break
         // Other Command
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
