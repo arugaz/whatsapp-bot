@@ -98,6 +98,13 @@ after running it you need to scan the qr
 | Demote User|✅|
 | Delete bot msg|✅|
 | Tagall/mentions all|✅|
+| Kick all members|✅|
+
+| Owner bot |Yes|
+| ------------- | ------------- |
+| Broadcast|✅|
+| Leave all group|✅|
+| Delete all msgs|✅|
 
 
 ## To-Do
