@@ -111,6 +111,7 @@ after running it you need to scan the qr
 | Broadcast|✅|
 | Leave all group|✅|
 | Delete all msgs|✅|
+| Banned user|✅|
 
 
 ## To-Do
