@@ -52,7 +52,7 @@ after running it you need to scan the qr
 
 | Fitur blm public |Yes|
 | ------------- | ------------- |
-| pornhub downloads|ban star sampe 50|
+| pornhub downloads|bantu star sampe 50|
 | simi-simi chat bot|bantu star sampe 50|
 
 | Creator |Yes|
