@@ -8,6 +8,8 @@
  [Trakteer](https://trakteer.id/arugabot)
  
 </details>
+
+bantu kontribusi dengan cara pull request atau request di issues, makasi
 </div>
 
 ## Getting Started
