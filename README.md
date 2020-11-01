@@ -63,6 +63,7 @@ after running it you need to scan the qr
 | Respond gif to sticker|✅|
 | Respond giphy url to sticker|✅|
 | Make a meme from photo|✅|
+| Quotes maker result pict|✅|
 
 | Islam |Yes|
 | ------------- | ------------- |
