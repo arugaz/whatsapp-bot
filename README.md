@@ -46,8 +46,7 @@ path ffmpeg nya yaitu
 C:\ffmpeg\bin
 
 ```
-tutorial >> <a href="https://github.com/ArugaZ/tutor-ffmpeg/blob/main/README.md"> Tutor </a>
-
+tutorial >> <a href="https://github.com/ArugaZ/tutor-ffmpeg/blob/main/README.md"> Tutor </a> || wikihow >> <a href="https://www.wikihow.com/Install-FFmpeg-on-Windows"> tutor </a>
 
 ### Usage
 Run the Whatsapp bot
