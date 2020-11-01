@@ -8,6 +8,8 @@ const fs = require('fs-extra')
 const axios = require('axios')
 const fetch = require('node-fetch')
 
+const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
+
 const { 
     removeBackgroundFromImageBase64
 } = require('remove.bg')
@@ -121,6 +123,8 @@ const start = (aruga = new Client()) => {
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const isOwnerBot = ownerNumber == sender.id
+        
+        const isBanned = banned.includes(sender.id)
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -144,6 +148,9 @@ const start = (aruga = new Client()) => {
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 
+        if (isBanned) {
+            return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+        }
         switch (command) {
         // Menu and TnC
         case 'speed':
@@ -649,8 +656,30 @@ const start = (aruga = new Client()) => {
         break
 
         //Owner Bot
+        case 'ban':
+            if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+            if (args.length == 0) return aruga.reply(from, `Untuk banned seseorang agar tidak bisa menggunakan commands\n\nCaranya ketik: \n${prefix}ban add 628xx --untuk mengaktifkan\n${prefix}ban del 628xx --untuk nonaktifkan\n\ncara cepat ban banyak digrup ketik:\n${prefix}ban @tag @tag @tag`, id)
+            if (args[0] == 'add') {
+                banned.push(args[1]+'@c.us')
+                fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                aruga.reply(from, 'Succes banned target!')
+            } else
+            if (args[0] == 'del') {
+                let xnxx = banned.indexOf(args[1]+'@c.us')
+                banned.splice(xnxx,1)
+                fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                aruga.reply(from, 'Succes unbanned target!')
+            } else {
+                for (let i = 0; i < mentionedJidList.length; i++) {
+                    banned.push(mentionedJidList[i])
+                    fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                       aruga.reply(from, 'Succes ban target!', id)
+                   }
+            }
+            break
         case 'bc': //untuk broadcast atau promosi
             if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
+            if (args.length == 0) return aruga.reply(from, `Untuk broadcast ke semua chat ketik:\n${prefix}bc [isi chat]`)
             let msg = body.slice(4)
             const chatz = await aruga.getAllChatIds()
             for (let idk of chatz) {
@@ -680,7 +709,7 @@ const start = (aruga = new Client()) => {
             aruga.reply(from, 'Succes clear all chat!', id)
             break
         default:
-            console.log(color('[ERROR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'Unregistered Command from', color(pushname))
+            console.log(color('[EROR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'Unregistered Command from', color(pushname))
             break
         }
     } catch (err) {
