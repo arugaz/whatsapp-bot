@@ -34,7 +34,7 @@ jangan lupa install ffmpeg sama wget
 kalo kelen pake rdp windows , jan lupa download binary penunjang
 dibawah ini
 
-<a href="https://drive.google.com/file/d/1SugE8vjfOyyW3VTRqsxlW_GJh6EKQ19X/view?usp=drivesdk"> Download </a>
+<a href="https://drive.google.com/file/d/1SugE8vjfOyyW3VTRqsxlW_GJh6EKQ19X/view?usp=drivesdk"> Download 
 
 pindahin folder ffmpeg ke `C:\`
 dan file wget.exe ke `system32`
@@ -46,6 +46,8 @@ path ffmpeg nya yaitu
 C:\ffmpeg\bin
 
 ```
+</a> tutorial >> <a href="https://github.com/ArugaZ/tutor-ffmpeg/blob/main/README.md"> Tutor </a>
+
 
 ### Usage
 Run the Whatsapp bot
