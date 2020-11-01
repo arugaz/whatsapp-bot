@@ -629,7 +629,8 @@ const start = (aruga = new Client()) => {
             const chatz = await aruga.getAllChatIds()
             for (let ids of chatz) {
                 var cvk = await aruga.getChatById(ids)
-                if (!cvk.isReadOnly && cvk.isReadOnly) await aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
+                if (!cvk.isReadOnly) aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
+                if (cvk.isReadOnly) aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
             }
             aruga.reply(from, 'Broadcast Success!', id)
             break
