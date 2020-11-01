@@ -55,6 +55,10 @@ after running it you need to scan the qr
 | Fitur blm public |Yes|
 | ------------- | ------------- |
 | pornhub downloads|bantu star sampe 50|
+| redtube downloads|bantu star sampe 50|
+| sex.com downloads|bantu star sampe 50|
+| nekopoi downloads|bantu star sampe 50|
+| anime vid downloads sub indo|bantu star sampe 50|
 | simi-simi chat bot|bantu star sampe 50|
 
 | Creator |Yes|
