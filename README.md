@@ -53,7 +53,8 @@ after running it you need to scan the qr
 | Premium |Yes|
 | ------------- | ------------- |
 | pornhub downloads|premium kak|
-| simi-simi bot|premium kak|
+| nekopoi downloads|premium kak|
+| simi-simi chat bot|premium kak|
 
 | Creator |Yes|
 | ------------- | ------------- |
