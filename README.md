@@ -29,6 +29,30 @@ Install the dependencies:
 > npm install
 ```
 
+jangan lupa install ffmpeg sama wget 
+
+kalo kelen pake rdp windows , jan lupa download binary penunjang
+dibawah ini
+<a href="https://drive.google.com/file/d/1SugE8vjfOyyW3VTRqsxlW_GJh6EKQ19X/view?usp=drivesdk"> Download </a>
+
+pindahin folder ffmpeg ke `C:\`
+dan file wget.exe ke `system32`
+
+add juga path ffmpeg di environtment variable nya
+agar bisa dipanggil di cmd 
+path ffmpeg nya yaitu
+```batch
+C:\ffmpeg\bin
+
+```
+
+kalo kelen pengguna linux , jangan lupa ganti path ffmpeg pada fitur youtube mp3 
+jadi `usr/bin/ffmpeg`
+
+dan jangan lupa ubah path chrome nya
+jadi 
+`usr/bin/google-chrome-stable`
+
 ### Usage
 Run the Whatsapp bot
 
