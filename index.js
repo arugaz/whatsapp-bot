@@ -275,6 +275,23 @@ const start = (aruga = new Client()) => {
                 await aruga.reply(from, `Tidak ada gambar! Silahkan kirim gambar dengan caption ${prefix}meme <teks_atas> | <teks_bawah>\ncontoh: ${prefix}meme teks atas | teks bawah`, id)
             }
             break
+        case 'quotemaker':
+            const qmaker = body.trim().split('|')
+            if (qmaker.length >= 3) {
+                const quotes = qmaker[1]
+                const author = qmaker[2]
+                const theme = qmaker[3]
+                aruga.reply(from, 'Proses kak..', id)
+                try {
+                    const hasilqmaker = await images.quote(quotes, author, theme)
+                    aruga.sendFileFromUrl(from, `${hasilqmaker}`, '', 'ini kak..', id)
+                } catch {
+                    aruga.reply('yahh proses gagal, kakak isinya sudah benar blm?..', id)
+                }
+            } else {
+                aruga.reply(from, `Pemakaian ${prefix}quotemaker |isi quote|author|theme\n\ncontoh: ${prefix}quotemaker |aku sayang kamu|-aruga|random\n\nuntuk theme nya pakai random ya kak..`)
+            }
+            break
 
         //Islam Command
         case 'listsurah':
