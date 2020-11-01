@@ -76,6 +76,7 @@ after running it you need to scan the qr
 | Searchs |Yes|
 | ------------- | ------------- |
 | images |✅|
+| subreddit |✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
