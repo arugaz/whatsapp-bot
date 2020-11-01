@@ -457,7 +457,13 @@ const start = (aruga = new Client()) => {
                   }
               }
               break
-        
+        //Premium
+        case 'pornhub':
+            aruga.reply(from, `Ini merupakan commands untuk mendownload video dari pornhub\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
+            break
+        case 'simsimi':
+            aruga.reply(from, `Ini merupakan commands untuk mengaktifkan simi-simi chat bot\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
+            break
         // Random Kata
         case 'fakta':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
@@ -500,6 +506,20 @@ const start = (aruga = new Client()) => {
                 })
             } else {
                 aruga.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}anime untuk melihat list query`)
+            }
+            break
+        case 'kpop':
+            if (args.length == 0) return aruga.reply(from, `Untuk menggunakan ${prefix}kpop\nSilahkan ketik: ${prefix}kpop [query]\nContoh: ${prefix}kpop bts\n\nquery yang tersedia:\nblackpink, exo, bts`, id)
+            if (args[0] == 'blackpink' || args[0] == 'exo' || args[0] == 'bts') {
+                fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/kpop/' + args[0] + '.txt')
+                .then(res => res.text())
+                .then(body => {
+                    let randomkpop = body.split('\n')
+                    let randomkpopx = randomkpop[Math.floor(Math.random() * randomkpop.length)]
+                    aruga.sendFileFromUrl(from, randomkpopx, '', 'Nee..', id)
+                })
+            } else {
+                aruga.reply(from, `Maaf query tidak tersedia. Silahkan ketik ${prefix}kpop untuk melihat list query`)
             }
             break
         case 'memes':
