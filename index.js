@@ -172,6 +172,32 @@ const start = (aruga = new Client()) => {
             await aruga.sendContact(from, ownerNumber)
             .then(() => aruga.sedText(from, 'Jika kalian ingin request fitur silahkan chat nomor owner!'))
             break
+        case 'join':
+            if (args.length == 0) return aruga.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
+            let linkgrup = body.slice(6)
+            let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
+            let chekgrup = await client.inviteInfo(islink)
+            if (!islink) return aruga.reply(from, 'Maaf link group-nya salah! sialahkan kirim link yang benar', id)
+            if (isOwnerBot) {
+                await aruga.joinGroupViaLink(linkgrup)
+                      .then(async () => {
+                          await aruga.sendText(from, 'Berhasil join grup via link!')
+                          await aruga.sendText(chekgrup.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+                      })
+            } else {
+                let cgrup = await aruga.getAllGroups()
+                if (cgrup.length > groupLimit) return aruga.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
+                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, Sorry, BOT wil not join if the group members do not exceed ${memberLimit} people`, id)
+                await aruga.joinGroupViaLink(linkgrup)
+                      .then(async () =>{
+                          await aruga.reply(from, 'Berhasil join grup via link!', id)
+                      })
+                      .catch(() => {
+                          aruga.reply(from, 'Gagal!', id)
+                      })
+            }
+            break
+
         // Sticker Creator
         case 'sticker':
         case 'stiker': {
@@ -627,19 +653,19 @@ const start = (aruga = new Client()) => {
             if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
             let msg = body.slice(4)
             const chatz = await aruga.getAllChatIds()
-            for (let ids of chatz) {
-                var cvk = await aruga.getChatById(ids)
-                if (!cvk.isReadOnly) aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
-                if (cvk.isReadOnly) aruga.sendText(ids, `〘 *A R U G A  B C* \n\n${msg}`)
+            for (let idk of chatz) {
+                var cvk = await aruga.getChatById(idk)
+                if (!cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* \n\n${msg}`)
+                if (cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* \n\n${msg}`)
             }
             aruga.reply(from, 'Broadcast Success!', id)
             break
         case 'leaveall': //mengeluarkan bot dari semua group serta menghapus chatnya
             if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot', id)
-            const allChats = await aruga.getAllChatIds()
-            const allGroups = await aruga.getAllGroups()
-            for (let gclist of allGroups) {
-                await aruga.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChats.length}`)
+            const allChatz = await aruga.getAllChatIds()
+            const allGroupz = await aruga.getAllGroups()
+            for (let gclist of allGroupz) {
+                await aruga.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChatz.length}`)
                 await aruga.leaveGroup(gclist.contact.id)
                 await aruga.deleteChat(gclist.contact.id)
             }
@@ -647,8 +673,8 @@ const start = (aruga = new Client()) => {
             break
         case 'clearall': //menghapus seluruh pesan diakun bot
             if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya untuk Owner bot', id)
-            const allChatz = await aruga.getAllChats()
-            for (let dchat of allChatz) {
+            const allChatx = await aruga.getAllChats()
+            for (let dchat of allChatx) {
                 await aruga.deleteChat(dchat.id)
             }
             aruga.reply(from, 'Succes clear all chat!', id)
