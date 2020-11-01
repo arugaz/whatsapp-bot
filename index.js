@@ -529,10 +529,18 @@ const start = (aruga = new Client()) => {
         
         // Search Any
         case 'images':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
             const cariwall = body.slice(8)
             const hasilwall = await images.fdci(cariwall)
             aruga.sendFileFromUrl(from, hasilwall, '', '', id)
             break
+        case 'sreddit':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
+            const carireddit = body.slice(9)
+            const hasilreddit = await images.sreddit(carireddit)
+            aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
+            break
+
         // Other Command
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
@@ -690,11 +698,11 @@ const start = (aruga = new Client()) => {
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
                 aruga.reply(from, 'Succes unbanned target!')
             } else {
-                for (let i = 0; i < mentionedJidList.length; i++) {
-                    banned.push(mentionedJidList[i])
-                    fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
-                       aruga.reply(from, 'Succes ban target!', id)
-                   }
+            for (let i = 0; i < mentionedJidList.length; i++) {
+                banned.push(mentionedJidList[i])
+                fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
+                    aruga.reply(from, 'Succes ban target!', id)
+                }
             }
             break
         case 'bc': //untuk broadcast atau promosi
