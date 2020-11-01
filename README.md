@@ -50,10 +50,10 @@ after running it you need to scan the qr
 
 ## Features
 
-| Premium |Yes|
+| Fitur blm public |Yes|
 | ------------- | ------------- |
-| pornhub downloads|premium kak|
-| simi-simi chat bot|premium kak|
+| pornhub downloads|ban star sampe 50|
+| simi-simi chat bot|bantu star sampe 50|
 
 | Creator |Yes|
 | ------------- | ------------- |
