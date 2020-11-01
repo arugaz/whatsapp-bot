@@ -29,25 +29,6 @@ Install the dependencies:
 > npm install
 ```
 
-jangan lupa install ffmpeg sama wget 
-
-kalo kelen pake rdp windows , jan lupa download binary penunjang
-dibawah ini
-
-<a href="https://drive.google.com/file/d/1SugE8vjfOyyW3VTRqsxlW_GJh6EKQ19X/view?usp=drivesdk"> Download </a>
-
-pindahin folder ffmpeg ke `C:\`
-dan file wget.exe ke `system32`
-
-add juga path ffmpeg di environtment variable nya
-agar bisa dipanggil di cmd 
-path ffmpeg nya yaitu
-```batch
-C:\ffmpeg\bin
-
-```
-tutorial >> <a href="https://github.com/ArugaZ/tutor-ffmpeg/blob/main/README.md"> Tutor </a> || wikihow >> <a href="https://www.wikihow.com/Install-FFmpeg-on-Windows"> tutor </a>
-
 ### Usage
 Run the Whatsapp bot
 
