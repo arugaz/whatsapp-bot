@@ -86,6 +86,7 @@ after running it you need to scan the qr
 | Random image |Yes|
 | ------------- | ------------- |
 | Anime |✅|
+| Kpop |✅|
 | Memes |✅|
 
 
