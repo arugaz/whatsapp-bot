@@ -26,7 +26,8 @@ const {
     translate, 
     getLocationData,
     images,
-    resep
+    resep,
+    rugapoi
 } = require('./lib')
 
 const { 
@@ -550,7 +551,21 @@ const start = (aruga = new Client()) => {
             const hasilresep = await resep.resep(cariresep)
             aruga.reply(from, hasilresep + '\n\nIni kak resep makanannya..', id)
             break
-
+        case 'nekopoi':
+            aruga.sendText(from, `Sedang mencari video terbaru dari website nekopoi...`)
+            rugapoi.getLatest()
+            .then((result) => {
+                rugapoi.getVideo(result.link)
+                .then((res) => {
+                    let heheq = '\n'
+                    for (let i = 0; i < res.links.length; i++) {
+                        heheq += `${res.links[i]}\n`
+                    }
+                    aruga.reply(from, `Title: ${res.title}\n\nLink:\n${heheq}\nmasih tester bntr :v`)
+                })
+            })
+            break
+            
         // Other Command
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
@@ -599,7 +614,8 @@ const start = (aruga = new Client()) => {
             if (!isUrl(args[0])) return aruga.reply(from, 'Maaf, url yang kamu kirim tidak valid.', message.id)
             const shortlink = await urlShortener(args[0]);
             await aruga.sendText(from, shortlink);
-             break
+            break
+
         // Group Commands (group admin only)
 	    case 'add':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
