@@ -96,9 +96,12 @@ const start = (aruga = new Client()) => {
     })
 
     aruga.onIncomingCall(async (callData) => {
-        // ketika seseorang menelpon nomor bot
-        aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan, block dlu gan.')
-        aruga.contactBlock(callData.peerJid)
+        // ketika seseorang menelpon nomor bot akan mengirim pesan
+        await aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n-bot')
+        .then(async () => {
+            // bot akan memblock nomor itu
+            await aruga.contactBlock(callData.peerJid)
+        })
     })
 
     // ketika seseorang mengirim pesan
@@ -183,7 +186,7 @@ const start = (aruga = new Client()) => {
             if (args.length == 0) return aruga.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
             let linkgrup = body.slice(6)
             let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
-            let chekgrup = await client.inviteInfo(islink)
+            let chekgrup = await aruga.inviteInfo(islink)
             if (!islink) return aruga.reply(from, 'Maaf link group-nya salah! sialahkan kirim link yang benar', id)
             if (isOwnerBot) {
                 await aruga.joinGroupViaLink(linkgrup)
@@ -666,6 +669,7 @@ const start = (aruga = new Client()) => {
             aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
             break
         }
+
         //Owner Group
         case 'kickall': //mengeluarkan semua member
         if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
@@ -698,7 +702,7 @@ const start = (aruga = new Client()) => {
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
                 aruga.reply(from, 'Succes unbanned target!')
             } else {
-            for (let i = 0; i < mentionedJidList.length; i++) {
+             for (let i = 0; i < mentionedJidList.length; i++) {
                 banned.push(mentionedJidList[i])
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
                     aruga.reply(from, 'Succes ban target!', id)
@@ -712,8 +716,8 @@ const start = (aruga = new Client()) => {
             const chatz = await aruga.getAllChatIds()
             for (let idk of chatz) {
                 var cvk = await aruga.getChatById(idk)
-                if (!cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* \n\n${msg}`)
-                if (cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* \n\n${msg}`)
+                if (!cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
+                if (cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
             }
             aruga.reply(from, 'Broadcast Success!', id)
             break
