@@ -46,8 +46,9 @@ after running it you need to scan the qr
 - Change groupLimit on settings/setting.json
 - Change memberLimit on settings/setting.json
 - Change prefix on settings/setting.json
-
 - Change all apiKey settings/api.json
+- Change menu on lib/menu/id.js
+pls dont remove my github link:)
 
 ---
 
