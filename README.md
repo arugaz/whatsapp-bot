@@ -54,13 +54,14 @@ pls dont remove my github link:)
 
 ## Features
 
-| Fitur blm public |bantu klik star|
+| Fitur premium |bantu klik star|
 | ------------- | ------------- |
-| nekopoi search link| sampe 30|
-| pornhub downloads| sampe 50|
-| redtube downloads| sampe 50|
-| sex.com downloads| sampe 50|
+| nekopoi search link| ✅|
+| pornhub downloads| sampe 45|
+| redtube downloads| sampe 40|
+| sex.com downloads| sampe 40|
 | simi-simi chat bot| sampe 50|
+| nekopoi search video| sampe 50|
 
 | Creator |Yes|
 | ------------- | ------------- |
@@ -85,6 +86,7 @@ pls dont remove my github link:)
 | images |✅|
 | subreddit |✅|
 | resep makanan |✅|
+| nekopoi |✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
