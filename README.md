@@ -52,12 +52,13 @@ after running it you need to scan the qr
 
 ## Features
 
-| Fitur blm public |Yes|
+| Fitur blm public |bantu klik star|
 | ------------- | ------------- |
-| pornhub downloads|bantu star sampe 50|
-| redtube downloads|bantu star sampe 50|
-| sex.com downloads|bantu star sampe 50|
-| simi-simi chat bot|bantu star sampe 50|
+| nekopoi search link| sampe 30|
+| pornhub downloads| sampe 50|
+| redtube downloads| sampe 50|
+| sex.com downloads| sampe 50|
+| simi-simi chat bot| sampe 50|
 
 | Creator |Yes|
 | ------------- | ------------- |
