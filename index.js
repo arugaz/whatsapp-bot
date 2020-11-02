@@ -25,7 +25,8 @@ const {
     meme, 
     translate, 
     getLocationData,
-    images
+    images,
+    resep
 } = require('./lib')
 
 const { 
@@ -79,20 +80,20 @@ const start = (aruga = new Client()) => {
 	      aruga.deleteChat(chat.id)
 	    })
 	    } else {
-        await aruga.simulateTyping(chat.id, true).then(() => {
-          aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+        await aruga.simulateTyping(chat.id, true).then(async () => {
+          await aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
         })
 	    }
 	}
     })
 
     // ketika seseorang masuk/keluar dari group
-    aruga.onGlobalParicipantsChanged((event) => {
+    aruga.onGlobalParicipantsChanged(async (event) => {
         // kondisi ketika seseorang diinvite/join group lewat link
-        if (event.action === 'add' || event.action === 'invite') aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+        if (event.action === 'add' || event.action === 'invite') await aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
 
         // kondisi ketika seseorang dikick/keluar dari group
-	    if (event.action === 'remove' || event.action === 'leave') aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you`)
+	    if (event.action === 'remove' || event.action === 'leave') await aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you`)
     })
 
     aruga.onIncomingCall(async (callData) => {
@@ -542,6 +543,12 @@ const start = (aruga = new Client()) => {
             const carireddit = body.slice(9)
             const hasilreddit = await images.sreddit(carireddit)
             aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
+            
+        case 'resep':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari resep makanan\nCaranya ketik: ${prefix}resep [search]\n\ncontoh: ${prefix}resep tahu`, id)
+            const cariresep = body.slice(7)
+            const hasilresep = await resep.resep(cariresep)
+            aruga.reply(from, hasilresep + '\n\nIni kak resep makanannya..', id)
             break
 
         // Other Command
