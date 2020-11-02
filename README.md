@@ -10,6 +10,7 @@
 </details>
 
 bantu kontribusi dengan cara pull request atau request di issues, makasi
+[`Whastapp saya`](https://wa.me/6281908330577?text=ini%20aruga?)
 </div>
 
 ## Getting Started
