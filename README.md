@@ -47,7 +47,7 @@ after running it you need to scan the qr
 - Change memberLimit on settings/setting.json
 - Change prefix on settings/setting.json
 - Change all apiKey settings/api.json
-- Change menu on lib/menu/id.js
+- Change menu on lib/menu.js
 pls dont remove my github link:)
 
 ---
@@ -86,7 +86,7 @@ pls dont remove my github link:)
 | images |✅|
 | subreddit |✅|
 | resep makanan |✅|
-| nekopoi |✅|
+| nekopoi links |✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
