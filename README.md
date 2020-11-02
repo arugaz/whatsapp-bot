@@ -83,6 +83,7 @@ after running it you need to scan the qr
 | ------------- | ------------- |
 | images |✅|
 | subreddit |✅|
+| resep makanan |✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
