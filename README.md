@@ -14,16 +14,17 @@
 <a href="https://github.com/arugaz/whatsapp-bot/network/members"><img title="Forks" src="https://img.shields.io/github/forks/arugaz/whatsapp-bot?color=red&style=flat-square"></a>
 <a href="https://github.com/arugaz/whatsapp-bot/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/arugaz/whatsapp-bot?label=Watchers&color=blue&style=flat-square"></a>
 </p>
+<div align="center">
 <details>
  <summary>🥟 Help me!</summary>
  
  [Trakteer](https://trakteer.id/arugabot)
  
 </details>
-<p align="center">
+
 bantu kontribusi dengan cara pull request atau request di issues, makasi
 [this section](https://github.com/MhankBarBar/whatsapp-bot/blob/master/msgHndlr.js#L67)
-</p>
+</div>
 
 ## Getting Started
 
