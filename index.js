@@ -337,11 +337,6 @@ const start = (aruga = new Client()) => {
             const nulisp = await rugaapi.tulis(nulisq)
             await aruga.sendImage(from, `${nulisp}`, '', 'Nih...', id)
             break
-        case 'ss':
-            if (args.length == 0) return aruga.reply(from, `Membuat bot men-screenshot sebuah web\n\nPemakaian: ${prefix}ss [url]\n\ncontoh: ${prefix}ss http://google.com`, id)
-            const scrinshit = await meme.ss(args[0])
-            await aruga.sendFile(from, scrinshit, 'ss.jpg', 'cekrek', id)
-            break
 
         //Islam Command
         case 'listsurah':
@@ -632,6 +627,11 @@ const start = (aruga = new Client()) => {
             const chordq = body.slice(7)
             const chordp = await rugaapi.chord(chordq)
             await aruga.reply(from, chordp, id)
+            break
+        case 'ss': //jika error silahkan buka file di folder settings/api.json dan ubah apiSS 'API-KEY' yang kalian dapat dari website https://apiflash.com/
+            if (args.length == 0) return aruga.reply(from, `Membuat bot men-screenshot sebuah web\n\nPemakaian: ${prefix}ss [url]\n\ncontoh: ${prefix}ss http://google.com`, id)
+            const scrinshit = await meme.ss(args[0])
+            await aruga.sendFile(from, scrinshit, 'ss.jpg', 'cekrek', id)
             break
             
         // Other Command
