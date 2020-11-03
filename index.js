@@ -27,7 +27,8 @@ const {
     getLocationData,
     images,
     resep,
-    rugapoi
+    rugapoi,
+    rugaapi
 } = require('./lib')
 
 const { 
@@ -462,6 +463,17 @@ const start = (aruga = new Client()) => {
                   }
               }
               break
+        case 'jsolat':
+            if (args.length == 0) return aruga.reply(from, `Untuk melihat jadwal solat dari setiap daerah yang ada\nketik: ${prefix}jsolat [daerah]\n\nuntuk list daerah yang ada\nketik: ${prefix}daerah`, id)
+            const solatx = body.slice(8)
+            const solatj = await rugaapi.jadwaldaerah(solatx)
+            await aruga.reply(from, solatj, id)
+            break
+        case 'daerah':
+            const daerahq = await rugaapi.daerah()
+            await aruga.reply(from, daerahq, id)
+            break
+
         //Premium
         case 'pornhub':
             aruga.reply(from, `Ini merupakan commands untuk mendownload video dari pornhub\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
@@ -469,6 +481,24 @@ const start = (aruga = new Client()) => {
         case 'simsimi':
             aruga.reply(from, `Ini merupakan commands untuk mengaktifkan simi-simi chat bot\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
             break
+
+        //Media
+        case 'instagram':
+            if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
+            const instag = await rugaapi.insta(args[0])
+            await aruga.sendFileFromUrl(from, instag, '', '', id)
+            break
+        case 'ytmp3':
+            if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
+            const mp3 = await rugaapi.ytmp3(args[0])
+            await aruga.sendFileFromUrl(from, mp3, '', '', id)
+            break
+        case 'ytmp4':
+            if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
+            const mp4 = await rugaapi.ytmp4(args[0])
+            await aruga.sendFileFromUrl(from, mp4, '', '', id)
+            break
+
         // Random Kata
         case 'fakta':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
@@ -496,6 +526,10 @@ const start = (aruga = new Client()) => {
                 let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
                 aruga.reply(from, randompantun.replace(/aruga-line/g,"\n"), id)
             })
+            break
+        case 'quote':
+            const quotex = await rugaapi.quote()
+            await aruga.reply(from, quotex, id)
             break
 
         //Random Images
@@ -544,7 +578,6 @@ const start = (aruga = new Client()) => {
             const carireddit = body.slice(9)
             const hasilreddit = await images.sreddit(carireddit)
             aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
-            
         case 'resep':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari resep makanan\nCaranya ketik: ${prefix}resep [search]\n\ncontoh: ${prefix}resep tahu`, id)
             const cariresep = body.slice(7)
@@ -564,6 +597,30 @@ const start = (aruga = new Client()) => {
                     aruga.reply(from, `Title: ${res.title}\n\nLink:\n${heheq}\nmasih tester bntr :v`)
                 })
             })
+            break
+        case 'stalkig':
+            if (args.length == 0) return aruga.reply(from, `Untuk men-stalk akun instagram seseorang\nketik ${prefix}stalkig [username]\ncontoh: ${prefix}stalkig ini.arga`, id)
+            const igstalk = await rugaapi.stalkig(args[0])
+            const igstalkpict = await rugaapi.stalkigpict(args[0])
+            await aruga.sendFileFromUrl(from, igstalkpict, '', igstalk, id)
+            break
+        case 'wiki':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari suatu kata dari wikipedia\nketik: ${prefix}wiki [kata]`, id)
+            const wikip = body.slice(6)
+            const wikis = await rugaapi.wiki(wikip)
+            await aruga.reply(from, wikis, id)
+            break
+        case 'cuaca':
+            if (args.length == 0) return aruga.reply(from, `Untuk melihat cuaca pada suatu daerah\nketik: ${prefix}cuaca [daerah]`, id)
+            const cuacaq = body.slice(7)
+            const cuacap = await rugaapi.cuaca(cuacaq)
+            await aruga.reply(from, cuacap, id)
+            break
+        case 'chord':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dan chord dari sebuah lagu\bketik: ${prefix}chord [judul_lagu]`, id)
+            const chordq = body.slice(7)
+            const chordp = await rugaapi.chord(chordq)
+            await aruga.reply(from, chordp, id)
             break
             
         // Other Command
