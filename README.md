@@ -83,6 +83,7 @@ pls dont remove my github link:)
 | Respond giphy url to sticker|✅|
 | Make a meme from photo|✅|
 | Quotes maker result pict|✅|
+| Nulis Bot|✅|
 
 | Islam |Yes|
 | ------------- | ------------- |
@@ -109,6 +110,7 @@ pls dont remove my github link:)
 | Wikipedia |✅|
 | Cuaca |✅|
 | Chord music |✅|
+| Screen Crot!|✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
