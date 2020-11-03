@@ -23,7 +23,7 @@
 </details>
 
 bantu kontribusi dengan cara pull request atau request di issues, makasi
-[this section](https://github.com/MhankBarBar/whatsapp-bot/blob/master/msgHndlr.js#L67)
+[My Whatsapp](https://wa.me/6281290142115?text=aruga?)
 </div>
 
 ## Getting Started
