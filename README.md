@@ -80,19 +80,31 @@ pls dont remove my github link:)
 | Surah|✅|
 | Tafsir Alquran|✅|
 | Alquran Audio/Voice|✅|
+| Jadwal solat|✅|
+
+| Downloader |Yes|
+| ------------- | ------------- |
+| Instagram |✅|
+| Youtube Music |✅|
+| Youtube Video |✅|
 
 | Searchs |Yes|
 | ------------- | ------------- |
-| images |✅|
-| subreddit |✅|
-| resep makanan |✅|
-| nekopoi links |✅|
+| Images |✅|
+| Subreddit |✅|
+| Resep makanan |✅|
+| Nekopoi links |✅|
+| Stalk IG |✅|
+| Wikipedia |✅|
+| Cuaca |✅|
+| Chord music |✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
 | Pantun pakboy|✅|
 | Fakta Menarik|✅|
 | Kata Bijak|✅|
+| Quotes|✅|
 
 | Random image |Yes|
 | ------------- | ------------- |
