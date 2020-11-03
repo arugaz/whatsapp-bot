@@ -71,8 +71,6 @@ pls dont remove my github link:)
 | ------------- | ------------- |
 | nekopoi search link| ✅|
 | pornhub downloads| sampe 45|
-| redtube downloads| sampe 40|
-| sex.com downloads| sampe 40|
 | simi-simi chat bot| sampe 50|
 | nekopoi search video| sampe 50|
 
