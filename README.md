@@ -110,12 +110,14 @@ pls dont remove my github link:)
 
 | Groups |Yes|
 | ------------- | ------------- |
+| Admin||
 | Add user|✅|
 | Kick user|✅|
 | Promote User|✅|
 | Demote User|✅|
 | Delete bot msg|✅|
 | Tagall/mentions all|✅|
+| Owner||
 | Kick all members|✅|
 
 | Owner bot |Yes|
