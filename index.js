@@ -189,7 +189,7 @@ const start = (aruga = new Client()) => {
             if (args.length == 0) return aruga.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
             let linkgrup = body.slice(6)
             let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
-            let chekgrup = await aruga.inviteInfo(islink)
+            let chekgrup = await aruga.inviteInfo(linkgrup)
             if (!islink) return aruga.reply(from, 'Maaf link group-nya salah! sialahkan kirim link yang benar', id)
             if (isOwnerBot) {
                 await aruga.joinGroupViaLink(linkgrup)
