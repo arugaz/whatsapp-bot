@@ -25,8 +25,6 @@
 </details>
 
 bantu kontribusi dengan cara pull request atau request di issues, makasi
-</div>
-<div align="center">
 [My Whatsapp](https://wa.me/6281290142115?text=aruga?)
 </div>
 
