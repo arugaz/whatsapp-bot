@@ -113,6 +113,7 @@ pls dont remove my github link:)
 | Cuaca |✅|
 | Chord music |✅|
 | Screen Crot!|✅|
+| Play music|✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
