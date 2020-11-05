@@ -69,6 +69,10 @@ pls dont remove my github link:)
 
 ## Features
 
+| Proses |bantu star|
+| ------------- | ------------- |
+| Pornhub|50|
+| Simi-simi|50|
 
 | Creator |Yes|
 | ------------- | ------------- |
