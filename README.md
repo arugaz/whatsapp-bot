@@ -69,12 +69,6 @@ pls dont remove my github link:)
 
 ## Features
 
-| Fitur premium |bantu klik star|
-| ------------- | ------------- |
-| nekopoi search link| ✅|
-| pornhub downloads| sampe 45|
-| simi-simi chat bot| sampe 50|
-| nekopoi search video| sampe 50|
 
 | Creator |Yes|
 | ------------- | ------------- |
