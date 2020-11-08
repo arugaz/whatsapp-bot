@@ -190,7 +190,7 @@ const start = (aruga = new Client()) => {
             let linkgrup = body.slice(6)
             let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
             let chekgrup = await aruga.inviteInfo(linkgrup)
-            if (!islink) return aruga.reply(from, 'Maaf link group-nya salah! sialahkan kirim link yang benar', id)
+            if (!islink) return aruga.reply(from, 'Maaf link group-nya salah! silahkan kirim link yang benar', id)
             if (isOwnerBot) {
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () => {
@@ -200,7 +200,7 @@ const start = (aruga = new Client()) => {
             } else {
                 let cgrup = await aruga.getAllGroups()
                 if (cgrup.length > groupLimit) return aruga.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
-                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, Sorry, BOT wil not join if the group members do not exceed ${memberLimit} people`, id)
+                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, BOT wil not join if the group members do not exceed ${memberLimit} people`, id)
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () =>{
                           await aruga.reply(from, 'Berhasil join grup via link!', id)
@@ -236,7 +236,7 @@ const start = (aruga = new Client()) => {
                     await aruga.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
                     console.log(err)
-	   	    await aruga.reply(from, 'maaf batas penggunaan hari ini sudah maksimal', id)
+	   	    await aruga.reply(from, 'Maaf batas penggunaan hari ini sudah mencapai maksimal', id)
                 }
             }
             } else if (args.length === 1) {
@@ -295,7 +295,7 @@ const start = (aruga = new Client()) => {
                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                 }).catch((err) => console.log(err))
             } else {
-                await aruga.reply(from, 'maaf, commands sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
+                await aruga.reply(from, 'Maaf, commands sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
             }
             break
         }
@@ -323,9 +323,9 @@ const start = (aruga = new Client()) => {
                 aruga.reply(from, 'Proses kak..', id)
                 try {
                     const hasilqmaker = await images.quote(quotes, author, theme)
-                    aruga.sendFileFromUrl(from, `${hasilqmaker}`, '', 'ini kak..', id)
+                    aruga.sendFileFromUrl(from, `${hasilqmaker}`, '', 'Ini kak..', id)
                 } catch {
-                    aruga.reply('yahh proses gagal, kakak isinya sudah benar blm?..', id)
+                    aruga.reply('Yahh proses gagal, kakak isinya sudah benar belum?..', id)
                 }
             } else {
                 aruga.reply(from, `Pemakaian ${prefix}quotemaker |isi quote|author|theme\n\ncontoh: ${prefix}quotemaker |aku sayang kamu|-aruga|random\n\nuntuk theme nya pakai random ya kak..`)
@@ -643,6 +643,45 @@ const start = (aruga = new Client()) => {
                     await aruga.sendPtt(from, `${rest.data.result}`, id)
                 })
             })
+            break
+        case 'whatanime':
+            if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
+                if (isMedia) {
+                    var mediaData = await decryptMedia(message, uaOverride)
+                } else {
+                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                }
+                const fetch = require('node-fetch')
+                const imgBS4 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                client.reply(from, 'Searching....', id)
+                fetch('https://trace.moe/api/search', {
+                    method: 'POST',
+                    body: JSON.stringify({ image: imgBS4 }),
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(respon => respon.json())
+                .then(resolt => {
+                	if (resolt.docs && resolt.docs.length <= 0) {
+                		client.reply(from, 'Maaf, saya tidak tau ini anime apa, pastikan gambar yang akan di Search tidak Buram/Kepotong', id)
+                	}
+                    const { is_adult, title, title_chinese, title_romaji, title_english, episode, similarity, filename, at, tokenthumb, anilist_id } = resolt.docs[0]
+                    teks = ''
+                    if (similarity < 0.92) {
+                    	teks = '*Saya memiliki keyakinan rendah dalam hal ini* :\n\n'
+                    }
+                    teks += `➸ *Title Japanese* : ${title}\n➸ *Title chinese* : ${title_chinese}\n➸ *Title Romaji* : ${title_romaji}\n➸ *Title English* : ${title_english}\n`
+                    teks += `➸ *R-18?* : ${is_adult}\n`
+                    teks += `➸ *Eps* : ${episode.toString()}\n`
+                    teks += `➸ *Kesamaan* : ${(similarity * 100).toFixed(1)}%\n`
+                    var video = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`;
+                    client.sendFileFromUrl(from, video, 'anime.mp4', teks, id).catch(() => {
+                        client.reply(from, teks, id)
+                    })
+                })
+                .catch(() => {
+                    client.reply(from, 'Error !', id)
+                })
+            }
             break
             
         // Other Command
