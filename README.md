@@ -107,6 +107,7 @@ pls dont remove my github link:)
 | Chord music |✅|
 | Screen Crot!|✅|
 | Play music|✅|
+| whats anime?|✅|
 
 | Random text |Yes|
 | ------------- | ------------- |
