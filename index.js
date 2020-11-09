@@ -891,6 +891,7 @@ const start = (aruga = new Client()) => {
     })
 }
 
-create('Aruga', options(true, start))
+create(options(true, start))
     .then((aruga) => start(aruga))
     .catch((err) => new Error(err))
+
