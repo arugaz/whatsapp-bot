@@ -24,7 +24,7 @@
  
 </details>
 
-bantu kontribusi dengan cara pull request atau request di issues, makasi
+bantu kontribusi dengan cara pull request atau request di issues
 </div>
 
 ## Getting Started
