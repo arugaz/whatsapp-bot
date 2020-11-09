@@ -68,7 +68,7 @@ const start = (aruga = new Client()) => {
     // ketika bot diinvite ke dalam group
     aruga.onAddedToGroup(async (chat) => {
 	const groups = await aruga.getAllGroups()
-	// kodisi ketika batas group bot telah tercapat, ubah di file settings/setting.json
+	// kondisi ketika batas group bot telah tercapai,ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
 	await aruga.sendText(chat.id, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`).then(() => {
 	      aruga.leaveGroup(chat.id)
@@ -77,7 +77,7 @@ const start = (aruga = new Client()) => {
 	} else {
 	// kondisi ketika batas member group belum tercapai, ubah di file settings/setting.json
 	    if (chat.groupMetadata.participants.length < memberLimit) {
-	    await aruga.sendText(chat.id, `Sorry, Sorry, BOT comes out if the group members do not exceed ${memberLimit} people`).then(() => {
+	    await aruga.sendText(chat.id, `Sorry, BOT comes out if the group members do not exceed ${memberLimit} people`).then(() => {
 	      aruga.leaveGroup(chat.id)
 	      aruga.deleteChat(chat.id)
 	    })
@@ -295,7 +295,7 @@ const start = (aruga = new Client()) => {
                     console.log(`Sticker Processed for ${processTime(t, moment())} Second`)
                 }).catch((err) => console.log(err))
             } else {
-                await aruga.reply(from, 'Maaf, commands sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
+                await aruga.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
             }
             break
         }
@@ -482,10 +482,10 @@ const start = (aruga = new Client()) => {
 
         //Premium
         case 'pornhub':
-            aruga.reply(from, `Ini merupakan commands untuk mendownload video dari pornhub\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
+            aruga.reply(from, `Ini merupakan command untuk mendownload video dari pornhub\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
             break
         case 'simsimi':
-            aruga.reply(from, `Ini merupakan commands untuk mengaktifkan simi-simi chat bot\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
+            aruga.reply(from, `Ini merupakan command untuk mengaktifkan simi-simi chat bot\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
             break
 
         //Media
@@ -679,7 +679,7 @@ const start = (aruga = new Client()) => {
                     })
                 })
                 .catch(() => {
-                    aruga.reply(from, 'Error !', id)
+                    aruga.reply(from, 'Error!', id)
                 })
             }
             break
@@ -825,7 +825,7 @@ const start = (aruga = new Client()) => {
                     await aruga.removeParticipant(groupId, allMem[i].id)
                 }
             }
-            aruga.reply(from, 'Succes kick all member', id)
+            aruga.reply(from, 'Success kick all member', id)
         break
 
         //Owner Bot
@@ -835,18 +835,18 @@ const start = (aruga = new Client()) => {
             if (args[0] == 'add') {
                 banned.push(args[1]+'@c.us')
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
-                aruga.reply(from, 'Succes banned target!')
+                aruga.reply(from, 'Success banned target!')
             } else
             if (args[0] == 'del') {
                 let xnxx = banned.indexOf(args[1]+'@c.us')
                 banned.splice(xnxx,1)
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
-                aruga.reply(from, 'Succes unbanned target!')
+                aruga.reply(from, 'Success unbanned target!')
             } else {
              for (let i = 0; i < mentionedJidList.length; i++) {
                 banned.push(mentionedJidList[i])
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
-                    aruga.reply(from, 'Succes ban target!', id)
+                aruga.reply(from, 'Success ban target!', id)
                 }
             }
             break
@@ -879,7 +879,7 @@ const start = (aruga = new Client()) => {
             for (let dchat of allChatx) {
                 await aruga.deleteChat(dchat.id)
             }
-            aruga.reply(from, 'Succes clear all chat!', id)
+            aruga.reply(from, 'Success clear all chat!', id)
             break
         default:
             console.log(color('[EROR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'Unregistered Command from', color(pushname))
