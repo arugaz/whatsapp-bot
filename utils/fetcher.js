@@ -10,6 +10,7 @@ const resizeImage = require('./imageProcessing')
  *@param {String} url
  *@param {Object} options
  */
+
 const fetchJson = (url, options) =>
     new Promise((resolve, reject) =>
         fetch(url, options)
@@ -27,6 +28,7 @@ const fetchJson = (url, options) =>
  * @param {String} url
  * @param {Object} options
  */
+
 const fetchText = (url, options) => {
     return new Promise((resolve, reject) => {
         return fetch(url, options)
