@@ -653,7 +653,7 @@ const start = (aruga = new Client()) => {
                 }
                 const fetch = require('node-fetch')
                 const imgBS4 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                client.reply(from, 'Searching....', id)
+                aruga.reply(from, 'Searching....', id)
                 fetch('https://trace.moe/api/search', {
                     method: 'POST',
                     body: JSON.stringify({ image: imgBS4 }),
@@ -662,7 +662,7 @@ const start = (aruga = new Client()) => {
                 .then(respon => respon.json())
                 .then(resolt => {
                 	if (resolt.docs && resolt.docs.length <= 0) {
-                		client.reply(from, 'Maaf, saya tidak tau ini anime apa, pastikan gambar yang akan di Search tidak Buram/Kepotong', id)
+                		aruga.reply(from, 'Maaf, saya tidak tau ini anime apa, pastikan gambar yang akan di Search tidak Buram/Kepotong', id)
                 	}
                     const { is_adult, title, title_chinese, title_romaji, title_english, episode, similarity, filename, at, tokenthumb, anilist_id } = resolt.docs[0]
                     teks = ''
@@ -674,12 +674,12 @@ const start = (aruga = new Client()) => {
                     teks += `➸ *Eps* : ${episode.toString()}\n`
                     teks += `➸ *Kesamaan* : ${(similarity * 100).toFixed(1)}%\n`
                     var video = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`;
-                    client.sendFileFromUrl(from, video, 'anime.mp4', teks, id).catch(() => {
-                        client.reply(from, teks, id)
+                    aruga.sendFileFromUrl(from, video, 'anime.mp4', teks, id).catch(() => {
+                        aruga.reply(from, teks, id)
                     })
                 })
                 .catch(() => {
-                    client.reply(from, 'Error !', id)
+                    aruga.reply(from, 'Error !', id)
                 })
             }
             break
