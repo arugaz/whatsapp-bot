@@ -35,7 +35,8 @@ const {
     msgFilter, 
     color, 
     processTime, 
-    isUrl 
+    isUrl,
+    messageLog 
 } = require('./utils')
 
 const options = require('./utils/options')
@@ -892,6 +893,11 @@ const start = (aruga = new Client()) => {
     } catch (err) {
         console.log(color('[EROR]', 'red'), err)
     }
+    })
+	
+    // Message log for analytic
+    aruga.onAnyMessage((fn) => { 
+        messageLog(fn.fromMe, fn.type)
     })
 }
 
