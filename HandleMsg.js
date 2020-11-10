@@ -586,7 +586,6 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'pornhub':
             if (args.length == 0) return aruga.reply(from, `Mencari video dari pornhub site\n\nPenggunaan: ${prefix}pornhub [search]\ncontoh: ${prefix}pornhub japanese`, id)
-            if (!isPremium) return aruga.reply(from, `Maaf commands ini hanya untuk user premium!`, id)
             const cariporn = body.slice(9)
             rugaporn.search(cariporn, ['title', 'link','hd'])
             .then((res) => {
