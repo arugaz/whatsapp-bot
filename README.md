@@ -70,7 +70,6 @@ pls dont remove my github link:)
 
 | 18+ |Yes|
 | ------------- | ------------- |
-| Pornhub |✅|
 | Nekopoi |✅|
 
 | Creator |Yes|
