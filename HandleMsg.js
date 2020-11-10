@@ -3,7 +3,7 @@ const { decryptMedia } = require('@open-wa/wa-automate')
 
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
-
+const rugaporn = require('@justalk/pornhub-api')
 const axios = require('axios')
 const fetch = require('node-fetch')
 
@@ -426,15 +426,6 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
             break
-
-        //Premium
-        case 'pornhub':
-            aruga.reply(from, `Ini merupakan command untuk mendownload video dari pornhub\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
-            break
-        case 'simsimi':
-            aruga.reply(from, `Ini merupakan command untuk mengaktifkan simi-simi chat bot\nFitur ini masih bersifat premium\n\nLebih jelasnya silahkan lihat web ini:\ngithub.com/ArugaZ/whatsapp-bot`, id)
-            break
-
         //Media
         case 'instagram':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
@@ -591,6 +582,31 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
+            })
+            break
+        case 'pornhub':
+            if (args.length == 0) return aruga.reply(from, `Mencari video dari pornhub site\n\nPenggunaan: ${prefix}pornhub [search]\ncontoh: ${prefix}pornhub japanese`, id)
+            if (!isPremium) return aruga.reply(from, `Maaf commands ini hanya untuk user premium!`, id)
+            const cariporn = body.slice(9)
+            rugaporn.search(cariporn, ['title', 'link','hd'])
+            .then((res) => {
+                const ramdom = Math.floor(Math.random() * res.results.length)
+                const domram = res.results[ramdom].link
+                aruga.reply(from, `Berhasil mendapatkan video\n\nJudul: ${res.results[ramdom].title}\nAuthor: ${res.results[ramdom].author}\nView: ${res.results[ramdom].views}\nLink: ${res.results[ramdom].link}`)
+                rugaporn.page(domram, ['title','pornstars','download_urls'])
+                .then(async (res) => {
+                    await aruga.reply(from, `*Streaming disini*\n\nJudul: ${res.title}\nArtis: ${res.pornstars}\n\n720: ${res.download_urls['720P']}\n480: ${res.download_urls['480P']}\n240: ${res.download_urls['240P']}\n\nbot sedang mencoba mengirim video..`, id)
+                    await aruga.sendFileFromUrl(from, `${res.download_urls['720P']}`, '', `ini kak video pornhubnya..`, id)
+                    .catch(async() => {
+                        await aruga.sendFileFromUrl(from, `${res.download_urls['480P']}`, '', `ini kak video pornhubnya..`, id)
+                        .catch(async() => {
+                            await aruga.sendFileFromUrl(from, `${res.download_urls['240P']}`, '', `ini kak video pornhubnya..`, id)
+                            .catch(() => {
+                                aruga.reply(from, 'Maaf terjadi error pada website', id)
+                            })
+                        })
+                    })
+                })
             })
             break
         case 'stalkig':
