@@ -584,30 +584,6 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
             break
-        case 'pornhub':
-            if (args.length == 0) return aruga.reply(from, `Mencari video dari pornhub site\n\nPenggunaan: ${prefix}pornhub [search]\ncontoh: ${prefix}pornhub japanese`, id)
-            const cariporn = body.slice(9)
-            rugaporn.search(cariporn, ['title', 'link','hd'])
-            .then((res) => {
-                const ramdom = Math.floor(Math.random() * res.results.length)
-                const domram = res.results[ramdom].link
-                aruga.reply(from, `Berhasil mendapatkan video\n\nJudul: ${res.results[ramdom].title}\nAuthor: ${res.results[ramdom].author}\nView: ${res.results[ramdom].views}\nLink: ${res.results[ramdom].link}`)
-                rugaporn.page(domram, ['title','pornstars','download_urls'])
-                .then(async (res) => {
-                    await aruga.reply(from, `*Streaming disini*\n\nJudul: ${res.title}\nArtis: ${res.pornstars}\n\n720: ${res.download_urls['720P']}\n480: ${res.download_urls['480P']}\n240: ${res.download_urls['240P']}\n\nbot sedang mencoba mengirim video..`, id)
-                    await aruga.sendFileFromUrl(from, `${res.download_urls['720P']}`, '', `ini kak video pornhubnya..`, id)
-                    .catch(async() => {
-                        await aruga.sendFileFromUrl(from, `${res.download_urls['480P']}`, '', `ini kak video pornhubnya..`, id)
-                        .catch(async() => {
-                            await aruga.sendFileFromUrl(from, `${res.download_urls['240P']}`, '', `ini kak video pornhubnya..`, id)
-                            .catch(() => {
-                                aruga.reply(from, 'Maaf terjadi error pada website', id)
-                            })
-                        })
-                    })
-                })
-            })
-            break
         case 'stalkig':
             if (args.length == 0) return aruga.reply(from, `Untuk men-stalk akun instagram seseorang\nketik ${prefix}stalkig [username]\ncontoh: ${prefix}stalkig ini.arga`, id)
             const igstalk = await rugaapi.stalkig(args[0])
