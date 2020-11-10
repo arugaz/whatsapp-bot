@@ -104,6 +104,9 @@ module.exports = HandleMsg = async (aruga, message) => {
             await aruga.sendText(from, menuId.textMenu(pushname))
             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
+	case 'nsfw':
+	    await aruga.sendText(from, menuId.textNSFW())
+	    break
         case 'menuadmin':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
