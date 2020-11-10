@@ -68,6 +68,10 @@ pls dont remove my github link:)
 
 ## Features
 
+| 18+ |Yes|
+| ------------- | ------------- |
+| Pornhub |✅|
+| Nekopoi |✅|
 
 | Creator |Yes|
 | ------------- | ------------- |
@@ -100,7 +104,6 @@ pls dont remove my github link:)
 | Images |✅|
 | Subreddit |✅|
 | Resep makanan |✅|
-| Nekopoi links |✅|
 | Stalk IG |✅|
 | Wikipedia |✅|
 | Cuaca |✅|
