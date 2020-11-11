@@ -638,6 +638,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
                 axios.get(`https://arugaz.herokuapp.com/api/yta?url=https://youtu.be/${res.data[0].id}`)
                 .then(async(rest) => {
+					if (Number(res.data.filesize.split(' MB')[0]) >= 10.00) return aruga.reply(from, 'Maaf ukuran file terlalu besar!')
                     await aruga.sendPtt(from, `${rest.data.result}`, id)
                 })
                 .catch(() => {
@@ -685,7 +686,9 @@ module.exports = HandleMsg = async (aruga, message) => {
                 .catch(() => {
                     aruga.reply(from, 'Ada yang eror!', id)
                 })
-            }
+            } else {
+				aruga.reply(from, `Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`, id)
+			}
             break
             
         // Other Command
