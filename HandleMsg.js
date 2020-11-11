@@ -436,19 +436,23 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
-            const mp3 = await rugaapi.ytmp3(args[0])
-            await aruga.sendFileFromUrl(from, mp3, '', '', id)
-            .catch(() => {
-                aruga.reply(from, 'Ada yang eror!', id)
-            })
+            rugaapi.ytmp3(args[0])
+            .then(async(res) => {
+				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+			})
             break
         case 'ytmp4':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
-            const mp4 = await rugaapi.ytmp4(args[0])
-            await aruga.sendFileFromUrl(from, mp4, '', '', id)
-            .catch(() => {
-                aruga.reply(from, 'Ada yang eror!', id)
-            })
+            rugaapi.ytmp4(args[0])
+            .then(async(res) => {
+				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+			})
             break
 
         // Random Kata
