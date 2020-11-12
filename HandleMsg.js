@@ -630,6 +630,13 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
             break
+		case 'lirik':
+			if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dari sebuah lagu\bketik: ${prefix}chord [judul_lagu]`, id)
+			rugaapi.lirik(body.slice(7))
+			.then(async (res) => {
+				await aruga.reply(from, `Lirik Lagu: ${body.slice(7)}\n\n${res}`, id)
+			})
+			break
         case 'chord':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dan chord dari sebuah lagu\bketik: ${prefix}chord [judul_lagu]`, id)
             const chordq = body.slice(7)
@@ -736,6 +743,12 @@ module.exports = HandleMsg = async (aruga, message) => {
                 .then((result) => aruga.sendText(from, result))
                 .catch(() => aruga.sendText(from, 'Error, Kode bahasa salah.'))
             break
+		case 'covidindo':
+			rugaapi.covidindo()
+			.then(async (res) => {
+				await aruga.reply(from, `${res}`, id)
+			})
+			break
         case 'ceklokasi':
             if (quotedMsg.type !== 'location') return aruga.reply(from, `Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}ceklokasi`, id)
             console.log(`Request Status Zona Penyebaran Covid-19 (${quotedMsg.lat}, ${quotedMsg.lng}).`)
@@ -759,6 +772,13 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
             break
+		case 'bapakfont':
+			if (args.length == 0) return aruga.reply(from, `Mengubah kalimat menjadi alayyyyy\n\nketik ${prefix}bapakfont kalimat`, id)
+			rugaapi.bapakfont(body.slice(11))
+			.then(async(res) => {
+				await aruga.reply(from, `${res}`, id)
+			})
+			break
 
         // Group Commands (group admin only)
 	    case 'add':
