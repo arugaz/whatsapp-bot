@@ -112,7 +112,8 @@ pls dont remove my github link:)
 | Stalk IG |✅|
 | Wikipedia |✅|
 | Cuaca |✅|
-| Chord music |✅|
+| Chord musik |✅|
+| Lirik musik |✅|
 | Screen Crot!|✅|
 | Play music|✅|
 | whats anime?|✅|
@@ -136,7 +137,9 @@ pls dont remove my github link:)
 | Teks to Sound/Voice|✅|
 | Translate teks|✅|
 | Get covid info from map|✅|
+| Covid-19 Indo|✅|
 | Shortlink|✅|
+| Bap4k F0nt|✅|
 
 | Groups |Yes|
 | ------------- | ------------- |
