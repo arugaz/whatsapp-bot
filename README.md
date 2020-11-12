@@ -99,6 +99,11 @@ pls dont remove my github link:)
 | Youtube Music |✅|
 | Youtube Video |✅|
 
+| Primbon |Yes|
+| ------------- | ------------- |
+| Arti nama |✅|
+| Cek Jodoh |✅|
+
 | Searchs |Yes|
 | ------------- | ------------- |
 | Images |✅|
