@@ -726,8 +726,8 @@ module.exports = HandleMsg = async (aruga, message) => {
             const zoneStatus = await getLocationData(quotedMsg.lat, quotedMsg.lng)
             if (zoneStatus.kode !== 200) aruga.sendText(from, 'Maaf, Terjadi error ketika memeriksa lokasi yang anda kirim.')
             let datax = ''
-            for (let i = 0; i < zoneStatus.datax.length; i++) {
-                const { zone, region } = zoneStatus.datax[i]
+            for (let i = 0; i < zoneStatus.data.length; i++) {
+                const { zone, region } = zoneStatus.data[i]
                 const _zone = zone == 'green' ? 'Hijau* (Aman) \n' : zone == 'yellow' ? 'Kuning* (Waspada) \n' : 'Merah* (Bahaya) \n'
                 datax += `${i + 1}. Kel. *${region}* Berstatus *Zona ${_zone}`
             }
