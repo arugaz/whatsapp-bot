@@ -1,8 +1,8 @@
 <p align="center">
-<img src="https://avatars2.githubusercontent.com/u/53950128?s=460&u=09f530e3326f710c4e0f9106f094eeea5429f86d&v=4" width="128" height="128"/>
+<img src="https://1.bp.blogspot.com/-GW5Wm4OnvqU/XlzVbMuEkZI/AAAAAAAADgU/U5GlzmVLZUctV7phDci8NIh7CQX8YepQgCLcBGAsYHQ/s320/MyIcon2.png" width="128" height="128"/>
 </p>
 <p align="center">
-<a href="#"><img title="Whatsapp-Bot" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="#"><img title="SPL-BOT" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
 <a href="https://github.com/ArugaZ"><img title="Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
@@ -22,6 +22,7 @@
  <summary>🥟 Help me!</summary>
  
  [Trakteer](https://trakteer.id/arugabot)
+ [Paypal](paypal.me/TheSploit)
  
 </details>
 
@@ -73,84 +74,88 @@ pls dont remove my github link:)
 | ------------- | ------------- |
 | Nekopoi |✅|
 
-| Creator |Yes|
+| ꜰɪᴛᴜʀᴇ ᴀʟʟ ᴜꜱᴇʀ |Yes|
 | ------------- | ------------- |
-| Respond img to sticker|✅|
-| Respond img to sticker no bg|✅|
-| Respond url to sticker|✅|
-| Respond gif to sticker|✅|
-| Respond giphy url to sticker|✅|
-| Make a meme from photo|✅|
-| Quotes maker result pict|✅|
-| Nulis Bot|✅|
-
-| Islam |Yes|
+| 🌹 !meme |✅|
+| 🌹 !nulis|✅|
+| 🌹 !sticker|✅|
+| 🌹 !stickergif|✅|
+| 🌹 !stickergiphy|✅|
+| 🌹 !quotemaker|✅|
+| ʀᴇʟɪɢɪᴏᴜꜱ ᴄᴏᴍᴍᴀɴᴅ |Yes|
 | ------------- | ------------- |
-| List Surah|✅|
-| Info Surah|✅|
-| Surah|✅|
-| Tafsir Alquran|✅|
-| Alquran Audio/Voice|✅|
-| Jadwal solat|✅|
+| 🌹 !infosurah|✅|
+| 🌹 !surah|✅|
+| 🌹 !tafsir|✅|
+| 🌹 !ALaudio|✅|
+| 🌹 !jsolat|✅|
 
-| Downloader |Yes|
+| ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ |Yes|
 | ------------- | ------------- |
-| Instagram |✅|
-| Youtube Music |✅|
-| Youtube Video |✅|
-
-| Searchs |Yes|
+| 🌹 !ytmp3|✅|
+| 🌹 !ytmp4|✅|
+| 🌹 !instagram|✅|
+| ᴄᴏᴍᴍᴀɴᴅ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ |Yes|
 | ------------- | ------------- |
-| Images |✅|
-| Subreddit |✅|
-| Resep makanan |✅|
-| Stalk IG |✅|
-| Wikipedia |✅|
-| Cuaca |✅|
-| Chord music |✅|
-| Screen Crot!|✅|
-| Play music|✅|
-| whats anime?|✅|
-
-| Random text |Yes|
+| 🌹 !ss|✅|
+| 🌹 !play|✅|
+| 🌹 !wiki|✅|
+| 🌹 !cuaca|✅|
+| 🌹 !chord|✅|
+| 🌹 !resep|✅|
+| 🌹 !images|✅|
+| 🌹 !sreddit|✅|
+| 🌹 !nekopoi|✅|
+| 🌹 !stalkig|✅|
+| ᴇɴᴛᴇʀᴛᴀɪɴᴍᴇɴᴛ ғᴇᴀᴛᴜʀᴇᴤ |Yes|
 | ------------- | ------------- |
-| Pantun pakboy|✅|
-| Fakta Menarik|✅|
-| Kata Bijak|✅|
-| Quotes|✅|
-
-| Random image |Yes|
+| 🌹 !quote|✅|
+| 🌹 !pantun|✅|
+| 🌹 !fakta|✅|
+| 🌹 !bucin|✅|
+| 🌹 !katabijak|✅|
+| 🌹 !lirik|✅|
+| ʀᴀɴᴅᴏᴍ ɪᴍᴀɢᴇᴤ |Yes|
 | ------------- | ------------- |
-| Anime |✅|
-| Kpop |✅|
-| Memes |✅|
+|🌹 !wanime|✅|
+|🌹 !anime|✅|
+|🌹 !whatanime|✅|
+|🌹 !kpop|✅|
+|🌹 !memes|✅|
+|🌹 !nekoanime|✅|
+|🌹 !animehentai|✅|
+|🌹 !trapanime|✅|
+|🌹 !nsfneko|✅|
+|🌹 !wahorror|✅|
+|🌹 !loli|✅|
+|🌹 !gambar|✅|
 
 
-| Others |Yes|
+| ᴏᴛʜᴇʀᴤ ᴄᴏᴍᴍᴀɴᴅᴤ |Yes|
 | ------------- | ------------- |
-| Teks to Sound/Voice|✅|
-| Translate teks|✅|
-| Get covid info from map|✅|
-| Shortlink|✅|
-
-| Groups |Yes|
+| 🌹 !tts|✅|
+| 🌹 !translate|✅|
+| 🌹 !resi|✅|
+| 🌹 !ceklokasi|✅|
+| 🌹 !shortlink|✅|
+| 🌹 !toimg|✅|
+| ᴀʙᴏᴜᴛ ʙᴏᴛ |Yes|
 | ------------- | ------------- |
 | Admin||
-| Add user|✅|
-| Kick user|✅|
-| Promote User|✅|
-| Demote User|✅|
-| Delete bot msg|✅|
-| Tagall/mentions all|✅|
-| Owner||
-| Kick all members|✅|
-
-| Owner bot |Yes|
+| 🌹 !join|✅|
+| 🌹 !tnc|✅|
+| 🌹 !donasi|✅|
+| 🌹 !ownerbot|✅|
+| 🌹 !linkgrup|✅|
+| 🌹 !adminlist|✅|
+| 🌹 !ownergroup|✅|
+| 🌹 !listblock|✅|
+| ᴏᴡɴᴇʀ ʙᴏᴛ |Yes|
 | ------------- | ------------- |
-| Broadcast|✅|
-| Leave all group|✅|
-| Delete all msgs|✅|
-| Banned user|✅|
+| 🌹 !ban - banned|✅|
+| 🌹 !bc - promosi|✅|
+| 🌹 !leaveall - keluar semua grup|✅|
+| 🌹 !clearall - hapus semua chat|✅|
 
 
 ## To-Do
@@ -170,6 +175,7 @@ Fix Stuck on linux, install google chrome stable:
 ```
 
 ## Thanks to
+- [ArugaZ](https://github.com/ArugaZ/whatsapp-bot)
 - [WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
 - [YogaSakti](https://github.com/YogaSakti/imageToSticker)
 - [MhankBarBar](https://github.com/MhankBarBar/whatsapp-bot)
