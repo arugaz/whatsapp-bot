@@ -613,26 +613,26 @@ module.exports = HandleMsg = async (kris, message) => {
             })
             break
         case 'ytmp3':
-			kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
-            //if (args.length == 0) return kris.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
-           // rugaapi.ytmp3(args[0])
-           // .then(async(res) => {
-			//	if (res.status == 'error') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				//if (res.status == 'filesize') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-			//	await kris.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
-		//		await kris.sendFileFromUrl(from, `${res.link}`, '', '', id)
-	//		})
+			// kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
+            if (args.length == 0) return kris.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
+            rugaapi.ytmp3(args[0])
+            .then(async(res) => {
+				if (res.status == 'error') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				if (res.status == 'filesize') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				await kris.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
+				await kris.sendFileFromUrl(from, `${res.link}`, '', '', id)
+			})
 			break
         case 'ytmp4':
-			kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
-        //    if (args.length == 0) return kris.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
-          //  rugaapi.ytmp4(args[0])
-           // .then(async(res) => {
-		//		if (res.status == 'error') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-			//	if (res.status == 'filesize') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-			//	await kris.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
-			//	await kris.sendFileFromUrl(from, `${res.link}`, '', '', id)
-		//	})
+			//kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
+         if (args.length == 0) return kris.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
+          rugaapi.ytmp4(args[0])
+          .then(async(res) => {
+				if (res.status == 'error') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				if (res.status == 'filesize') return kris.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
+				await kris.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
+				await kris.sendFileFromUrl(from, `${res.link}`, '', '', id)
+			})
             break
 
         // Random Kata
@@ -812,23 +812,23 @@ module.exports = HandleMsg = async (kris, message) => {
             })
             break
         case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
-			kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
-           // if (args.length == 0) return kris.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-            //axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
-            //.then(async (res) => {
-              //  await kris.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
-                //axios.get(`https://arugaz.herokuapp.com/api/yta?url=https://youtu.be/${res.data[0].id}`)
-                //.then(async(rest) => {
-					//if (Number(rest.data.filesize.split(' MB')[0]) >= 10.00) return kris.reply(from, 'Maaf ukuran file terlalu besar!')
-                    //await kris.sendPtt(from, `${rest.data.result}`, id)
-                //})
-                //.catch(() => {
-                  //  kris.reply(from, 'Ada yang eror!', id)
-                // })
-           // })
-           // .catch(() => {
-             //   kris.reply(from, 'Ada yang eror!', id)
-           // })
+			//kris.reply(from, 'Fitur di Nonaktifkan dikarenakan Terlalu Banyak Spam, jika ingin menggunakan harap check menu !donasi', id)
+           if (args.length == 0) return kris.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
+           axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
+           then(async (res) => {
+             await kris.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
+           axios.get(`https://arugaz.herokuapp.com/api/yta?url=https://youtu.be/${res.data[0].id}`)
+           then(async(rest) => {
+					if (Number(rest.data.filesize.split(' MB')[0]) >= 10.00) return kris.reply(from, 'Maaf ukuran file terlalu besar!')
+                    await kris.sendPtt(from, `${rest.data.result}`, id)
+                })
+                .catch(() => {
+                  kris.reply(from, 'Ada yang eror!', id)
+                 })
+           })
+            .catch(() => {
+              kris.reply(from, 'Ada yang eror!', id)
+            })
 			break
         case 'whatanime':
             if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
