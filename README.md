@@ -25,7 +25,7 @@
  
 </details>
 
-bantu kontribusi dengan cara pull request atau request di issues
+ini semua gratis, jangan pelit ⭐️ ya :D
 </div>
 
 ## Getting Started
