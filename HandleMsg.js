@@ -454,7 +454,23 @@ module.exports = HandleMsg = async (aruga, message) => {
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
 			})
             break
-
+			
+		//Primbon Menu
+		case 'artinama':
+			if (args.length == 0) return aruga.reply(from, `Untuk mengetahui artinama seseorang\nketik ${prefix}artinama namanya`, id)
+            rugaapi.artinama(body.slice(10))
+			.then(async(res) => {
+				await aruga.reply(from, `Arti : ${res}`, id)
+			})
+			break
+		case 'cekjodoh':
+			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama pasangan\n\ncontoh: ${prefix}cekjodoh aku kamu\n\nhanya bisa pakai nama panggilan (satu kata)`)
+			rugaapi.cekjodoh(args[0],args[1])
+			.then(async(res) => {
+				await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+			})
+			break
+			
         // Random Kata
         case 'fakta':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
