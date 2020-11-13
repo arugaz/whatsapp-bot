@@ -763,6 +763,23 @@ module.exports = HandleMsg = async (aruga, message) => {
             const text = `*CEK LOKASI PENYEBARAN COVID-19*\nHasil pemeriksaan dari lokasi yang anda kirim adalah *${zoneStatus.status}* ${zoneStatus.optional}\n\nInformasi lokasi terdampak disekitar anda:\n${datax}`
             aruga.sendText(from, text)
             break
+            break
+        case '!welcome':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan oleh Admin group!', id)
+            if (args.length === 1) return client.reply(from, 'Pilih enable atau disable!', id)
+            if (args[1].toLowerCase() === 'enable') {
+                welkom.push(chat.id)
+                fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
+                client.reply(from, 'Fitur welcome berhasil di aktifkan di group ini!', id)
+            } else if (args[1].toLowerCase() === 'disable') {
+                welkom.splice(chat.id, 1)
+                fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
+                client.reply(from, 'Fitur welcome berhasil di nonaktifkan di group ini!', id)
+            } else {
+                client.reply(from, 'Pilih enable atau disable udin!', id)
+            }
+            break
         case 'shortlink':
             if (args.length == 0) return aruga.reply(from, `ketik ${prefix}shortlink <url>`, id)
             if (!isUrl(args[0])) return aruga.reply(from, 'Maaf, url yang kamu kirim tidak valid.', id)
