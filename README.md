@@ -58,13 +58,16 @@ Run the Whatsapp bot
 after running it you need to scan the qr
 
 ### Information
-- Change ownerNumber on settings/setting.json
-- Change groupLimit on settings/setting.json
-- Change memberLimit on settings/setting.json
-- Change prefix on settings/setting.json
-- Change all apiKey settings/api.json
-- Change menu on lib/menu.js
-pls dont remove my github link:)
+- Change ownerNumber on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L2)
+- Change groupLimit on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L3)
+- Change memberLimit on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L4)
+- Change prefix on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L5)
+- Change menu on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/lib/menu.js#L32)
+- Change all apiKey on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/api.json)
+
+- Get Api NoBackground on [this website](https://www.remove.bg/)
+- Get Api ScreenShot on [this website](https://apiflash.com/)
+- Get Api Simi-simi on [this website](https://workshop.simsimi.com/en/)
 
 ---
 
@@ -141,6 +144,10 @@ pls dont remove my github link:)
 | Covid-19 Indo|✅|
 | Shortlink|✅|
 | Bap4k F0nt|✅|
+
+| Fun Group! |Yes|
+| ------------- | ------------- |
+| Simi-simi BOT|✅|
 
 | Groups |Yes|
 | ------------- | ------------- |
