@@ -27,7 +27,6 @@
 
 ini semua gratis, jangan pelit ⭐️ ya :D
 <p align="center"><a href="https://arugaz.herokuapp.com/" target="_blank">Free Rest APIs</a>.</p>
-<p align="center"><audio controls autoplay><source src="https://rugaaruga.000webhostapp.com/tariksis.mp3" type="audio/ogg"></audio></p>
 </div>
 
 ## Getting Started
