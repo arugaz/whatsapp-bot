@@ -39,16 +39,13 @@ const { uploadImages } = require('./utils/fetcher')
 const fs = require('fs-extra')
 const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
 const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
-const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 
-let { 
+const { 
     ownerNumber, 
     groupLimit, 
     memberLimit,
-    prefix,
-	simiChat
-} = setting
-
+    prefix
+} = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const {
     apiNoBg,
 	apiSimi
@@ -84,8 +81,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 		const isSimi = simi.includes(chatId)
 		
 		// Simi-simi function
-		
-		if ((isGroupMsg && isSimi && simiChat === true) && message.type === 'chat') {
+		if ((isGroupMsg && isSimi) && message.type === 'chat') {
 			axios.get(`https://arugaz.herokuapp.com/api/simisimi?kata=${message.body}&apikey=${apiSimi}`)
 			.then((res) => {
 				if (res.data.status == 403) return aruga.sendText(ownerNumber, `${res.data.result}\n\n${res.data.pesan}`)
@@ -149,12 +145,12 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () => {
                           await aruga.sendText(from, 'Berhasil join grup via link!')
-                          await aruga.sendText(chekgrup.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+                          await aruga.sendText(chekgrup.id, `Hai Semua..., Im Riintan BOT. To find out the commands on this bot type ${prefix}menu`)
                       })
             } else {
                 let cgrup = await aruga.getAllGroups()
                 if (cgrup.length > groupLimit) return aruga.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
-                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, BOT wil not join if the group members do not exceed ${memberLimit} people`, id)
+                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, BOT tidak bisa masuk karena anggota belum mencapai 50orang ${memberLimit} people`, id)
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () =>{
                           await aruga.reply(from, 'Berhasil join grup via link!', id)
@@ -198,7 +194,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                     await aruga.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                     } catch(err) {
                     console.log(err)
-	   	            await aruga.reply(from, 'Maaf batas penggunaan hari ini sudah mencapai maksimal', id)
+	   	            await aruga.reply(from, 'Hub Owner untuk NOBGnya', id)
                     }
                 }
             } else if (args.length === 1) {
@@ -318,7 +314,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                         hehex += '╠➥ '
                         hehex += response.data.data[i].name.transliteration.id.toLowerCase() + '\n'
                             }
-                        hehex += '╚═〘 *A R U G A  B O T* 〙'
+                        hehex += '╚═〘 *R I I N T A N  B O T* 〙'
                     aruga.reply(from, hehex, id)
                 })
             } catch(err) {
@@ -876,7 +872,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                 hehex += '╠➥'
                 hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
             }
-            hehex += '╚═〘 *A R U G A  B O T* 〙'
+            hehex += '╚═〘 *R I I N T A N  B O T* 〙'
             await aruga.sendTextWithMentions(from, hehex)
             break
 		case 'simisimi':
@@ -889,18 +885,14 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
 			if (args.length !== 1) return aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
 			if (args[0] == 'on') {
-				if (simiChat === true) return aruga.reply(from, 'simi-simi sudah diaktifkan sebelumnya', id)
-				simiChat = true
 				simi.push(chatId)
 				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
                 aruga.reply(from, 'mengaktifkan bot simi-simi!', id)
 			} else if (args[0] == 'off') {
-				if (simiChat === false) return aruga.reply(from, 'simi-simi belum diaktifkan sebelumnya', id)
-				simiChat = false
 				let inxx = simi.indexOf(chatId)
 				simi.splice(inxx, 1)
 				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
-				aruga.reply(from, 'menonaktifkan bot simi-simi!', id)
+				aruga.reply(from, 'Menghapus White List!', id)
 			} else {
 				aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
 			}
@@ -952,8 +944,8 @@ module.exports = HandleMsg = async (aruga, message) => {
             const chatz = await aruga.getAllChatIds()
             for (let idk of chatz) {
                 var cvk = await aruga.getChatById(idk)
-                if (!cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
-                if (cvk.isReadOnly) aruga.sendText(idk, `〘 *A R U G A  B C* 〙\n\n${msg}`)
+                if (!cvk.isReadOnly) aruga.sendText(idk, `〘 *R I I N T A N  B R O A D C A S T* 〙\n\n${msg}`)
+                if (cvk.isReadOnly) aruga.sendText(idk, `〘 *R I I N T A N  B C* 〙\n\n${msg}`)
             }
             aruga.reply(from, 'Broadcast Success!', id)
             break
