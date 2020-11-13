@@ -1,7 +1,7 @@
 {
-    "ownerNumber": "6288809071250@c.us",
-    "memberLimit": 5,
-    "groupLimit": 5,
-    "prefix": "#",
+    "ownerNumber": "6285349607186@c.us",
+    "memberLimit": 50,
+    "groupLimit": 25,
+    "prefix": "!",
 	"simiChat": false
   }
