@@ -6,9 +6,9 @@ const HandleMsg = require('./HandleMsg')
 
 const start = (aruga = new Client()) => {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
-    console.log(color(figlet.textSync('ARUGA BOT', { font: 'Ghost', horizontalLayout: 'default' })))
+    console.log(color(figlet.textSync('BOT_STYLE', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
-    console.log(color('[DEV]'), color('ArugaZ', 'yellow'))
+    console.log(color('[DEV]'), color('Benni', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
 
     // Mempertahankan sesi agar tetap nyala
@@ -35,7 +35,7 @@ const start = (aruga = new Client()) => {
 	    })
 	    } else {
         await aruga.simulateTyping(chat.id, true).then(async () => {
-          await aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+          await aruga.sendText(chat.id, `Hai minna~, Im BOT_STYLE. To find out the commands on this bot type ${prefix}menu`)
         })
 	    }
 	}
