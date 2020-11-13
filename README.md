@@ -68,6 +68,7 @@ after running it you need to scan the qr
 - Get Api NoBackground on [this website](https://www.remove.bg/)
 - Get Api ScreenShot on [this website](https://apiflash.com/)
 - Get Api Simi-simi on [this website](https://workshop.simsimi.com/en/)
+masih limit api simi-siminya? [cek ini#726981060](https://github.com/ArugaZ/whatsapp-bot/issues/38#issuecomment-726981060)
 
 ---
 
