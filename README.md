@@ -27,7 +27,7 @@
 
 ini semua gratis, jangan pelit ⭐️ ya :D
 <p align="center">
-https://arugaz.herokuapp.com/
+[Free Rest APIs](https://arugaz.herokuapp.com/)
  </p>
 </div>
 
