@@ -38,6 +38,8 @@ const { uploadImages } = require('./utils/fetcher')
 
 const fs = require('fs-extra')
 const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
+const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
+
 const { 
     ownerNumber, 
     groupLimit, 
@@ -45,12 +47,13 @@ const {
     prefix
 } = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const {
-    apiNoBg
+    apiNoBg,
+	apiSimi
 } = JSON.parse(fs.readFileSync('./settings/api.json'))
 
 module.exports = HandleMsg = async (aruga, message) => {
     try {
-        const { type, id, from, t, sender, isGroupMsg, chat, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+        const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
@@ -60,9 +63,6 @@ module.exports = HandleMsg = async (aruga, message) => {
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-        const isOwnerBot = ownerNumber == sender.id
-        
-        const isBanned = banned.includes(sender.id)
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
@@ -74,6 +74,22 @@ module.exports = HandleMsg = async (aruga, message) => {
         const url = args.length !== 0 ? args[0] : ''
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
 	    const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
+		
+		// [IDENTIFY]
+		const isOwnerBot = ownerNumber.includes(sender.id)
+        const isBanned = banned.includes(sender.id)
+		const isSimi = simi.includes(chatId)
+		
+		// Simi-simi function
+		if ((isGroupMsg && isSimi) && message.type === 'chat') {
+			axios.get(`https://arugaz.herokuapp.com/api/simisimi?kata=${message.body}&apikey=${apiSimi}`)
+			.then((res) => {
+				aruga.reply(from, `simi berkata: ${res.data.result}`, id)
+			})
+			.catch((err) => {
+				aruga.reply(from, `${err}`, id)
+			})
+		}
 
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
@@ -86,9 +102,11 @@ module.exports = HandleMsg = async (aruga, message) => {
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 
+		// Filter Banned People
         if (isBanned) {
             return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
+		
         switch (command) {
         // Menu and TnC
         case 'speed':
@@ -141,6 +159,13 @@ module.exports = HandleMsg = async (aruga, message) => {
                       })
             }
             break
+        case 'botstat': {
+            const loadedMsg = await aruga.getAmountOfLoadedMessages()
+            const chatIds = await aruga.getAllChatIds()
+            const groups = await aruga.getAllGroups()
+            aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
+            break
+        }
 
         // Sticker Creator
         case 'sticker':
@@ -849,14 +874,29 @@ module.exports = HandleMsg = async (aruga, message) => {
             hehex += '╚═〘 *A R U G A  B O T* 〙'
             await aruga.sendTextWithMentions(from, hehex)
             break
-        case 'botstat': {
-            const loadedMsg = await aruga.getAmountOfLoadedMessages()
-            const chatIds = await aruga.getAllChatIds()
-            const groups = await aruga.getAllGroups()
-            aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
-            break
-        }
-
+		case 'simisimi':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+			aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
+			break
+		case 'simi':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+			if (args.length !== 1) return aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
+			if (args[0] == 'on') {
+				simi.push(chatId)
+				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
+                aruga.reply(from, 'mengaktifkan bot simi-simi!', id)
+			} else if (args[0] == 'off') {
+				let inxx = simi.indexOf(chatId)
+				simi.splice(inxx, 1)
+				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
+				aruga.reply(from, 'Menghapus White List!', id)
+			} else {
+				aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
+			}
+			break
+			
         //Owner Group
         case 'kickall': //mengeluarkan semua member
         if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
