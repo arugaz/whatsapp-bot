@@ -63,7 +63,7 @@ const start = (aruga = new Client()) => {
         })
     })
 
-    // ketika seseorang mengirim pesan
+    // ketikaa seseorang mengirim pesan
     aruga.onMessage(async (message) => {
         aruga.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
             .then((msg) => {
