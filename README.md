@@ -26,6 +26,7 @@
 </details>
 
 ini semua gratis, jangan pelit ⭐️ ya :D
+https://arugaz.herokuapp.com/
 </div>
 
 ## Getting Started
