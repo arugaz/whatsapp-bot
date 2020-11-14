@@ -63,6 +63,7 @@ after running it you need to scan the qr
 - Change memberLimit on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L4)
 - Change prefix on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/setting.json#L5)
 - Change menu on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/lib/menu.js#L32)
+- Add kata kasar on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/lib/kataKotor.js#L8)
 - Change all apiKey on [this section](https://github.com/ArugaZ/whatsapp-bot/blob/master/settings/api.json)
 - Get Api NoBackground on [this website](https://www.remove.bg/)
 - Get Api ScreenShot on [this website](https://apiflash.com/)
@@ -101,6 +102,11 @@ after running it you need to scan the qr
 | Instagram |✅|
 | Youtube Music |✅|
 | Youtube Video |✅|
+
+| Fun Group! |Yes|
+| ------------- | ------------- |
+| Simi-simi BOT|✅|
+| Anti kata kasar|✅|
 
 | Primbon |Yes|
 | ------------- | ------------- |
@@ -144,10 +150,6 @@ after running it you need to scan the qr
 | Shortlink|✅|
 | Bap4k F0nt|✅|
 
-| Fun Group! |Yes|
-| ------------- | ------------- |
-| Simi-simi BOT|✅|
-
 | Groups |Yes|
 | ------------- | ------------- |
 | Admin||
@@ -188,3 +190,4 @@ Fix Stuck on linux, install google chrome stable:
 - [WA-Automate](https://github.com/open-wa/wa-automate-nodejs)
 - [YogaSakti](https://github.com/YogaSakti/imageToSticker)
 - [MhankBarBar](https://github.com/MhankBarBar/whatsapp-bot)
+- [dandyraka](https://github.com/dandyraka/NoBadWord)
