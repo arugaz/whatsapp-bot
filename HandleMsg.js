@@ -622,6 +622,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
+	    break
         case 'resep':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari resep makanan\nCaranya ketik: ${prefix}resep [search]\n\ncontoh: ${prefix}resep tahu`, id)
             const cariresep = body.slice(7)
