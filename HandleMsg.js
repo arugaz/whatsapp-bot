@@ -6,6 +6,13 @@ moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
 
+const appRoot = require('app-root-path')
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const db_group = new FileSync(appRoot+'/lib/data/group.json')
+const db = low(db_group)
+db.defaults({ group: []}).write()
+
 const { 
     removeBackgroundFromImageBase64
 } = require('remove.bg')
@@ -24,7 +31,8 @@ const {
     images,
     resep,
     rugapoi,
-    rugaapi
+    rugaapi,
+	cariKasar
 } = require('./lib')
 
 const { 
@@ -39,6 +47,7 @@ const { uploadImages } = require('./utils/fetcher')
 const fs = require('fs-extra')
 const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
 const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
+const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 
 let { 
@@ -53,6 +62,21 @@ const {
 	apiSimi
 } = JSON.parse(fs.readFileSync('./settings/api.json'))
 
+function formatin(duit){
+    let	reverse = duit.toString().split('').reverse().join('');
+    let ribuan = reverse.match(/\d{1,3}/g);
+    ribuan = ribuan.join('.').split('').reverse().join('');
+    return ribuan;
+}
+
+const inArray = (needle, haystack) => {
+    let length = haystack.length;
+    for(let i = 0; i < length; i++) {
+        if(haystack[i].id == needle) return i;
+    }
+    return false;
+}
+
 module.exports = HandleMsg = async (aruga, message) => {
     try {
         const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
@@ -64,6 +88,8 @@ module.exports = HandleMsg = async (aruga, message) => {
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
+		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
+		const pengirim = sender.id
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 
         // Bot Prefix
@@ -71,6 +97,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
         const arg = body.trim().substring(body.indexOf(' ') + 1)
         const args = body.trim().split(/ +/).slice(1)
+		const argx = chats.slice(0).trim().split(/ +/).shift().toLowerCase()
         const isCmd = body.startsWith(prefix)
         const uaOverride = process.env.UserAgent
         const url = args.length !== 0 ? args[0] : ''
@@ -78,28 +105,17 @@ module.exports = HandleMsg = async (aruga, message) => {
 	    const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
 		
 		// [IDENTIFY]
-		const isOwnerBot = ownerNumber.includes(sender.id)
-        const isBanned = banned.includes(sender.id)
+		const isOwnerBot = ownerNumber.includes(pengirim)
+        const isBanned = banned.includes(pengirim)
 		const isSimi = simi.includes(chatId)
-		
-		// Simi-simi function
-		
-		if ((isGroupMsg && isSimi) && message.type === 'chat') {
-			axios.get(`https://arugaz.herokuapp.com/api/simisimi?kata=${message.body}&apikey=${apiSimi}`)
-			.then((res) => {
-				if (res.data.status == 403) return aruga.sendText(ownerNumber, `${res.data.result}\n\n${res.data.pesan}`)
-				aruga.reply(from, `simi berkata: ${res.data.result}`, id)
-			})
-			.catch((err) => {
-				aruga.reply(from, `${err}`, id)
-			})
-		}
+		const isNgegas = ngegas.includes(chatId)
+		const isKasar = await cariKasar(chats)
 
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
         if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         //
-        if (!isCmd) { return }
+        if(!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
 
@@ -593,7 +609,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
             const cariwall = body.slice(8)
             const hasilwall = await images.fdci(cariwall)
-            aruga.sendFileFromUrl(from, hasilwall, '', '', id)
+            await aruga.sendFileFromUrl(from, hasilwall, '', '', id)
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
@@ -602,7 +618,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
             const carireddit = body.slice(9)
             const hasilreddit = await images.sreddit(carireddit)
-            aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
+            await aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
@@ -610,14 +626,14 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (args.length == 0) return aruga.reply(from, `Untuk mencari resep makanan\nCaranya ketik: ${prefix}resep [search]\n\ncontoh: ${prefix}resep tahu`, id)
             const cariresep = body.slice(7)
             const hasilresep = await resep.resep(cariresep)
-            aruga.reply(from, hasilresep + '\n\nIni kak resep makanannya..', id)
+            await aruga.reply(from, hasilresep + '\n\nIni kak resep makanannya..', id)
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
             })
             break
         case 'nekopoi':
-            aruga.sendText(from, `Sedang mencari video terbaru dari website nekopoi...`)
-            rugapoi.getLatest()
+            aruga.sendText(from, `Maaf fitur ini sedang dalam perbaikan...`)
+            /* rugapoi.getLatest()
             .then((result) => {
                 rugapoi.getVideo(result.link)
                 .then((res) => {
@@ -630,7 +646,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             .catch(() => {
                 aruga.reply(from, 'Ada yang eror!', id)
-            })
+            }) */
             break
         case 'stalkig':
             if (args.length == 0) return aruga.reply(from, `Untuk men-stalk akun instagram seseorang\nketik ${prefix}stalkig [username]\ncontoh: ${prefix}stalkig ini.arga`, id)
@@ -808,6 +824,20 @@ module.exports = HandleMsg = async (aruga, message) => {
 				await aruga.reply(from, `${res}`, id)
 			})
 			break
+		
+		//Fun Menu
+		case 'klasmen':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+			const klasemen = db.get('group').filter({id: groupId}).map('members').value()[0]
+            let urut = Object.entries(klasemen).map(([key, val]) => ({id: key, ...val})).sort((a, b) => b.denda - a.denda);
+            let textKlas = "*Klasemen Denda Sementara*\n"
+            let i = 1;
+            urut.forEach((klsmn) => {
+            textKlas += i+". @"+klsmn.id.replace('@c.us', '')+" ➤ Rp"+formatin(klsmn.denda)+"\n"
+            i++
+            });
+            await aruga.sendTextWithMentions(from, textKlas)
+			break
 
         // Group Commands (group admin only)
 	    case 'add':
@@ -880,7 +910,6 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
 		case 'simisimi':
 			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
 			aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
 			break
 		case 'simi':
@@ -900,11 +929,40 @@ module.exports = HandleMsg = async (aruga, message) => {
 				aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
 			}
 			break
+		case 'katakasar':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+			aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\napasih itu? fitur apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+			break
+		case 'kasar':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+			if (args.length !== 1) return aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\napasih itu? fitur apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+			if (args[0] == 'on') {
+				ngegas.push(chatId)
+				fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
+				aruga.reply(from, 'sukses mengaktifkan fitur anti kata kasar', id)
+			} else if (args[0] == 'off') {
+				let nixx = ngegas.indexOf(chatId)
+				ngegas.splice(nixx, 1)
+				fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
+				aruga.reply(from, 'sukses menonatifkan fitur anti kata kasar', id)
+			} else {
+				aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\napasih itu? fitur apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+			}
+			break
+		case 'reset':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+			const reset = db.get('group').find({ id: groupId }).assign({ members: []}).write()
+            if(reset){
+				await aruga.sendText(from, "Klasemen telah direset.")
+            }
+			break
 			
         //Owner Group
         case 'kickall': //mengeluarkan semua member
         if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-        let isOwner = chat.groupMetadata.owner == sender.id
+        let isOwner = chat.groupMetadata.owner == pengirim
         if (!isOwner) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai oleh owner grup!', id)
         if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
             const allMem = await aruga.getGroupMembers(groupId)
@@ -972,8 +1030,61 @@ module.exports = HandleMsg = async (aruga, message) => {
             aruga.reply(from, 'Success clear all chat!', id)
             break
         default:
-            console.log(color('[EROR]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), 'Unregistered Command from', color(pushname))
             break
+        }
+		
+		// Simi-simi function
+		if ((!isCmd && isGroupMsg && isSimi) && message.type === 'chat') {
+			axios.get(`https://arugaz.herokuapp.com/api/simisimi?kata=${encodeURIComponent(message.body)}&apikey=${apiSimi}`)
+			.then((res) => {
+				if (res.data.status == 403) return aruga.sendText(ownerNumber, `${res.data.result}\n\n${res.data.pesan}`)
+				aruga.reply(from, `simi berkata: ${res.data.result}`, id)
+			})
+			.catch((err) => {
+				aruga.reply(from, `${err}`, id)
+			})
+		}
+		
+		// Kata kasar function
+		if(!isCmd && isGroupMsg && isNgegas) {
+            const find = db.get('group').find({ id: groupId }).value()
+            if(find && find.id === groupId){
+                const cekuser = db.get('group').filter({id: groupId}).map('members').value()[0]
+                const isIn = inArray(pengirim, cekuser)
+                if(cekuser && isIn !== false){
+                    if(isKasar){
+                        const denda = db.get('group').filter({id: groupId}).map('members['+isIn+']').find({ id: pengirim }).update('denda', n => n + 5000).write()
+                        if(denda){
+                            await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000\nTotal : Rp"+formatin(denda.denda), id)
+                        }
+                    }
+                } else {
+                    const cekMember = db.get('group').filter({id: groupId}).map('members').value()[0]
+                    if(cekMember.length === 0){
+                        if(isKasar){
+                            db.get('group').find({ id: groupId }).set('members', [{id: pengirim, denda: 5000}]).write()
+                        } else {
+                            db.get('group').find({ id: groupId }).set('members', [{id: pengirim, denda: 0}]).write()
+                        }
+                    } else {
+                        const cekuser = db.get('group').filter({id: groupId}).map('members').value()[0]
+                        if(isKasar){
+                            cekuser.push({id: pengirim, denda: 5000})
+                            await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000", id)
+                        } else {
+                            cekuser.push({id: pengirim, denda: 0})
+                        }
+                        db.get('group').find({ id: groupId }).set('members', cekuser).write()
+                    }
+                }
+            } else {
+                if(isKasar){
+                    db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 5000}] }).write()
+                    await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000\nTotal : Rp5.000", id)
+                } else {
+                    db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 0}] }).write()
+                }
+            }
         }
     } catch (err) {
         console.log(color('[EROR]', 'red'), err)
