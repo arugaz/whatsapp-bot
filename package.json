@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-bot",
-  "version": "1.1.5",
+  "version": "2.0.0",
   "description": "Whatsapp Bot - Node Js",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/ArugaZ/whatsapp-bot",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.0.14",
+    "@open-wa/wa-automate": "^3.0.15",
     "app-root-path": "^3.0.0",
     "axios": "^0.21.0",
     "chalk": "^4.1.0",
