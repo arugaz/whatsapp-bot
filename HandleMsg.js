@@ -45,8 +45,7 @@ let {
     ownerNumber, 
     groupLimit, 
     memberLimit,
-    prefix,
-	simiChat
+    prefix
 } = setting
 
 const {
@@ -85,7 +84,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 		
 		// Simi-simi function
 		
-		if ((isGroupMsg && isSimi && simiChat === true) && message.type === 'chat') {
+		if ((isGroupMsg && isSimi) && message.type === 'chat') {
 			axios.get(`https://arugaz.herokuapp.com/api/simisimi?kata=${message.body}&apikey=${apiSimi}`)
 			.then((res) => {
 				if (res.data.status == 403) return aruga.sendText(ownerNumber, `${res.data.result}\n\n${res.data.pesan}`)
@@ -889,14 +888,10 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
 			if (args.length !== 1) return aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
 			if (args[0] == 'on') {
-				if (simiChat === true) return aruga.reply(from, 'simi-simi sudah diaktifkan sebelumnya', id)
-				simiChat = true
 				simi.push(chatId)
 				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
                 aruga.reply(from, 'mengaktifkan bot simi-simi!', id)
 			} else if (args[0] == 'off') {
-				if (simiChat === false) return aruga.reply(from, 'simi-simi belum diaktifkan sebelumnya', id)
-				simiChat = false
 				let inxx = simi.indexOf(chatId)
 				simi.splice(inxx, 1)
 				fs.writeFileSync('./settings/simi.json', JSON.stringify(simi))
