@@ -485,7 +485,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             .then(async(res) => {
 				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.data.filesize}\n\nAudio sedang dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
 			})
             break
@@ -495,7 +495,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             .then(async(res) => {
 				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.data.filesize}\n\nVideo sedang dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
 			})
             break
