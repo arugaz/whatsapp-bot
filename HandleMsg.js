@@ -633,8 +633,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
         case 'nekopoi':
-            aruga.sendText(from, `Maaf fitur ini sedang dalam perbaikan...`)
-            /* rugapoi.getLatest()
+             rugapoi.getLatest()
             .then((result) => {
                 rugapoi.getVideo(result.link)
                 .then((res) => {
@@ -647,7 +646,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             .catch(() => {
                 aruga.reply(from, 'Ada yang Error!', id)
-            }) */
+            })
             break
         case 'stalkig':
             if (args.length == 0) return aruga.reply(from, `Untuk men-stalk akun instagram seseorang\nketik ${prefix}stalkig [username]\ncontoh: ${prefix}stalkig ini.arga`, id)
