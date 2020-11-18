@@ -77,7 +77,7 @@ after running it you need to scan the qr
 
 | 18+ |Yes|
 | ------------- | ------------- |
-| Nekopoi |❎|
+| Nekopoi |✅|
 
 | Creator |Yes|
 | ------------- | ------------- |
