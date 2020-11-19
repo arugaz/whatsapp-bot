@@ -1,5 +1,7 @@
 {
-    "apiNoBg": "APIKEY",
+    "apiNoBg": "$ curl -H 'X-API-Key: YOUR_API_KEY'                      \
+       -F 'image_file=@/path/to/file.jpg'                \
+       -f https://api.remove.bg/v1.0/removebg -o no-bg.png",
     "apiSS": "APIKEY",
     "apiSimi": "APIKEY"
 }
