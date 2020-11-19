@@ -138,6 +138,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'menu':
         case 'help':
+	case 'notes':
             await aruga.sendText(from, menuId.textMenu(pushname))
             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
@@ -472,32 +473,35 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         //Media
         case 'instagram':
-            if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
+		aruga.reply(from, 'Under Maintenance', id)
+            /*  if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
             const instag = await rugaapi.insta(args[0])
             await aruga.sendFileFromUrl(from, instag, '', '', id)
             .catch(() => {
                 aruga.reply(from, 'Ada yang Error!', id)
-            })
+            }) */
             break
         case 'ytmp3':
-            if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
+		aruga.reply(from, 'Under Maintenance', id)
+            /*  if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
             rugaapi.ytmp3(args[0])
             .then(async(res) => {
 				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
-			})
+			}) */
             break
         case 'ytmp4':
-            if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
+		aruga.reply(from, 'Under Maintenance', id)
+           /*   if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
             rugaapi.ytmp4(args[0])
             .then(async(res) => {
 				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
 				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
-			})
+			}) */
             break
 			
 		//Primbon Menu
@@ -700,7 +704,8 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
         case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
-            if (args.length == 0) return aruga.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
+		aruga.reply(from, 'Under Maintenance', id)
+            /* if (args.length == 0) return aruga.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
             axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
             .then(async (res) => {
                 await aruga.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
@@ -715,7 +720,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             .catch(() => {
                 aruga.reply(from, 'Ada yang Error!', id)
-            })
+            })  */
             break
         case 'whatanime':
             if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
@@ -946,7 +951,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 				fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
 				aruga.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
 			} else {
-				aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\napasih itu? fitur apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+				aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\Apasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
 			}
 			break
 		case 'reset':

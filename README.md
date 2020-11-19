@@ -101,9 +101,9 @@ after running it you need to scan the qr
 
 | Downloader |Yes|
 | ------------- | ------------- |
-| Instagram |✅|
-| Youtube Music |✅|
-| Youtube Video |✅|
+| Instagram |❎|
+| Youtube Music |❎|
+| Youtube Video |❎|
 
 | Fun Group! |Yes|
 | ------------- | ------------- |
@@ -126,7 +126,7 @@ after running it you need to scan the qr
 | Chord musik |✅|
 | Lirik musik |✅|
 | Screen Crot!|✅|
-| Play music|✅|
+| Play music|❎|
 | whats anime?|✅|
 
 | Random text |Yes|
