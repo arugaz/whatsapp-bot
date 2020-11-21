@@ -56,7 +56,7 @@ const isFiltered = (from) => {
  *@param {Callback} callback
  */
 const download = (url, path, callback) => {
-  request.head(url, (err, res, body) => {
+  request.head(url, () => {
     request(url)
       .pipe(fs.createWriteStream(path))
       .on('close', callback)
