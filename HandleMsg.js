@@ -502,7 +502,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             const linkmp4 = args[0].replace('https://youtu.be/','')
 			download(`${arugaytdl4}${linkmp4}`, './media/ytmp4.mp4', (err) => {
 				if (err) return aruga.reply(from, err, id)
-				aruga.sendFile(from, './media/ytmp4.mp4', '', ' id)
+				aruga.sendFile(from, './media/ytmp4.mp4', '', '', id)
 			})
 			/*rugaapi.ytmp4(args[0])
             .then(async(res) => {
