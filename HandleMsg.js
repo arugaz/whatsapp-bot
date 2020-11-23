@@ -5,6 +5,7 @@ const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
+const downloader = require('././lib')
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
@@ -481,6 +482,65 @@ module.exports = HandleMsg = async (aruga, message) => {
             .catch(() => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
+            break
+        case 'tiktok':
+            if (args.length !== 1) return aruga.reply(from, 'Maaf, format pesan salah silahkan periksa menu. [Wrong Format]', id)
+            if (!isUrl(url) && !url.includes('tiktok.com')) return aruga.reply(from, 'Maaf, link yang kamu kirim tidak valid. [Invalid Link]', id)
+            await aruga.reply(from, `_Scraping Metadata..._ \n\n*`, id)
+            downloader.tiktok(url).then(async (videoMeta) => {
+                const filename = videoMeta.authorMeta.name + '.mp4'
+                const caps = `*Metadata:*\nUsername: ${videoMeta.authorMeta.name} \nMusic: ${videoMeta.musicMeta.musicName} \nView: ${videoMeta.playCount.toLocaleString()} \nLike: ${videoMeta.diggCount.toLocaleString()} \nComment: ${videoMeta.commentCount.toLocaleString()} \nShare: ${videoMeta.shareCount.toLocaleString()} \nCaption: ${videoMeta.text.trim() ? videoMeta.text : '-'}`
+                await aruga.sendFileFromUrl(from, videoMeta.url, filename, videoMeta.NoWaterMark ? caps : `⚠ Video tanpa watermark tidak tersedia. \n\n${caps}`, '', { headers: { 'User-Agent': 'okhttp/4.5.0', referer: 'https://www.tiktok.com/' } }, true)
+                    .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
+                    .catch((err) => console.error(err))
+            }).catch(() => aruga.reply(from, 'Gagal mengambil metadata, link yang kamu kirim tidak valid. [Invalid Link]', id))
+            break
+	    case 'twt':
+        case 'twitter':
+            if (args.length !== 1) return aruga.reply(from, 'Maaf, format pesan salah silahkan periksa menu. [Wrong Format]', id)
+            if (!isUrl(url) & !url.includes('twitter.com') || url.includes('t.co')) return aruga.reply(from, 'Maaf, url yang kamu kirim tidak valid. [Invalid Link]', id)
+            await aruga.reply(from, `_Scraping Metadata..._ \n\n*`, id)
+            downloader.tweet(url).then(async (data) => {
+                if (data.type === 'video') {
+                    const content = data.variants.filter(x => x.content_type !== 'application/x-mpegURL').sort((a, b) => b.bitrate - a.bitrate)
+                    const result = await urlShortener(content[0].url)
+                    console.log('Shortlink: ' + result)
+                    await aruga.sendFileFromUrl(from, content[0].url, 'video.mp4', `Link Download: ${result} \n\nProcessed for ${processTime(t, moment())} _Second_`, null, null, true)
+                        .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
+                        .catch((err) => console.error(err))
+                } else if (data.type === 'photo') {
+                    for (let i = 0; i < data.variants.length; i++) {
+                        await aruga.sendFileFromUrl(from, data.variants[i], data.variants[i].split('/media/')[1], '', null, null, true)
+                            .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
+                            .catch((err) => console.error(err))
+                    }
+                }
+            })
+                .catch(() => aruga.sendText(from, 'Maaf, link tidak valid atau tidak ada media di link yang kamu kirim. [Invalid Link]'))
+            break
+        case 'fb':
+        case 'facebook':
+            if (args.length !== 1) return aruga.reply(from, 'Maaf, format pesan salah silahkan periksa menu. [Wrong Format]', id)
+            if (!isUrl(url) && !url.includes('facebook.com')) return aruga.reply(from, 'Maaf, url yang kamu kirim tidak valid. [Invalid Link]', id)
+            await aruga.reply(from, '_Scraping Metadata..._ \n\n*', id)
+            downloader.facebook(url).then(async (videoMeta) => {
+                const title = videoMeta.response.title
+                const thumbnail = videoMeta.response.thumbnail
+                const links = videoMeta.response.links
+                const shorts = []
+                for (let i = 0; i < links.length; i++) {
+                    const shortener = await urlShortener(links[i].url)
+                    console.log('Shortlink: ' + shortener)
+                    links[i].short = shortener
+                    shorts.push(links[i])
+                }
+                const link = shorts.map((x) => `${x.resolution} Quality: ${x.short}`)
+                const caption = `Text: ${title} \n\nLink Download: \n${link.join('\n')} \n\nProcessed for ${processTime(t, moment())} _Second_`
+                await aruga.sendFileFromUrl(from, thumbnail, 'videos.jpg', caption, null, null, true)
+                    .then((serialized) => console.log(`Sukses Mengirim File dengan id: ${serialized} diproses selama ${processTime(t, moment())}`))
+                    .catch((err) => console.error(err))
+            })
+                .catch((err) => aruga.reply(from, `Error, url tidak valid atau tidak memuat video. [Invalid Link or No Video] \n\n${err}`, id))
             break
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
