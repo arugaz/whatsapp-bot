@@ -736,6 +736,14 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
+		case 'movie':
+			if (args.length == 0) return aruga.reply(from, `Untuk mencari suatu movie dari website sdmovie.fun\nketik: ${prefix}movie judulnya`, id)
+			rugaapi.movie((body.slice(7)))
+			.then(async (res) => {
+				if (res.status == 'error') return aruga.reply(from, res.hasil, id)
+				await aruga.sendFileFromUrl(from, res.link, 'movie.jpg', res.hasil, id)
+			})
+			break
         case 'whatanime':
             if (isMedia && type === 'image' || quotedMsg && quotedMsg.type === 'image') {
                 if (isMedia) {
