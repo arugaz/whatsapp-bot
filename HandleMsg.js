@@ -50,8 +50,6 @@ const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
 const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
 const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
-const arugaytdl3 = 'https://arugaytdl.herokuapp.com/audio?id='
-const arugaytdl4 = 'https://arugaytdl.herokuapp.com/video?id='
 
 let { 
     ownerNumber, 
@@ -484,34 +482,46 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
-            const linkmp3 = args[0].replace('https://youtu.be/','')
-			download(`${arugaytdl3}${linkmp3}`, './media/ytmp3.mp3', (err) => {
-				if (err) return aruga.reply(from, err, id)
-				aruga.sendPtt(from, './media/ytmp3.mp3', id)
-			})
-			/*rugaapi.ytmp3(args[0])
+            const linkmp3 = args[0].replace('https://youtu.be/','').replace('https://www.youtube.com/watch?v=','')
+			rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
             .then(async(res) => {
-				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nAudio sedang dikirim`, id)
+				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
-			})*/
+				.catch(() => {
+					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+				})
+			})
             break
         case 'ytmp4':
-            if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari youtube\nketik: ${prefix}ytmp3 [link_yt]`)
-            const linkmp4 = args[0].replace('https://youtu.be/','')
-			download(`${arugaytdl4}${linkmp4}`, './media/ytmp4.mp4', (err) => {
-				if (err) return aruga.reply(from, err, id)
-				aruga.sendFile(from, './media/ytmp4.mp4', '', '', id)
-			})
-			/*rugaapi.ytmp4(args[0])
+            if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
+            const linkmp4 = args[0].replace('https://youtu.be/','').replace('https://www.youtube.com/watch?v=','')
+			rugaapi.ytmp4(`https://youtu.be/${linkmp4}`)
             .then(async(res) => {
-				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				if (res.status == 'filesize') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.judul}`, id)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Youtube ditemukan\n\nJudul: ${res.judul}\n\nUkuran: ${res.size}\n\nVideo sedang dikirim`, id)
+				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
-			})*/
+				.catch(() => {
+					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+				})
+			})
             break
+		case 'fb':
+		case 'facebook':
+			if (args.length == 0) return aruga.reply(from, `Untuk mendownload video dari link facebook\nketik: ${prefix}fb [link_fb]`, id)
+			rugaapi.fb(args[0])
+			.then(async (res) => {
+				const { link, linkhd, linksd } = res
+				if (res.status == 'error') return aruga.sendFileFromUrl(from, link, '', 'Maaf url anda tidak dapat ditemukan', id)
+				await aruga.sendFileFromUrl(from, linkhd, '', 'Nih ngab videonya', id)
+				.catch(async () => {
+					await aruga.sendFileFromUrl(from, linksd, '', 'Nih ngab videonya', id)
+					.catch(() => {
+						aruga.reply(from, 'Maaf url anda tidak dapat ditemukan', id)
+					})
+				})
+			})
+			break
 			
 		//Primbon Menu
 		case 'artinama':
