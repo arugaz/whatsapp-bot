@@ -104,6 +104,7 @@ after running it you need to scan the qr
 | Instagram |✅|
 | Youtube Music |✅|
 | Youtube Video |✅|
+| Facebook |✅|
 
 | Fun Group! |Yes|
 | ------------- | ------------- |
