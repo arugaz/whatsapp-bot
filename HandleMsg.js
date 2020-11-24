@@ -727,9 +727,14 @@ module.exports = HandleMsg = async (aruga, message) => {
             axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
             .then(async (res) => {
                 await aruga.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
-				download(`${arugaytdl3}${res.data[0].id}`, './media/ytmp3.mp3', (err) => {
-					if (err) return aruga.reply(from, err, id)
-					aruga.sendPtt(from, './media/ytmp3.mp3', id)
+				rugaapi.ytmp3(`https://youtu.be/${res.data[0].id}`)
+				.then(async(res) => {
+					if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+					await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
+					await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+					.catch(() => {
+						aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+					})
 				})
             })
             .catch(() => {
