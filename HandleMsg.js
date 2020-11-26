@@ -474,11 +474,13 @@ module.exports = HandleMsg = async (aruga, message) => {
         //Media
         case 'instagram':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
-            const instag = await rugaapi.insta(args[0])
-            await aruga.sendFileFromUrl(from, instag, '', '', id)
-            .catch(() => {
-                aruga.reply(from, 'Ada yang Error!', id)
-            })
+            rugaapi.insta(args[0])
+            .then(async (res) => {
+				if (res.error) return aruga.reply(from, res.error, id)
+				for (let i = 0; i < res.result.length; i++) {
+					await aruga.sendFileFromUrl(from, res.result[i].urlDownload, '', 'Insta Downloader by: ' + res.author, id)
+				}
+			})
             break
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
