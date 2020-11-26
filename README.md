@@ -154,15 +154,17 @@ after running it you need to scan the qr
 
 | Groups |Yes|
 | ------------- | ------------- |
+| Owner||
+| Kick all members|✅|
 | Admin||
 | Add user|✅|
 | Kick user|✅|
 | Promote User|✅|
 | Demote User|✅|
+| Mute Group|✅|
 | Delete bot msg|✅|
 | Tagall/mentions all|✅|
-| Owner||
-| Kick all members|✅|
+
 
 | Owner bot |Yes|
 | ------------- | ------------- |
