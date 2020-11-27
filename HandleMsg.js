@@ -1004,6 +1004,25 @@ module.exports = HandleMsg = async (aruga, message) => {
 				aruga.reply(from, `Untuk mengubah settingan group chat agar hanya admin saja yang bisa chat\n\nPenggunaan:\n${prefix}mutegrup on --aktifkan\n${prefix}mutegrup off --nonaktifkan`, id)
 			}
 			break
+		case 'setprofile':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+			if (isMedia && type == 'image' || isQuotedImage) {
+				const dataMedia = isQuotedImage ? quotedMsg : message
+				const _mimetype = dataMedia.mimetype
+				const mediaData = await decryptMedia(dataMedia, uaOverride)
+				const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+				await aruga.setGroupIcon(groupId, imageBase64)
+			} else if (args.length === 1) {
+				if (!isUrl(url)) { await aruga.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+				aruga.setGroupIconByUrl(groupId, url).then((r) => (!r && r !== undefined)
+				? aruga.reply(from, 'Maaf, link yang kamu kirim tidak memuat gambar.', id)
+				: aruga.reply(from, 'Berhasil mengubah profile group', id))
+			} else {
+				aruga.reply(from, `Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silahkan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silahkan ketik ${prefix}setprofile linkImage`)
+			}
+			break
 			
         //Owner Group
         case 'kickall': //mengeluarkan semua member
