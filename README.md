@@ -162,6 +162,7 @@ after running it you need to scan the qr
 | Promote User|✅|
 | Demote User|✅|
 | Mute Group|✅|
+| Change Group icon|✅|
 | Delete bot msg|✅|
 | Tagall/mentions all|✅|
 
