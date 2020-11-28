@@ -50,7 +50,7 @@ const start = (aruga = new Client()) => {
         }
         // kondisi ketika seseorang dikick/keluar dari group
         if (event.action === 'remove' && event.who !== host) {
-            await aruga.sendTextWithMentions(event.chat, `Adios @${event.who.replace('@c.us', '')},✨`)
+            await aruga.sendTextWithMentions(event.chat, `Adios @${event.who.replace('@c.us', '')},Te echaremos de menos✨`)
         }
     })
 
@@ -65,9 +65,9 @@ const start = (aruga = new Client()) => {
 
     // ketika seseorang mengirim pesan
     aruga.onMessage(async (message) => {
-        aruga.getAmountOfLoadedMessages() // 
+        aruga.getAmountOfLoadedMessages() // borrar la caché de mensajes si ya hay 3000 mensajes.
             .then((msg) => {
-                if (msg >= 30000) {
+                if (msg >= 3000) {
                     console.log('[aruga]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
                     aruga.cutMsgCache()
                 }
