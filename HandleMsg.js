@@ -593,7 +593,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 			.then(async (res) => {
 				await aruga.reply(from, res.result, id)
 			})
-
+                        break
         //Random Images
         case 'anime':
             if (args.length == 0) return aruga.reply(from, `Untuk menggunakan ${prefix}anime\nSilahkan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`, id)
