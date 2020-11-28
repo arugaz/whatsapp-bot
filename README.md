@@ -39,8 +39,8 @@ This project require NodeJS v12.
 Clone this project
 
 ```bash
-> git clone https://github.com/nacowon15/whatsapp-bot-1
-> cd whatsapp-bot-1
+> git clone https://github.com/nacowon15/whatsapp-bot-lcs
+> cd whatsapp-bot-lcs
 ```
 
 Install the dependencies:
