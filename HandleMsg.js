@@ -137,6 +137,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         case 'tnc':
             await aruga.sendText(from, menuId.textTnC())
             break
+        case 'notes':
         case 'menu':
         case 'help':
             await aruga.sendText(from, menuId.textMenu(pushname))
@@ -461,7 +462,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             const solatj = await rugaapi.jadwaldaerah(solatx)
             await aruga.reply(from, solatj, id)
             .catch(() => {
-                aruga.reply(from, 'Sudah input daerah yang ada dilist?', id)
+                aruga.reply(from, 'Pastikan daerah kamu ada di list ya!', id)
             })
             break
         case 'daerah':
@@ -527,14 +528,14 @@ module.exports = HandleMsg = async (aruga, message) => {
 			
 		//Primbon Menu
 		case 'artinama':
-			if (args.length == 0) return aruga.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama Namanya`, id)
+			if (args.length == 0) return aruga.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
             rugaapi.artinama(body.slice(10))
 			.then(async(res) => {
 				await aruga.reply(from, `Arti : ${res}`, id)
 			})
 			break
 		case 'cekjodoh':
-			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama pasangan\n\ncontoh: ${prefix}cekjodoh aku kamu\n\nhanya bisa pakai nama panggilan (satu kata)`)
+			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama-kamu nama-pasangan\n\ncontoh: ${prefix}cekjodoh bagas siti\n\nhanya bisa pakai nama panggilan (satu kata)`)
 			rugaapi.cekjodoh(args[0],args[1])
 			.then(async(res) => {
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
@@ -700,13 +701,14 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-	case 'lirik':
-		if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dari sebuah lagu\bketik: ${prefix}lirik [judul_lagu]`, id)
-		rugaapi.lirik(body.slice(7))
-		.then(async (res) => {
-			await aruga.reply(from, `Lirik Lagu: ${body.slice(7)}\n\n${res}`, id)
-		})
-		break
+        case 'lyrics':
+        case 'lirik':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dari sebuah lagu\bketik: ${prefix}lirik [judul_lagu]`, id)
+            rugaapi.lirik(body.slice(7))
+            .then(async (res) => {
+                await aruga.reply(from, `Lirik Lagu: ${body.slice(7)}\n\n${res}`, id)
+            })
+            break
         case 'chord':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dan chord dari sebuah lagu\bketik: ${prefix}chord [judul_lagu]`, id)
             const chordq = body.slice(7)
@@ -860,6 +862,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 		
 		//Fun Menu
+        case 'klasemen':
 		case 'klasmen':
 			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
 			const klasemen = db.get('group').filter({id: groupId}).map('members').value()[0]
@@ -980,7 +983,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 				fs.writeFileSync('./settings/ngegas.json', JSON.stringify(ngegas))
 				aruga.reply(from, 'Fitur Anti Kasar sudah di non-Aktifkan', id)
 			} else {
-				aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\napasih itu? fitur apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
+				aruga.reply(from, `Untuk mengaktifkan Fitur Kata Kasar pada Group Chat\n\nApasih kegunaan Fitur Ini? Apabila seseorang mengucapkan kata kasar akan mendapatkan denda\n\nPenggunaan\n${prefix}kasar on --mengaktifkan\n${prefix}kasar off --nonaktifkan\n\n${prefix}reset --reset jumlah denda`, id)
 			}
 			break
 		case 'reset':
