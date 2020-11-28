@@ -2,7 +2,7 @@ require('dotenv').config()
 const { decryptMedia } = require('@open-wa/wa-automate')
 
 const moment = require('moment-timezone')
-moment.tz.setDefault('Asia/Jakarta').locale('id')
+moment.tz.setDefault('Asia/Europe').locale('es')
 const axios = require('axios')
 const fetch = require('node-fetch')
 
@@ -230,7 +230,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         case 'stickergif':
         case 'stikergif':
             if (isMedia || isQuotedVideo) {
-                if (mimetype === 'video/mp4' && message.duration < 20 || mimetype === 'image/gif' && message.duration < 20) {
+                if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     var mediaData = await decryptMedia(message, uaOverride)
                     aruga.reply(from, '[ESPERA] Siendo procesado⏳ por favor espera ± 1 min!', id)
                     var filename = `./media/stickergif.${mimetype.split('/')[1]}`
@@ -243,7 +243,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                         })
                     })
                   } else {
-                    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 20 s!`, id)
+                    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 10 s!`, id)
                    }
                 } else {
 		    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif*`, id)
