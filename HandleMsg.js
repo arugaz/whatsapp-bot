@@ -473,24 +473,14 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
         //Media
-        case 'instagram':
-            if (args.length == 0) return aruga.reply(from, `Untuk mendownload gambar atau video dari instagram\nketik: ${prefix}instagram [link_ig]`, id)
-            rugaapi.insta(args[0])
-            .then(async (res) => {
-				if (res.error) return aruga.reply(from, res.error, id)
-				for (let i = 0; i < res.result.length; i++) {
-					await aruga.sendFileFromUrl(from, res.result[i].urlDownload, '', 'Insta Downloader by: ' + res.author, id)
-				}
-			})
-            break
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
             const linkmp3 = args[0].replace('https://youtu.be/','').replace('https://www.youtube.com/watch?v=','')
 			rugaapi.ytmp3(`https://youtu.be/${linkmp3}`)
             .then(async(res) => {
-				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
-				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+				if (res.error) return aruga.sendFileFromUrl(from, `${res.url}`, '', `${res.error}`)
+				await aruga.sendFileFromUrl(from, `${res.result.thumb}`, '', `Lagu ditemukan\n\nJudul: ${res.result.title}\nDesc: ${res.result.desc}\nSabar lagi dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.result.url}`, '', '', id)
 				.catch(() => {
 					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
 				})
@@ -501,9 +491,9 @@ module.exports = HandleMsg = async (aruga, message) => {
             const linkmp4 = args[0].replace('https://youtu.be/','').replace('https://www.youtube.com/watch?v=','')
 			rugaapi.ytmp4(`https://youtu.be/${linkmp4}`)
             .then(async(res) => {
-				if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-				await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
-				await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+				if (res.error) return aruga.sendFileFromUrl(from, `${res.url}`, '', `${res.error}`)
+				await aruga.sendFileFromUrl(from, `${res.result.thumb}`, '', `Lagu ditemukan\n\nJudul: ${res.result.title}\nDesc: ${res.result.desc}\nSabar lagi dikirim`, id)
+				await aruga.sendFileFromUrl(from, `${res.result.url}`, '', '', id)
 				.catch(() => {
 					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
 				})
@@ -586,6 +576,23 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
+		case 'cerpen':
+			rugaapi.cerpen()
+			.then(async (res) => {
+				await aruga.reply(from, res.result, id)
+			})
+			break
+		case 'cersex':
+			rugaapi.cersex()
+			.then(async (res) => {
+				await aruga.reply(from, res.result, id)
+			})
+			break
+		case 'puisi':
+			rugaapi.puisi()
+			.then(async (res) => {
+				await aruga.reply(from, res.result, id)
+			})
 
         //Random Images
         case 'anime':
