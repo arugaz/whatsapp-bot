@@ -80,7 +80,7 @@ const inArray = (needle, haystack) => {
 
 module.exports = HandleMsg = async (aruga, message) => {
     try {
-        const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+        const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         var { name, formattedTitle } = chat
         let { pushname, verifiedName, formattedName } = sender
@@ -593,6 +593,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 			.then(async (res) => {
 				await aruga.reply(from, res.result, id)
 			})
+			break
 
         //Random Images
         case 'anime':
