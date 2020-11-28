@@ -100,7 +100,6 @@ after running it you need to scan the qr
 
 | Downloader |Yes|
 | ------------- | ------------- |
-| Instagram |✅|
 | Youtube Music |✅|
 | Youtube Video |✅|
 | Facebook |✅|
@@ -135,6 +134,9 @@ after running it you need to scan the qr
 | Fakta Menarik|✅|
 | Kata Bijak|✅|
 | Quotes|✅|
+| Cerita Sex|✅|
+| Cerita Pendek|✅|
+| Puisi|✅|
 
 | Random image |Yes|
 | ------------- | ------------- |
