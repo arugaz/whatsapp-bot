@@ -161,7 +161,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             let linkgrup = body.slice(6)
             let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
             let chekgrup = await aruga.inviteInfo(linkgrup)
-            if (!islink) return aruga.reply(from, '¡Lo siento, el enlace del grupo es incorrecto! envíanos el enlace correcto', id)
+            if (!islink) return aruga.reply(from, 'Lo siento, el enlace del grupo es incorrecto! envíanos el enlace correcto', id)
             if (isOwnerBot) {
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () => {
@@ -219,7 +219,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                     }
                 }
             } else if (args.length === 1) {
-                if (!isUrl(url)) { await aruga.reply(from, 'Lo sentimos, el enlace que envió no es válido..', id) }
+                if (!isUrl(url)) { await aruga.reply(from, 'Lo sentimos el enlace que envió no es válido.', id) }
                 aruga.sendStickerfromUrl(from, url).then((r) => (!r && r !== undefined)
                     ? aruga.sendText(from, 'Lo sentimos, el enlace que envió no contiene una imagen.')
                     : aruga.reply(from, 'aqui va tu sticker')).then(() => console.log(`Sticker Procesado para ${processTime(t, moment())} segundo`))
@@ -295,7 +295,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                         aruga.reply(from, 'Algo salió mal!')
                     })
             } else {
-                await aruga.reply(from, `¡Sin imagen! Por favor envíe una imagen con una leyenda. ${prefix}meme <texto_arriba> | <texto_abajo>\ncontoh: ${prefix}meme texto superior | texto abajo`, id)
+                await aruga.reply(from, `Sin imagen! Por favor envíe una imagen con una leyenda ${prefix}meme <texto_arriba> | <texto_abajo>\ncontoh: ${prefix}meme texto superior | texto abajo`, id)
             }
             break
         case 'quotemaker':
@@ -588,7 +588,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         //Random Images
         case 'anime':
             if (args.length == 0) return aruga.reply(from, `Usar ${prefix}anime\nPor favor escribe: ${prefix}anime [consulta]\nEjemplo: ${prefix}anime random\n\nconsulta disponible:\nrandom, waifu, husbu, neko`, id)
-            if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko'|| args[0] == 'hentai') {
+            if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'hentai') {
                 fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/anime/' + args[0] + '.txt')
                 .then(res => res.text())
                 .then(body => {
@@ -1010,8 +1010,8 @@ module.exports = HandleMsg = async (aruga, message) => {
 
         //Owner Bot
         case 'ban':
-            if (!isOwnerBot) return aruga.reply(from, 'Este pedido es solo para propietarios del bot.!', id)
-            if (args.length == 0) return aruga.reply(from, `Prohibir que alguien use comandos\n\nCómo escribir: \n${prefix}ban add 628xx --Activar\n${prefix}ban del 628xx --deshabilitar\n\ncómo prohibir rápidamente muchos tipos de grupos:\n${prefix}ban @tag @tag @tag`, id)
+            if (!isOwnerBot) return aruga.reply(from, 'Este pedido es solo para propietarios del bot!', id)
+            if (args.length == 0) return aruga.reply(from, 'Prohibir que alguien use comandos\n\nCómo escribir: \n${prefix}ban add 628xx --Activar\n${prefix}ban del 628xx --deshabilitar\n\ncómo prohibir rápidamente muchos tipos de grupos:\n${prefix}ban @tag @tag @tag`, id)
             if (args[0] == 'add') {
                 banned.push(args[1]+'@c.us')
                 fs.writeFileSync('./settings/banned.json', JSON.stringify(banned))
