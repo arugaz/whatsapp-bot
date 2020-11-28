@@ -8,7 +8,7 @@ const start = (aruga = new Client()) => {
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('ARUGA BOT', { font: 'Ghost', horizontalLayout: 'default' })))
     console.log(color(figlet.textSync('----------------', { horizontalLayout: 'default' })))
-    console.log(color('[DEV]'), color('ArugaZ', 'yellow'))
+    console.log(color('[DEV]'), color('NACOWON', 'yellow'))
     console.log(color('[~>>]'), color('BOT Started!', 'green'))
 
     // Mempertahankan sesi agar tetap nyala
@@ -22,20 +22,20 @@ const start = (aruga = new Client()) => {
 	const groups = await aruga.getAllGroups()
 	// kondisi ketika batas group bot telah tercapai,ubah di file settings/setting.json
 	if (groups.length > groupLimit) {
-	await aruga.sendText(chat.id, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`).then(() => {
+	await aruga.sendText(chat.id, `Lo sentimos, el grupo de este bot está completo\nGrupo máximo is: ${groupLimit}`).then(() => {
 	      aruga.leaveGroup(chat.id)
 	      aruga.deleteChat(chat.id)
 	  }) 
 	} else {
 	// kondisi ketika batas member group belum tercapai, ubah di file settings/setting.json
 	    if (chat.groupMetadata.participants.length < memberLimit) {
-	    await aruga.sendText(chat.id, `Sorry, BOT comes out if the group members do not exceed ${memberLimit} people`).then(() => {
+	    await aruga.sendText(chat.id, `Lo siento, BOT sale si los miembros del grupo no superan ${memberLimit} people`).then(() => {
 	      aruga.leaveGroup(chat.id)
 	      aruga.deleteChat(chat.id)
 	    })
 	    } else {
         await aruga.simulateTyping(chat.id, true).then(async () => {
-          await aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+          await aruga.sendText(chat.id, `Hola~, soy NACO BOT. Para averiguar los comandos de este tipo de bot ${prefix}menu`)
         })
 	    }
 	}
@@ -46,17 +46,17 @@ const start = (aruga = new Client()) => {
         const host = await aruga.getHostNumber() + '@c.us'
         // kondisi ketika seseorang diinvite/join group lewat link
         if (event.action === 'add' && event.who !== host) {
-            await aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+            await aruga.sendTextWithMentions(event.chat, `Bienvenido al grupo @${event.who.replace('@c.us', '')} \n\nDiviértete con nosotros✨`)
         }
         // kondisi ketika seseorang dikick/keluar dari group
         if (event.action === 'remove' && event.who !== host) {
-            await aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
+            await aruga.sendTextWithMentions(event.chat, `Adios @${event.who.replace('@c.us', '')},✨`)
         }
     })
 
     aruga.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot akan mengirim pesan
-        await aruga.sendText(callData.peerJid, 'Maaf sedang tidak bisa menerima panggilan.\n\n-bot')
+        await aruga.sendText(callData.peerJid, 'Lo siento, no puedo recibir llamadas.\n\n-bot')
         .then(async () => {
             // bot akan memblock nomor itu
             await aruga.contactBlock(callData.peerJid)
@@ -65,9 +65,9 @@ const start = (aruga = new Client()) => {
 
     // ketika seseorang mengirim pesan
     aruga.onMessage(async (message) => {
-        aruga.getAmountOfLoadedMessages() // menghapus pesan cache jika sudah 3000 pesan.
+        aruga.getAmountOfLoadedMessages() // 
             .then((msg) => {
-                if (msg >= 3000) {
+                if (msg >= 30000) {
                     console.log('[aruga]', color(`Loaded Message Reach ${msg}, cuting message cache...`, 'yellow'))
                     aruga.cutMsgCache()
                 }
