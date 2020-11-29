@@ -122,7 +122,10 @@ module.exports = HandleMsg = async (aruga, message) => {
 
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
-
+	
+	//[AUTO READ] Auto read message 
+	aruga.sendSeen(chatId)
+	    
 	// Filter Banned People
         if (isBanned) {
             return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
