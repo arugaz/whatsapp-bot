@@ -1037,6 +1037,24 @@ module.exports = HandleMsg = async (aruga, message) => {
 				aruga.reply(from, `Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silahkan kirim/reply sebuah gambar dengan caption ${prefix}setprofile\n\n2. Silahkan ketik ${prefix}setprofile linkImage`)
 			}
 			break
+		case 'welcome':
+			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            if (!isBotGroupAdmins) return aruga.reply(from, 'Gagal, silahkan tambahkan bot sebagai admin grup!', id)
+			if (args.length !== 1) return aruga.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
+			if (args[0] == 'on') {
+				welcome.push(chatId)
+				fs.writeFileSync('./settings/welcome.json', JSON.stringify(welcome))
+				aruga.reply(from, 'Welcome Message sekarang diaktifkan!', id)
+			} else if (args[0] == 'off') {
+				let xporn = welcome.indexOf(chatId)
+				welcome.splice(xporn, 1)
+				fs.writeFileSync('./settings/welcome.json', JSON.stringify(welcome))
+				aruga.reply(from, 'Welcome Message sekarang dinonaktifkan', id)
+			} else {
+				aruga.reply(from, `Membuat BOT menyapa member yang baru join kedalam group chat!\n\nPenggunaan:\n${prefix}welcome on --aktifkan\n${prefix}welcome off --nonaktifkan`, id)
+			}
+			break
 			
         //Owner Group
         case 'kickall': //mengeluarkan semua member
