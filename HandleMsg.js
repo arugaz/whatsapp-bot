@@ -52,7 +52,8 @@ const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 
 let { 
-    ownerNumber, 
+    ownerNumber,
+    limitCount,
     groupLimit, 
     memberLimit,
     prefix
@@ -125,6 +126,88 @@ module.exports = HandleMsg = async (aruga, message) => {
 	
 	//[AUTO READ] Auto read message 
 	aruga.sendSeen(chatId)
+	    
+        // LIMIT
+                function isMsgLimit(id){
+                    if (isAdmin) {return false;}
+                    let found = false;
+                    for (let i of msgLimit){
+                        if(i.id === id){
+                            if (i.msg >= 12) {
+                                found === true 
+                                aruga.reply(from, '*[ANTI-SPAM]*\nMaaf, akun anda kami blok karena SPAM, dan tidak bisa di UNBLOK!', id)
+                                aruga.contactBlock(id)
+                                banned.push(id)
+                                fs.writeFileSync('./setting/banned.json', JSON.stringify(banned))
+                                return true;
+                            }else if(i.msg >= 7){
+                                found === true
+                                aruga.reply(from, '*[ANTI-SPAM]*\nNomor anda terdeteksi spam!\nMohon tidak spam 5 pesan lagi atau nomor anda AUTO BLOK!', id)
+                                return true
+                            }else{
+                                found === true
+                                return false;
+                            }   
+                        }
+                    }
+                    if (found === false){
+                        let obj = {id: `${id}`, msg:1};
+                        msgLimit.push(obj);
+                        fs.writeFileSync('./lib/msgLimit.json',JSON.stringify(msgLimit));
+                        return false;
+                    }  
+                }
+                function addMsgLimit(id){
+                    if (isAdmin) {return;}
+                    var found = false
+                    Object.keys(msgLimit).forEach((i) => {
+                        if(msgLimit[i].id == id){
+                            found = i
+                        }
+                    })
+                    if (found !== false) {
+                        msgLimit[found].msg += 1;
+                        fs.writeFileSync('./lib/msgLimit.json',JSON.stringify(msgLimit));
+                    }
+                }
+                function isLimit(id){
+                    if (isAdmin) {return false;}
+                    let found = false;
+                    for (let i of limit){
+                        if(i.id === id){
+                            let limits = i.limit;
+                            if (limits >= limitCount) {
+                                found = true;
+                                aruga.reply(from, 'Perintah BOT anda sudah mencapai batas, coba esok hari :)', id)
+                                return true;
+                            }else{
+                                limit
+                                found = true;
+                                return false;
+                            }
+                        }
+                    }
+                    if (found === false){
+                        let obj = {id: `${id}`, limit:1};
+                        limit.push(obj);
+                        fs.writeFileSync('./lib/limit.json',JSON.stringify(limit));
+                        return false;
+                    }  
+                }
+                function limitAdd (id) {
+                    if (isAdmin) {return;}
+                    var found = false;
+                    Object.keys(limit).forEach((i) => {
+                        if(limit[i].id == id){
+                            found = i
+                        }
+                    })
+                    if (found !== false) {
+                        limit[found].limit += 1;
+                        fs.writeFileSync('./lib/limit.json',JSON.stringify(limit));
+                    }
+                }
+                // END LIMIT
 	    
 	// Filter Banned People
         if (isBanned) {
@@ -888,6 +971,26 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 
         // Group Commands (group admin only)
+        case 'limit':
+            var found = false
+            const limidat = JSON.parse(fs.readFileSync('./lib/limit.json'))
+            for(let lmt of limidat){
+                if(lmt.id === serial){
+                    let limitCounts = limitCount-lmt.limit
+                    if(limitCounts <= 0) return aruga.reply(from, `Limit request anda sudah habis\n\n_Note : Limit akan direset setiap jam 21:00!_`, id)
+                    aruga.reply(from, `Sisa limit request anda tersisa : *${limitCounts}*\n\n_Note : Limit akan direset setiap jam 21:00!_`, id)
+                    found = true
+                }
+            }
+            console.log(limit)
+            console.log(limidat)
+            if (found === false){
+                let obj = {id: `${serial}`, limit:1};
+                limit.push(obj);
+                fs.writeFileSync('./lib/limit.json',JSON.stringify(limit, 1));
+                aruga.reply(from, `Sisa limit request anda tersisa : *${limitCount}*\n\n_Note : Limit akan direset setiap jam 21:00!_`, id)
+            }
+            break
 	    case 'add':
             if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
