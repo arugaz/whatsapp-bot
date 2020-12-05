@@ -167,6 +167,7 @@ after running it you need to scan the qr
 | Change Group icon|✅|
 | Delete bot msg|✅|
 | Tagall/mentions all|✅|
+| Welcome ON/OFF|✅|
 
 
 | Owner bot |Yes|
