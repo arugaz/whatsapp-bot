@@ -194,6 +194,14 @@ module.exports = HandleMsg = async (aruga, message) => {
         }
 
         // Sticker Creator
+	case 'coolteks':
+	case 'cooltext':
+            if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext fikriganteng`, id)
+		rugaapi.cooltext(args[0])
+		.then(async(res) => {
+		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+		})
+		break
         case 'sticker':
         case 'stiker':
             if ((isMedia || isQuotedImage) && args.length === 0) {
@@ -521,6 +529,14 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 			
 		//Primbon Menu
+		case 'cekzodiak':
+            if (args.length !== 4) return aruga.reply(from, `Untuk mengecek zodiak, gunakan ${prefix}cekzodiak nama tanggallahir bulanlahir tahunlahir\nContoh: ${prefix}cekzodiak fikri 13 06 2004`, id)
+            const cekzodiak = await rugaapi.cekzodiak(args[0],args[1],args[2])
+            await aruga.reply(from, cekzodiak, id)
+            .catch(() => {
+                aruga.reply(from, 'Ada yang Error!', id)
+            })
+            break
 		case 'artinama':
 			if (args.length == 0) return aruga.reply(from, `Untuk mengetahui arti nama seseorang\nketik ${prefix}artinama namakamu`, id)
             rugaapi.artinama(body.slice(10))
@@ -537,6 +553,31 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 			
         // Random Kata
+	case 'motivasi':
+            fetch('https://raw.githubusercontent.com/selyxn/motivasi/main/motivasi.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitmotivasi = body.split('\n')
+                let randommotivasi = splitmotivasi[Math.floor(Math.random() * splitmotivasi.length)]
+                aruga.reply(from, randommotivasi, id)
+            })
+            .catch(() => {
+                aruga.reply(from, 'Ada yang Error!', id)
+            })
+            break
+	case 'howgay':
+		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: #howgay burhan`, id)
+            fetch('https://raw.githubusercontent.com/MrPawNO/howgay/main/howgay.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splithowgay = body.split('\n')
+                let randomhowgay = splithowgay[Math.floor(Math.random() * splithowgay.length)]
+                aruga.reply(from, randomhowgay, id)
+            })
+            .catch(() => {
+                aruga.reply(from, 'Ada yang Error!', id)
+            })
+            break
         case 'fakta':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
             .then(res => res.text())
