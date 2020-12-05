@@ -194,6 +194,13 @@ module.exports = HandleMsg = async (aruga, message) => {
         }
 
         // Sticker Creator
+	case 'cooltext':
+            if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext fikri ganteng`, id)
+		rugaapi.cooltext(args[0])
+		.then(async(res) => {
+		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+		})
+		break
         case 'sticker':
         case 'stiker':
             if ((isMedia || isQuotedImage) && args.length === 0) {
