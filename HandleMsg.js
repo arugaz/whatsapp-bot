@@ -545,6 +545,31 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 			
         // Random Kata
+	case 'motivasi':
+            fetch('https://raw.githubusercontent.com/selyxn/motivasi/main/motivasi.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitmotivasi = body.split('\n')
+                let randommotivasi = splitmotivasi[Math.floor(Math.random() * splitmotivasi.length)]
+                aruga.reply(from, randommotivasi, id)
+            })
+            .catch(() => {
+                aruga.reply(from, 'Ada yang Error!', id)
+            })
+            break
+	case 'howgay':
+		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: #howgay burhan`, id)
+            fetch('https://raw.githubusercontent.com/MrPawNO/howgay/main/howgay.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splithowgay = body.split('\n')
+                let randomhowgay = splithowgay[Math.floor(Math.random() * splithowgay.length)]
+                aruga.reply(from, randomhowgay, id)
+            })
+            .catch(() => {
+                aruga.reply(from, 'Ada yang Error!', id)
+            })
+            break
         case 'fakta':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/faktaunix.txt')
             .then(res => res.text())
