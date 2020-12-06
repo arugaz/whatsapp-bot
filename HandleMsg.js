@@ -291,6 +291,34 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
             }
             break
+        case 'groupinfo' :
+            if (isLimit(serial)) return aruga.reply(from, `Maaf ${pushname}, Kuota Limit Kamu Sudah Habis, Ketik #limit Untuk Mengecek Kuota Limit Kamu`, id)
+            
+            await limitAdd(serial)
+            if (!isGroupMsg) return aruga.reply(from, '.', message.id) 
+            var totalMem = chat.groupMetadata.participants.length
+            var desc = chat.groupMetadata.desc
+            var groupname = name
+            var welgrp = wel.includes(chat.id)
+            var ngrp = nsfwgrp.includes(chat.id)
+            var grouppic = await aruga.getProfilePicFromServer(chat.id)
+            if (grouppic == undefined) {
+                 var pfp = errorurl
+            } else {
+                 var pfp = grouppic 
+            }
+            await aruga.sendFileFromUrl(from, pfp, 'group.png', `*${groupname}* 
+
+🌐️ *Members: ${totalMem}*
+
+💌️ *Welcome: ${welgrp}*
+
+⚜️ *NSFW: ${ngrp}*
+
+📃️ *Group Description* 
+
+${desc}`)
+        break
         case 'meme':
             if ((isMedia || isQuotedImage) && args.length >= 2) {
                 const top = arg.split('|')[0]
