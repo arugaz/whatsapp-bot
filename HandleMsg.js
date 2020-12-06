@@ -124,6 +124,48 @@ module.exports = HandleMsg = async (aruga, message) => {
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 	
+		 // Kerang Menu
+		const apakah = [
+            'Ya',
+            'Tidak',
+            'Coba Ulangi'
+            ]
+
+        const bisakah = [
+            'Bisa',
+            'Tidak Bisa',
+            'Coba Ulangi'
+            ]
+
+        const kapankah = [
+            '1 Minggu lagi',
+            '1 Bulan lagi',
+            '1 Tahun lagi'
+            ]
+
+        const rate = [
+            '100%',
+            '95%',
+            '90%',
+            '85%',
+            '80%',
+            '75%',
+            '70%',
+            '65%',
+            '60%',
+            '55%',
+            '50%',
+            '45%',
+            '40%',
+            '35%',
+            '30%',
+            '25%',
+            '20%',
+            '15%',
+            '10%',
+            '5%'
+            ]
+	    
 	//[AUTO READ] Auto read message 
 	aruga.sendSeen(chatId)
 	    
@@ -682,7 +724,36 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-        
+         //Kerang Menu
+        case 'kapankah':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const when = args.join(' ')
+            const ans = kapankah[Math.floor(Math.random() * (kapankah.length))]
+            if (!when) aruga.reply(from, '⚠️ Format salah! Ketik *#menu* untuk penggunaan.')
+            await aruga.sendText(from, `Pertanyaan: *${when}* \n\nJawaban: ${ans}`)
+            break
+        case 'nilai':
+        case 'rate':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const rating = args.join(' ')
+            const awr = rate[Math.floor(Math.random() * (rate.length))]
+            if (!rating) aruga.reply(from, '⚠️ Format salah! Ketik *#menu* untuk penggunaan.')
+            await aruga.sendText(from, `Pertanyaan: *${rating}* \n\nJawaban: ${awr}`)
+            break
+        case 'apakah':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const nanya = args.join(' ')
+            const jawab = apakah[Math.floor(Math.random() * (apakah.length))]
+            if (!nanya) aruga.reply(from, '⚠️ Format salah! Ketik *#menu* untuk penggunaan.')
+            await aruga.sendText(from, `Pertanyaan: *${nanya}* \n\nJawaban: ${jawab}`)
+            break
+         case 'bisakah':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const bsk = args.join(' ')
+            const jbsk = bisakah[Math.floor(Math.random() * (bisakah.length))]
+            if (!bsk) aruga.reply(from, '⚠️ Format salah! Ketik *#menu* untuk penggunaan.')
+            await aruga.sendText(from, `Pertanyaan: *${bsk}* \n\nJawaban: ${jbsk}`)
+            break
         // Search Any
         case 'images':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
