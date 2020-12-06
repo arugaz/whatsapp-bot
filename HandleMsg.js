@@ -489,7 +489,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
             if (isGroupMsg) {
                 const inviteLink = await aruga.getGroupInviteLink(groupId);
-                aruga.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *!revoke* untuk mereset Link group`)
+                aruga.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *${prefix}revoke* untuk mereset Link group`)
             } else {
             	aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             }
@@ -500,7 +500,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                         aruga
                             .revokeGroupInviteLink(from)
                             .then((res) => {
-                                aruga.reply(from, `Berhasil Revoke Grup Link gunakan *!grouplink* untuk mendapatkan group invite link yang terbaru`, id);
+                                aruga.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id);
                             })
                             .catch((err) => {
                                 console.log(`[ERR] ${err}`);
