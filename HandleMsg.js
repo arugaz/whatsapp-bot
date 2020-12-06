@@ -189,7 +189,8 @@ module.exports = HandleMsg = async (aruga, message) => {
             const loadedMsg = await aruga.getAmountOfLoadedMessages()
             const chatIds = await aruga.getAllChatIds()
             const groups = await aruga.getAllGroups()
-            aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
+            const groupsIn = groups.filter(x => x.groupMetadata.participants.map(x => [botNumber, '62895334962050@c.us'].includes(x.id._serialized)).includes(true))
+            aruga.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groupsIn.length}* Group Joined\n- *${groups.length - groupsIn.length}* Groups Left\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length - groups.length - groupsIn.length}* Personal Chats Active\n- *${chatIds.length}* Total Chats\n- *${chatIds.length - groupsIn.length}* Total Chats Active`)
             break
         }
 
@@ -202,6 +203,15 @@ module.exports = HandleMsg = async (aruga, message) => {
 		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
 		})
 		break
+	case 'stmg':
+            case 'stickertoimg':
+            if (quotedMsg && quotedMsg.type == 'sticker') {
+                const mediaData = await decryptMedia(quotedMsg)
+                aruga.reply(from, `[WAIT] Sedang di proses⏳ silahkan tunggu!`, id)
+                const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                await aruga.sendFile(from, imageBase64, 'imagesticker.jpg', 'Success Convert Sticker to Image!', id)
+            } else if (!quotedMsg) return aruga.reply(from, `Mohon tag sticker yang ingin dijadikan gambar!`, id)
+            break
         case 'sticker':
         case 'stiker':
             if ((isMedia || isQuotedImage) && args.length === 0) {
@@ -762,6 +772,66 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, `Lirik Lagu: ${body.slice(7)}\n\n${res}`, id)
             })
             break
+	case 'listbanned':
+            let bened = `This is list of banned number\nTotal : ${banned.length}\n`
+            for (let i of banned) {
+                bened += `➸ ${i.replace(/@c.us/g,'')}\n`
+            }
+            await aruga.reply(from, bened, id)
+            break
+	case 'groupinfo' :
+            case 'gcinfo' :
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', message.id)
+            var totalMem = chat.groupMetadata.participants.length
+            var desc = chat.groupMetadata.desc
+            var groupname = name
+            var antlink = antilink.includes(chat.id)
+            var grouppic = await aruga.getProfilePicFromServer(chat.id)
+            if (grouppic == undefined) {
+                 var pfp = errorurl
+            } else {
+                 var pfp = grouppic 
+            }
+            await aruga.sendFileFromUrl(from, pfp, 'group.png', `*「 GROUP INFO 」*
+*➸ *Name : ${groupname}* 
+*➸ Members : ${totalMem}*
+*➸ Anti Link : ${antlink ? 'Aktif' : 'Tidak Aktif'}*
+*➸ Group Description* 
+${desc}`)
+            break
+	case "revoke":
+	            if (!isGroupAdmins) return aruga.reply(from, 'Yahaha wahyuu, perintah ini hanya bisa di gunakan admin', id)
+                    if (isGroupAdmins) {
+                        aruga
+                        .revokeGroupInviteLink(from)
+                            .then((res) => {
+                                aruga.reply(from, `Berhasil Revoke Grup Link gunakan *${prefix}grouplink* untuk mendapatkan group invite link yang terbaru`, id);
+                            })
+                            .catch((err) => {
+                                console.log(`[ERR] ${err}`);
+                            });
+                    }
+                    break;
+	case 'listblock':
+            let hih = `This is list of blocked number\nTotal : ${blockNumber.length}\n`
+            for (let i of blockNumber) {
+                hih += `➸ ${i.replace(/@c.us/g,'')}\n`
+            }
+            await aruga.reply(from, hih, id)
+            break
+	case 'ownergc':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const Owner_ = chat.groupMetadata.owner
+            await aruga.sendTextWithMentions(from, `Owner Group : @${Owner_}`)
+            break
+	case 'adminlist':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            let mimin = ''
+            for (let admon of groupAdmins) {
+                mimin += `➸ @${admon.replace(/@c.us/g, '')}\n` 
+            }
+            await aruga.sendTextWithMentions(from, mimin)
+            break
         case 'chord':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari lirik dan chord dari sebuah lagu\bketik: ${prefix}chord [judul_lagu]`, id)
             const chordq = body.slice(7)
@@ -985,18 +1055,18 @@ module.exports = HandleMsg = async (aruga, message) => {
             aruga.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
             break
         case 'tagall':
-        case 'everyone':
-            if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
-            if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
-            const groupMem = await aruga.getGroupMembers(groupId)
-            let hehex = '╔══✪〘 Mention All 〙✪══\n'
-            for (let i = 0; i < groupMem.length; i++) {
-                hehex += '╠➥'
-                hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
-            }
-            hehex += '╚═〘 *A R U G A  B O T* 〙'
-            await aruga.sendTextWithMentions(from, hehex)
-            break
+                if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                const textInfo = body.slice(8)
+                const groupMem = await aruga.getGroupMembers(groupId)
+                let hehex = `╔══✪〘 Mention All 〙✪══\n\n`
+                for (let i = 0; i < groupMem.length; i++) {
+                    hehex += '╠➥'
+                    hehex += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
+                }
+                hehex += '╚═〘 *A R U G A  B O T* 〙'
+                await aruga.sendTextWithMentions(from, `Info dari : ${pushname}\n` + textInfo+ '\n\n' +hehex)
+                break
 		case 'simisimi':
 			if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
 			aruga.reply(from, `Untuk mengaktifkan simi-simi pada Group Chat\n\nPenggunaan\n${prefix}simi on --mengaktifkan\n${prefix}simi off --nonaktifkan\n`, id)
