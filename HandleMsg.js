@@ -193,6 +193,20 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         }
 
+	//Sticker Converter
+	case 'stimg':
+            if (quotedMsg && quotedMsg.type == 'sticker') {
+                const mediaData = await decryptMedia(quotedMsg)
+                aruga.reply(from, `Sedamg di proses! Silahkan tunggu sebentar...`, id)
+                const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                await aruga.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
+                .then(() => {
+                    console.log(`Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
+                })
+        } else if (!quotedMsg) return aruga.reply(from, `Format salah, silahkan tag sticker yang ingin dijadikan gambar!`, id)
+        break
+			
+			
         // Sticker Creator
 	case 'coolteks':
 	case 'cooltext':
