@@ -90,9 +90,10 @@ module.exports = HandleMsg = async (aruga, message) => {
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
-		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
-		const pengirim = sender.id
+	const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
+	const pengirim = sender.id
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
+	const blockNumber = await aruga.getBlockedIds()
 
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
