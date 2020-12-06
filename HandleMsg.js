@@ -484,6 +484,29 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
+	//Group All User
+	case 'grouplink':
+            if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
+            if (isGroupMsg) {
+                const inviteLink = await aruga.getGroupInviteLink(groupId);
+                aruga.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}* Gunakan *!revoke* untuk mereset Link group`)
+            } else {
+            	aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            }
+            break
+	case "revoke":
+	if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
+                    if (isBotGroupAdmins) {
+                        aruga
+                            .revokeGroupInviteLink(from)
+                            .then((res) => {
+                                aruga.reply(from, `Berhasil Revoke Grup Link gunakan *!grouplink* untuk mendapatkan group invite link yang terbaru`, id);
+                            })
+                            .catch((err) => {
+                                console.log(`[ERR] ${err}`);
+                            });
+                    }
+                    break;
         //Media
         case 'ytmp3':
             if (args.length == 0) return aruga.reply(from, `Untuk mendownload lagu dari youtube\nketik: ${prefix}ytmp3 [link_yt]`, id)
