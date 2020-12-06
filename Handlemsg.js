@@ -1,4 +1,4 @@
-      case 'linkgroup':
+            case 'linkgroup':
             case 'linkgc' :
             if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
             if (isGroupMsg) {
