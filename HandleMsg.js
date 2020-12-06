@@ -193,6 +193,20 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         }
 
+	//Sticker Converter
+	case 'stimg':
+            if (quotedMsg && quotedMsg.type == 'sticker') {
+                const mediaData = await decryptMedia(quotedMsg)
+                aruga.reply(from, `Sedamg di proses! Silahkan tunggu sebentar...`, id)
+                const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                await aruga.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
+                .then(() => {
+                    console.log(`Sticker to Image Processed for ${processTime(t, moment())} Seconds`)
+                })
+        } else if (!quotedMsg) return aruga.reply(from, `Format salah, silahkan tag sticker yang ingin dijadikan gambar!`, id)
+        break
+			
+			
         // Sticker Creator
 	case 'coolteks':
 	case 'cooltext':
@@ -684,6 +698,13 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         
         // Search Any
+	case 'dewabatch':
+		if (args.length == 0) return aruga.reply(from, `Untuk mencari anime batch, ketik ${prefix}dewabatch judul\n\nContoh: ${prefix}dewabatch naruto`, id)
+		rugaapi.dewabatch(args[0])
+		.then(async(res) => {
+		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+		})
+		break
         case 'images':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
             const cariwall = body.slice(8)
