@@ -582,7 +582,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
 	      case 'howgay':
-        		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: #howgay burhan`, id)
+        		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: ${prefix}howgay burhan`, id)
             fetch('https://raw.githubusercontent.com/MrPawNO/howgay/main/howgay.txt')
             .then(res => res.text())
             .then(body => {
