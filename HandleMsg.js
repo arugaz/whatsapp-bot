@@ -53,6 +53,8 @@ const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
 
+const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
+
 let { 
     ownerNumber, 
     groupLimit, 
@@ -507,6 +509,37 @@ module.exports = HandleMsg = async (aruga, message) => {
             .catch(() => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
+            break
+	case 'me':
+            if (isBanned) return false
+            if (isGroupMsg) {
+                if (!quotedMsg) {
+                var pic = await aruga.getProfilePicFromServer(author)
+                var namae = pushname
+                var sts = await aruga.getStatus(author)
+                var adm = isGroupAdmins
+                const { status } = sts
+                if (pic == undefined) {
+                var pfp = errorurl 
+                } else {
+                    var pfp = pic
+                } 
+                await aruga.sendFileFromUrl(from, pfp, 'pfp.jpg', `*User Profile* ✨️ \n\n➸ *Username: ${namae}*\n\n➸ *User Info: ${status}*\n\n➸ *Admin Group: ${adm}*\n\n`)
+             } else if (quotedMsg) {
+             var qmid = quotedMsgObj.sender.id
+             var pic = await aruga.getProfilePicFromServer(qmid)
+             var namae = quotedMsgObj.sender.name
+             var sts = await aruga.getStatus(qmid)
+             var adm = isGroupAdmins
+             const { status } = sts
+              if (pic == undefined) {
+              var pfp = errorurl 
+              } else {
+              var pfp = pic
+              } 
+              await aruga.sendFileFromUrl(from, pfp, 'pfp.jpg', `*User Profile* ✨️ \n\n➸ *Username: ${namae}*\n\n➸ *User Info: ${status}*\n\n➸ *Admin Group: ${adm}*\n\n`)
+             }
+            }
             break
         //Media
         case 'ytmp3':
