@@ -10,7 +10,6 @@ const appRoot = require('app-root-path')
 const Math_js = require('mathjs')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
-const Math_js = require('mathjs');
 const db_group = new FileSync(appRoot+'/lib/data/group.json')
 const db = low(db_group)
 db.defaults({ group: []}).write()
