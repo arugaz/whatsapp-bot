@@ -7,8 +7,10 @@ const axios = require('axios')
 const fetch = require('node-fetch')
 
 const appRoot = require('app-root-path')
+const Math_js = require('mathjs')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
+const Math_js = require('mathjs');
 const db_group = new FileSync(appRoot+'/lib/data/group.json')
 const db = low(db_group)
 db.defaults({ group: []}).write()
@@ -803,6 +805,15 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
             await aruga.reply(from, bened, id)
             break
+	case 'mtk':
+            if (args.length === 1) return aruga.reply(from, '[❗] Kirim perintah *#math [ Angka ]*\nContoh : #math 12 * 12\n*NOTE* :\n- Untuk Perkalian Menggunakan *\n- Untuk Pertambahan Menggunakan +\n- Untuk Pengurangan Mennggunakan -\n- Untuk Pembagian Menggunakan /')
+            const mtk = body.slice(6)
+            if (typeof Math_js.evaluate(mtk) !== "number") {
+            aruga.reply(from, `"${mtk}", bukan angka!\n[❗] Kirim perintah *#math [ Angka ]*\nContoh : #math 12*12\n*NOTE* :\n- Untuk Perkalian Menggunakan *\n- Untuk Pertambahan Menggunakan +\n- Untuk Pengurangan Mennggunakan -\n- Untuk Pembagian Menggunakan /`, id)
+        } else {
+            aruga.reply(from, `*「 MATH 」*\n\n*Kalkulator*\n${mtk} = ${Math_js.evaluate(mtk)}`, id)
+        }
+        break
 	case 'groupinfo' :
             case 'gcinfo' :
             if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', message.id)
