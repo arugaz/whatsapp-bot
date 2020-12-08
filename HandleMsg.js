@@ -8,6 +8,7 @@ const fetch = require('node-fetch')
 
 const appRoot = require('app-root-path')
 const low = require('lowdb')
+const Math_js = require('mathjs')
 const FileSync = require('lowdb/adapters/FileSync')
 const db_group = new FileSync(appRoot+'/lib/data/group.json')
 const db = low(db_group)
@@ -156,6 +157,15 @@ module.exports = HandleMsg = async (aruga, message) => {
         case 'donasi':
             await aruga.sendText(from, menuId.textDonasi())
             break
+	case 'mtk':
+            if (args.length === 1) return aruga.reply(from, '[❗] Kirim perintah *#math [ Angka ]*\nContoh : #math 12 * 12\n*NOTE* :\n- Untuk Perkalian Menggunakan *\n- Untuk Pertambahan Menggunakan +\n- Untuk Pengurangan Mennggunakan -\n- Untuk Pembagian Menggunakan /')
+            const mtk = body.slice(6)
+            if (typeof Math_js.evaluate(mtk) !== "number") {
+            aruga.reply(from, `"${mtk}", bukan angka!\n[❗] Kirim perintah *#math [ Angka ]*\nContoh : #math 12*12\n*NOTE* :\n- Untuk Perkalian Menggunakan *\n- Untuk Pertambahan Menggunakan +\n- Untuk Pengurangan Mennggunakan -\n- Untuk Pembagian Menggunakan /`, id)
+        } else {
+            aruga.reply(from, `*「 MATH 」*\n\n*Kalkulator*\n${mtk} = ${Math_js.evaluate(mtk)}`, id)
+        }
+        break
         case 'ownerbot':
             await aruga.sendContact(from, ownerNumber)
             .then(() => aruga.sendText(from, 'Jika kalian ingin request fitur silahkan chat nomor owner!'))
