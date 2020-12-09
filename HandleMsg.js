@@ -124,6 +124,20 @@ module.exports = HandleMsg = async (aruga, message) => {
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 	
+	// Fitur Anti Badword
+        if (isGroupMsg && !isGroupAdmins && !isAdmin && !isOwner){
+            if (chats.match("Anjing") || chats.match("Ngentot") || chats.match("Bangsat") || chats.match("Kontol") || chats.match("Ajg") || chats.match("Pepek")) {
+                const check = await aruga.inviteInfo(chats);
+                if (!check) {
+                    return
+                } else {
+                    aruga.reply(from, `*「 ANTI BADWORD DETECTOR 」*\nBADWORD lu berlebihan, jaga ucapan,jaga hati,jaga doi,babayyyy :(`, id).then(() => {
+                        aruga.removeParticipant(groupId, sender.id)
+                    })
+                }
+            }
+        }
+	    
 	//[AUTO READ] Auto read message 
 	aruga.sendSeen(chatId)
 	    
