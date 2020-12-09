@@ -126,7 +126,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         msgFilter.addFilter(from)
 	    
 	    //FITUR ANTI LINK
-      	  if (isGroupMsg && !isGroupAdmins && !isAdmin && !isOwnerBot){
+      	  if (isGroupMsg && !isGroupAdmins && !isOwnerBot){
             if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
                 const check = await aruga.inviteInfo(chats);
                 if (!check) {
