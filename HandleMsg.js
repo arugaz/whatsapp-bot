@@ -108,10 +108,11 @@ module.exports = HandleMsg = async (aruga, message) => {
 		
 		// [IDENTIFY]
 		const isOwnerBot = ownerNumber.includes(pengirim)
-        const isBanned = banned.includes(pengirim)
+        	const isBanned = banned.includes(pengirim)
 		const isSimi = simi.includes(chatId)
 		const isNgegas = ngegas.includes(chatId)
 		const isKasar = await cariKasar(chats)
+		const isAdmin = adminNumber.includes(pengirim)
 
         // [BETA] Avoid Spam Message
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
@@ -125,7 +126,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         msgFilter.addFilter(from)
 	    
 	    //FITUR ANTI LINK
-        if (isGroupMsg && !isGroupAdmins){
+      	  if (isGroupMsg && !isGroupAdmins && !isAdmin && !isOwnerBot){
             if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
                 const check = await aruga.inviteInfo(chats);
                 if (!check) {
