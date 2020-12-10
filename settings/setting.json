@@ -1,6 +1,6 @@
 {
-    "ownerNumber": "628xxxxxxxxxx@c.us",
-    "memberLimit": 5,
+    "ownerNumber": ["62895334950905@c.us","62895334962050@c.us"],
+    "memberLimit": 1000,
     "groupLimit": 5,
     "prefix": "#"
   }

@@ -35,26 +35,31 @@ const start = (aruga = new Client()) => {
 	    })
 	    } else {
         await aruga.simulateTyping(chat.id, true).then(async () => {
-          await aruga.sendText(chat.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+          await aruga.sendText(chat.id, `what up y'all~, I'm Thoriq BOT. Untuk mencari tahu command BOT, ketik ${prefix}menu`)
         })
 	    }
 	}
     })
 
     // ketika seseorang masuk/keluar dari group
-    aruga.onGlobalParicipantsChanged(async (event) => {
+   aruga.onGlobalParicipantsChanged(async (event) => {
         const host = await aruga.getHostNumber() + '@c.us'
-		let profile = await aruga.getProfilePicFromServer(event.who)
-		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
-        // kondisi ketika seseorang diinvite/join group lewat link
         if (event.action === 'add' && event.who !== host) {
-			await aruga.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-            await aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+            const gChat = await aruga.getChatById(event.chat)
+            const pChat = await aruga.getContact(event.who)
+            const { contact, groupMetadata, name } = gChat
+            const pepe = await aruga.getProfilePicFromServer(event.who)
+            const capt = `*ey yo,what up!* *@${event.who.replace('@c.us','')}*\n\n*Welcome to Our Group*\n\nIntro dulu bruh\n-Nama  :\n-Umur   :\n-Askot  :\nhave fun in our group.\n\n_*Commands bot #help , #menu*_`
+            if (pepe == '' || pepe == undefined) { 
+                await aruga.sendFileFromUrl(event.chat, 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU', 'profile.jpg', capt)
+                } else {
+                    await aruga.sendFileFromUrl(event.chat, pepe, 'profile.jpg', capt)
+                }
         }
         // kondisi ketika seseorang dikick/keluar dari group
         if (event.action === 'remove' && event.who !== host) {
-			await aruga.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
-            await aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
+            await aruga.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
+            await aruga.sendTextWithMentions(event.chat, `busettt, eh @${event.who.replace('@c.us', '')} udah dipungut malah mau jadi anak pungut lagi.`)
         }
     })
 

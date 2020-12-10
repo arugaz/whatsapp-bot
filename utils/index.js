@@ -74,6 +74,12 @@ const addFilter = (from) => {
         return usedCommandRecently.delete(from)
     }, 5000) // 5sec is delay before processing next command
 }
+/**
+    * Revokes the current invite link for a group chat. Any previous links will stop working
+   * @param chatId
+   * @returns Promise<boolean>
+   */
+  
 
 module.exports = {
     msgFilter: {
