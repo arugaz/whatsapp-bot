@@ -125,7 +125,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         msgFilter.addFilter(from)
 	
 	// Fitur Anti Badword
-        if (isGroupMsg && !isGroupAdmins && !isAdmin && !isOwner){
+        if (isGroupMsg && !isGroupAdmins && !isOwner){
             if (chats.match("Anjing") || chats.match("Ngentot") || chats.match("Bangsat") || chats.match("Kontol") || chats.match("Ajg") || chats.match("Pepek")) {
                 const check = await aruga.inviteInfo(chats);
                 if (!check) {
