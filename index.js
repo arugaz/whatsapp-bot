@@ -43,6 +43,7 @@ const start = (aruga = new Client()) => {
 
     // ketika seseorang masuk/keluar dari group
     aruga.onGlobalParicipantsChanged(async (event) => {
+<<<<<<< HEAD
     const host = await aruga.getHostNumber() + '@c.us'
     if (event.action === 'add' && event.who !== host) {
         const gChat = await aruga.getChatById(event.chat)
@@ -58,6 +59,24 @@ const start = (aruga = new Client()) => {
         await aruga.sendFileFromUrl(event.chat, burik, 'profile.jpg', hasu)
     }
 })
+=======
+        const host = await aruga.getHostNumber() + '@c.us'
+		const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
+		const isWelcome = welcome.includes(event.chat)
+		let profile = await aruga.getProfilePicFromServer(event.who)
+		if (profile == '' || profile == undefined) profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU'
+        // kondisi ketika seseorang diinvite/join group lewat link
+        if (event.action === 'add' && event.who !== host && isWelcome) {
+			await aruga.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
+            await aruga.sendTextWithMentions(event.chat, `Hello, Welcome to the group @${event.who.replace('@c.us', '')} \n\nHave fun with us✨`)
+        }
+        // kondisi ketika seseorang dikick/keluar dari group
+        if (event.action === 'remove' && event.who !== host) {
+			await aruga.sendFileFromUrl(event.chat, profile, 'profile.jpg', '')
+            await aruga.sendTextWithMentions(event.chat, `Good bye @${event.who.replace('@c.us', '')}, We'll miss you✨`)
+        }
+    })
+>>>>>>> b13bae9d5f383177ca046886717ccd82b206356d
 
     aruga.onIncomingCall(async (callData) => {
         // ketika seseorang menelpon nomor bot akan mengirim pesan
