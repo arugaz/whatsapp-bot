@@ -170,12 +170,12 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () => {
                           await aruga.sendText(from, 'Berhasil join grup via link!')
-                          await aruga.sendText(chekgrup.id, `Hai minna~, Im Aruga BOT. To find out the commands on this bot type ${prefix}menu`)
+                          await aruga.sendText(chekgrup.id, `Hai minna~, Im Aruga Bot. To find out the commands on this Bot type ${prefix}menu`)
                       })
             } else {
                 let cgrup = await aruga.getAllGroups()
                 if (cgrup.length > groupLimit) return aruga.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
-                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, BOT wil not join if the group members do not exceed ${memberLimit} people`, id)
+                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, Bot wil not join if the group members do not exceed ${memberLimit} people`, id)
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () =>{
                           await aruga.reply(from, 'Berhasil join grup via link!', id)
@@ -194,10 +194,12 @@ module.exports = HandleMsg = async (aruga, message) => {
         }
 
 	//Sticker Converter
+	case 'stikertoimg':
+	case 'stickertoimg':
 	case 'stimg':
             if (quotedMsg && quotedMsg.type == 'sticker') {
                 const mediaData = await decryptMedia(quotedMsg)
-                aruga.reply(from, `Sedamg di proses! Silahkan tunggu sebentar...`, id)
+                aruga.reply(from, `Sedang di proses! Silahkan tunggu sebentar...`, id)
                 const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                 await aruga.sendFile(from, imageBase64, 'imgsticker.jpg', 'Berhasil convert Sticker to Image!', id)
                 .then(() => {
@@ -210,7 +212,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         // Sticker Creator
 	case 'coolteks':
 	case 'cooltext':
-            if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext fikriganteng`, id)
+            if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext arugaz`, id)
 		rugaapi.cooltext(args[0])
 		.then(async(res) => {
 		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
@@ -559,7 +561,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 				await aruga.sendFileFromUrl(from, `${res.result.thumb}`, '', `Lagu ditemukan\n\nJudul: ${res.result.title}\nDesc: ${res.result.desc}\nSabar lagi dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.result.url}`, '', '', id)
 				.catch(() => {
-					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+					aruga.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL Akan di Reset setelah 1 Jam/60 Menit`, id)
 				})
 			})
             break
@@ -572,7 +574,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 				await aruga.sendFileFromUrl(from, `${res.result.thumb}`, '', `Lagu ditemukan\n\nJudul: ${res.result.title}\nDesc: ${res.result.desc}\nSabar lagi dikirim`, id)
 				await aruga.sendFileFromUrl(from, `${res.result.url}`, '', '', id)
 				.catch(() => {
-					aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+					aruga.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL akan di Reset setelah 1 Jam/60 Menit`, id)
 				})
 			})
             break
@@ -618,7 +620,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 			
         // Random Kata
-	case 'motivasi':
+      	case 'motivasi':
             fetch('https://raw.githubusercontent.com/selyxn/motivasi/main/motivasi.txt')
             .then(res => res.text())
             .then(body => {
@@ -630,8 +632,8 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-	case 'howgay':
-		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: #howgay burhan`, id)
+	      case 'howgay':
+        		if (args.length == 0) return aruga.reply(from, `Untuk mengetahui seberapa gay seseorang gunakan ${prefix}howgay namanya\n\nContoh: ${prefix}howgay burhan`, id)
             fetch('https://raw.githubusercontent.com/MrPawNO/howgay/main/howgay.txt')
             .then(res => res.text())
             .then(body => {
@@ -686,24 +688,24 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-		case 'cerpen':
-			rugaapi.cerpen()
-			.then(async (res) => {
-				await aruga.reply(from, res.result, id)
-			})
-			break
-		case 'cersex':
-			rugaapi.cersex()
-			.then(async (res) => {
-				await aruga.reply(from, res.result, id)
-			})
-			break
-		case 'puisi':
-			rugaapi.puisi()
-			.then(async (res) => {
-				await aruga.reply(from, res.result, id)
-			})
-			break
+    		case 'cerpen':
+      			rugaapi.cerpen()
+      			.then(async (res) => {
+		    		await aruga.reply(from, res.result, id)
+      			})
+		      	break
+	     	case 'cersex':
+			      rugaapi.cersex()
+			      .then(async (res) => {
+			    	await aruga.reply(from, res.result, id)
+		      	})
+		      	break
+	    	case 'puisi':
+		      	rugaapi.puisi()
+		      	.then(async (res) => {
+			    	await aruga.reply(from, res.result, id)
+		      	})
+		      	break
 
         //Random Images
         case 'anime':
@@ -750,14 +752,14 @@ module.exports = HandleMsg = async (aruga, message) => {
         
         // Search Any
 	case 'dewabatch':
-		if (args.length == 0) return aruga.reply(from, `Untuk mencari anime batch, ketik ${prefix}dewabatch judul\n\nContoh: ${prefix}dewabatch naruto`, id)
+		if (args.length == 0) return aruga.reply(from, `Untuk mencari anime batch dari Dewa Batch, ketik ${prefix}dewabatch judul\n\nContoh: ${prefix}dewabatch naruto`, id)
 		rugaapi.dewabatch(args[0])
 		.then(async(res) => {
 		await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
 		})
 		break
         case 'images':
-            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar dari pinterest\nketik: ${prefix}images [search]\ncontoh: ${prefix}images naruto`, id)
             const cariwall = body.slice(8)
             const hasilwall = await images.fdci(cariwall)
             await aruga.sendFileFromUrl(from, hasilwall, '', '', id)
@@ -766,7 +768,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
         case 'sreddit':
-            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar di sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari gambar dari sub reddit\nketik: ${prefix}sreddit [search]\ncontoh: ${prefix}sreddit naruto`, id)
             const carireddit = body.slice(9)
             const hasilreddit = await images.sreddit(carireddit)
             await aruga.sendFileFromUrl(from, hasilreddit, '', '', id)
@@ -862,7 +864,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 					await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
 					await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
 					.catch(() => {
-						aruga.reply(from, `URL INI ${args[0]} SUDAH PERNAH DI DOWNLOAD SEBELUMNYA ..URL AKAN RESET SETELAH 60 MENIT`, id)
+						aruga.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL akan di Reset setelah 1 Jam/60 Menit`, id)
 					})
 				})
             })
