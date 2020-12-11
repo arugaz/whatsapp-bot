@@ -47,6 +47,8 @@ const {
 const { uploadImages } = require('./utils/fetcher')
 
 const fs = require('fs-extra')
+const { MessageTypes } = require('@open-wa/wa-automate/dist/api/model/message')
+const { send } = require('process')
 const banned = JSON.parse(fs.readFileSync('./settings/banned.json'))
 const simi = JSON.parse(fs.readFileSync('./settings/simi.json'))
 const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
@@ -62,7 +64,8 @@ let {
     ownerNumber, 
     groupLimit, 
     memberLimit,
-    prefix
+    prefix,
+    mtc: mtcState
 } = setting
 
 const {
@@ -93,69 +96,7 @@ const isMuted = (chatId) => {
       }
   }
   const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
-  const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
   // FUNCTION
-function addMsgLimit(id){
-    if (isAdmin) {return;}
-    var found = false
-    Object.keys(msgLimit).forEach((i) => {
-        if(msgLimit[i].id == id){
-            found = i
-        }
-    })
-    if (found !== false) {
-        msgLimit[found].msg += 1;
-        fs.writeFileSync('./lib/database/msgLimit.json',JSON.stringify(msgLimit));
-    }
-}
-function isLimit(id){
-    if (isAdmin) {return false;}
-    let found = false;
-    for (let i of limit){
-        if(i.id === id){
-            let limits = i.limit;
-            if (limits >= limitCount) {
-                found = true;
-                aruga.reply(from, 'Perintah BOT anda sudah mencapai batas, coba esok hari :)', id)
-                return true;
-            }else{
-                limit
-                found = true;
-                return false;
-            }
-        }
-    }
-    if (found === false){
-        let obj = {id: `${id}`, limit:1};
-        limit.push(obj);
-        fs.writeFileSync('./lib/database/limit.json',JSON.stringify(limit));
-        return false;
-    }  
-}
-function limitAdd (id) {
-    if (isAdmin) {return;}
-    var found = false;
-    Object.keys(limit).forEach((i) => {
-        if(limit[i].id == id){
-            found = i
-        }
-    })
-    if (found !== false) {
-        limit[found].limit += 1;
-        fs.writeFileSync('./lib/database/limit.json',JSON.stringify(limit));
-    }
-}
-  if (typeof Array.prototype.splice === 'undefined') {
-    Array.prototype.splice = function (index, howmany, elemes) {
-        howmany = typeof howmany === 'undefined' || this.length;
-        var elems = Array.prototype.slice.call(arguments, 2), newArr = this.slice(0, index), last = this.slice(index + howmany);
-        newArr = newArr.concat.apply(newArr, elems);
-        newArr = newArr.concat.apply(newArr, last);
-        return newArr;
-    }
-}
-
-
 module.exports = HandleMsg = async (aruga, message) => {
     try {
         const { type, id, from, t, sender, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, author, mentionedJidList, } = message
@@ -171,15 +112,11 @@ module.exports = HandleMsg = async (aruga, message) => {
 		const pengirim = sender.id
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
         const blockNumber = await aruga.getBlockedIds()
-        const serial = sender.id
 
-        const adminNumber = "62895334950905@c.us"
-        const isAdmin = adminNumber.includes(pengirim)
+        const isAdmin = adminNumber.includes(sender.id)
         const ownerNumber = ["62895334950905@c.us" , "62895334962050@c.us"]
         const isOwner = ownerNumber.includes(pengirim)
         const isOwnerB = ownerNumber.includes(pengirim)
-        const Anjing = "6282136988960@c.us"
-        const isAnjing = Anjing.includes(sender.id)
 
         const isWhite = (chatId) => adminNumber.includes(chatId) ? true : false
         const isWhiteList = (chatId) => {
@@ -191,54 +128,86 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
         }
 
-        if(body === 'mute' && isMuted(chatId) == true){
-            if(isGroupMsg) {
-                if (!isAdmin) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dilakukan oleh admin Elaina!', id)
-                if(isMsgLimit(pengirim)){
-                    return
-                }else{
-                    addMsgLimit(pengirim)
-                }
-                muted.push(chatId)
-                fs.writeFileSync('./lib/database/muted.json', JSON.stringify(muted, null, 2))
-                aruga.reply(from, 'Bot telah di mute pada chat ini! #unmute untuk unmute!', id)
-            }else{
-                if(isMsgLimit(pengirim)){
-                    return
-                }else{
-                    addMsgLimit(pengirim)
-                }
-                muted.push(chatId)
-                fs.writeFileSync('./lib/database/muted.json', JSON.stringify(muted, null, 2))
-                reply(from, 'Bot telah di mute pada chat ini! #unmute untuk unmute!', id)
-            }
+        // PROTECT
+        if (body == 'Bot'){
+            aruga.reply(from, 'naonn euyy', id)
         }
-        if(body === 'unmute' && isMuted(chatId) == false){
-            if(isGroupMsg) {
-                if (!isAdmin) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dilakukan oleh admin Elaina!', id)
-                if(isMsgLimit(pengirim)){
-                    return
-                }else{
-                    addMsgLimit(pengirim)
-                }
-                let index = muted.indexOf(chatId);
-                muted.splice(index,1)
-                fs.writeFileSync('./lib/database/muted.json', JSON.stringify(muted, null, 2))
-                aruga.reply(from, 'Bot telah di unmute!', id)         
-            }else{
-                if(isMsgLimit(pengirim)){
-                    return
-                }else{
-                    addMsgLimit(pengirim)
-                }
-                let index = muted.indexOf(chatId);
-                muted.splice(index,1)
-                fs.writeFileSync('./lib/database/muted.json', JSON.stringify(muted, null, 2))
-                aruga.reply(from, 'Bot telah di unmute!', id)                   
-            }
+        if (body == 'bot'){
+            aruga.reply(from, 'naonn euyy')
+        }
+        if (body == 'Boty'){
+            aruga.reply(from, 'dih gay', id)
+        }
+        if (body == 'boty'){
+            aruga.reply(from, 'dih gay', id)
+        }
+        if (body == 'Boti'){
+            aruga.reply(from, 'dih gay', id)
+        }
+        if (body == 'boti'){
+            aruga.reply(from, 'dih gay', id)
+        }
+        if (body == 'Assalamualaikum'){
+            aruga.reply(from, 'Waalaikumsalam', id)
+        }
+        if (body == 'assalamualaikum'){
+            aruga.reply(from, 'Waalaikumsalam', id)
+        }
+        if (body == 'P'){
+            aruga.reply(from, 'salam yang bener babi' , id)
+        }
+        if (body == 'p'){
+            aruga.reply(from, 'salam yang bener babi', id)
+        }
+        if (body == 'woi'){
+            aruga.reply(from, 'apa sayang', id)
+        }
+        if (body == 'Woi'){
+            aruga.reply(from, 'apa sayang', id)
+        }
+        if (body == 'Woi bot'){
+            aruga.reply(from, 'knpa manggil?', id)
+        }
+        if (body == 'woi bot'){
+            aruga.reply(from, 'kenapa manggil?', id)
+        }
+        if (body == 'kacang'){
+            aruga.reply(from, 'direbus atau digoreng?', id)
+        }
+        if (body == 'Kacang'){
+            aruga.reply(from, 'direbus atau digoreng?', id)
+        }
+        if (body == 'hai'){
+            aruga.reply(from, 'haii sayang', id)
+        }
+        if (body == 'hi'){
+            aruga.reply(from, 'hi', id)
+        }
+        if (body == 'Hi'){
+            aruga.reply(from, 'hi', id)
+        }
+        if (body == 'Hai'){
+            aruga.reply(from, 'Hai sayangg', id)
+        }
+        if (body == 'Halo'){
+            aruga.reply(from, 'Halo gaes Bot disini, dan ini adalah command buat show menu pada bot *#help*', id)
+        }
+        if (body == 'halo'){
+            aruga.reply(from, 'Halo gaes Bot disini, dan ini adalah command buat show menu pada bot *#help*', id)
+        }
+        if (body == 'ngentot'){
+            aruga.reply(from, 'Bagus lu begitu?', id)
+        }
+        if (body == 'Ngentot'){
+            aruga.reply(from, 'Bagus lu begitu?', id)
+        }
+        if (body == 'Ayangg'){
+            aruga.reply(from, 'iya ayangg, kenapa?', id)
+        }
+        if (body == 'ayangg'){
+            aruga.reply(from, 'iyaa ayangg, kenapa?', id)
         }
 
-        // PROTECT
         const mess = {
             wait: '[ WAIT ] Sedang di proses⏳ silahkan tunggu sebentar',
             error: {
@@ -256,10 +225,7 @@ module.exports = HandleMsg = async (aruga, message) => {
                 Iv: '[❗] Link yang anda kirim tidak valid!'
             }
         }
-        const isBlocked = blockNumber.includes(sender.id)
-        const isNsfw = isGroupMsg ? nsfw_.includes(chat.id) : false
         const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi)
-
         // Bot Prefix
         body = (type === 'chat' && body.startsWith(prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(prefix)) ? caption : ''
         const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
@@ -288,7 +254,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
         }
         //fitur anti link
-        if (isGroupMsg && !isGroupAdmins && !isAdmin && !isOwner){
+        if (isGroupMsg && !isGroupAdmins && !isOwner){
             if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
                 const check = await aruga.inviteInfo(chats);
                 if (!check) {
@@ -301,11 +267,28 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
         }
         // Kerang Menu
+
 		const apakah = [
             'Ya',
             'Tidak',
             'Coba Ulangi'
             ]
+
+        const cegan = [
+            '62895334950905@c.us',
+            '6282136988960@c.us',
+            '6282341126034@c.us',
+            '6287821057464@c.us',
+        ]
+
+        const cecan = [
+            '628985945421@c.us',
+            '6283819609238@c.us',
+            '6281332494577@c.us',
+            '6281275200288@c.us',
+            '6281262787974@c.us',
+            '6281907437429@c.us'
+        ]
 
         const bisakah = [
             'Bisa',
@@ -356,6 +339,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'menu':
         case 'help':
+        case 'p':
             await aruga.sendText(from, menuId.textMenu(pushname))
             .then(() => ((isGroupMsg) && (isGroupAdmins)) ? aruga.sendText(from, `Menu Admin Grup: *${prefix}menuadmin*`) : null)
             break
@@ -395,8 +379,14 @@ module.exports = HandleMsg = async (aruga, message) => {
                 const aiquote = await axios.get("http://inspirobot.me/api?generate=true")
                 await aruga.sendFileFromUrl(from, aiquote.data, 'quote.jpg', 'FOLLOW NGAB \ :V https://www.instagram.com/_l_.lawliet_/' , id )
             break
+            case 'ptl':
+            if (!isGroupMsg) return tobz.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const pptl = ["https://i.pinimg.com/564x/b2/84/55/b2845599d303a4f8fc4f7d2a576799fa.jpg","https://i.pinimg.com/236x/98/08/1c/98081c4dffde1c89c444db4dc1912d2d.jpg","https://i.pinimg.com/236x/a7/e2/fe/a7e2fee8b0abef9d9ecc8885557a4e91.jpg","https://i.pinimg.com/236x/ee/ae/76/eeae769648dfaa18cac66f1d0be8c160.jpg","https://i.pinimg.com/236x/b2/84/55/b2845599d303a4f8fc4f7d2a576799fa.jpg","https://i.pinimg.com/564x/78/7c/49/787c4924083a9424a900e8f1f4fdf05f.jpg","https://i.pinimg.com/236x/eb/05/dc/eb05dc1c306f69dd43b7cae7cbe03d27.jpg","https://i.pinimg.com/236x/d0/1b/40/d01b40691c68b84489f938b939a13871.jpg","https://i.pinimg.com/236x/31/f3/06/31f3065fa218856d7650e84b000d98ab.jpg","https://i.pinimg.com/236x/4a/e5/06/4ae5061a5c594d3fdf193544697ba081.jpg","https://i.pinimg.com/236x/56/45/dc/5645dc4a4a60ac5b2320ce63c8233d6a.jpg","https://i.pinimg.com/236x/7f/ad/82/7fad82eec0fa64a41728c9868a608e73.jpg","https://i.pinimg.com/236x/ce/f8/aa/cef8aa0c963170540a96406b6e54991c.jpg","https://i.pinimg.com/236x/77/02/34/77023447b040aef001b971e0defc73e3.jpg","https://i.pinimg.com/236x/4a/5c/38/4a5c38d39687f76004a097011ae44c7d.jpg","https://i.pinimg.com/236x/41/72/af/4172af2053e54ec6de5e221e884ab91b.jpg","https://i.pinimg.com/236x/26/63/ef/2663ef4d4ecfc935a6a2b51364f80c2b.jpg","https://i.pinimg.com/236x/2b/cb/48/2bcb487b6d398e8030814c7a6c5a641d.jpg","https://i.pinimg.com/236x/62/da/23/62da234d941080696428e6d4deec6d73.jpg","https://i.pinimg.com/236x/d4/f3/40/d4f340e614cc4f69bf9a31036e3d03c5.jpg","https://i.pinimg.com/236x/d4/97/dd/d497dd29ca202be46111f1d9e62ffa65.jpg","https://i.pinimg.com/564x/52/35/66/523566d43058e26bf23150ac064cfdaa.jpg","https://i.pinimg.com/236x/36/e5/27/36e52782f8d10e4f97ec4dbbc97b7e67.jpg","https://i.pinimg.com/236x/02/a0/33/02a033625cb51e0c878e6df2d8d00643.jpg","https://i.pinimg.com/236x/30/9b/04/309b04d4a498addc6e4dd9d9cdfa57a9.jpg","https://i.pinimg.com/236x/9e/1d/ef/9e1def3b7ce4084b7c64693f15b8bea9.jpg","https://i.pinimg.com/236x/e1/8f/a2/e18fa21af74c28e439f1eb4c60e5858a.jpg","https://i.pinimg.com/236x/22/d9/22/22d9220de8619001fe1b27a2211d477e.jpg","https://i.pinimg.com/236x/af/ac/4d/afac4d11679184f557d9294c2270552d.jpg","https://i.pinimg.com/564x/52/be/c9/52bec924b5bdc0d761cfb1160865b5a1.jpg","https://i.pinimg.com/236x/1a/5a/3c/1a5a3cffd0d936cd4969028668530a15.jpg"]
+            let pep = pptl[Math.floor(Math.random() * pptl.length)]
+            aruga.sendFileFromUrl(from, pep, 'pptl.jpg', 'nihh ngab', id)
+            break
         case 'join':
-            if (args.length == 0) return aruga.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau dengan\nketik ${prefix}join [link group]`, id)
+            if (args.length == 0) return aruga.reply(from, `Jika kalian ingin mengundang bot kegroup silahkan invite atau chat Owner Bot\nketik ${prefix}join [link group]`, id)
             let linkgrup = body.slice(6)
             let islink = linkgrup.match(/(https:\/\/chat.whatsapp.com)/gi)
             let chekgrup = await aruga.inviteInfo(linkgrup)
@@ -405,12 +395,12 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () => {
                           await aruga.sendText(from, 'Donee sayanggg')
-                          await aruga.sendText(chekgrup.id, `what up y'all~, I'm Thoriq BOT. Untuk mencari tahu command BOT, ketik ${prefix}menu`)
+                          await aruga.sendText(chekgrup.id, `what up y'all~, I'm Thoriq Bot. To find out commands on this Bot, type ${prefix}menu`)
                       })
             } else {
                 let cgrup = await aruga.getAllGroups()
                 if (cgrup.length > groupLimit) return aruga.reply(from, `Sorry, the group on this bot is full\nMax Group is: ${groupLimit}`, id)
-                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, BOT gabakalan masuk kalo membernya full bangsat. ${memberLimit} people`, id)
+                if (cgrup.size < memberLimit) return aruga.reply(from, `Sorry, Bot gabakalan masuk kalo membernya full bangsat. ${memberLimit} people`, id)
                 await aruga.joinGroupViaLink(linkgrup)
                       .then(async () =>{
                           await aruga.reply(from, 'Donee sayangg', id)
@@ -476,6 +466,16 @@ module.exports = HandleMsg = async (aruga, message) => {
                     })
                 break
                 //Kerang Menu
+        case 'cogan':
+            const ganteng = cegan[Math.floor(Math.random() * (cegan.length))]
+            await aruga.sendContact(from, ganteng)
+            .then(() => aruga.sendText(from, 'nehh nomer cogann xixi'))
+            break
+        case 'cecan':
+            const cantik = cecan[Math.floor(Math.random() * (cecan.length))]
+            await aruga.sendContact(from, cantik)
+            .then(() => aruga.sendText(from, 'nehh nomer cecann xixi'))
+            break
         case 'kapan':
             if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             const when = args.join(' ')
@@ -563,10 +563,10 @@ module.exports = HandleMsg = async (aruga, message) => {
             case 'stickertoimg':
             if (quotedMsg && quotedMsg.type == 'sticker') {
                 const mediaData = await decryptMedia(quotedMsg)
-                aruga.reply(from, `[WAIT] Sedang di proses⏳ silahkan tunggu!`, id)
+                aruga.reply(from, `Sedang di proses! Mohon bersabar, ini ujian`, id)
                 const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                 await aruga.sendFile(from, imageBase64, 'imagesticker.jpg', 'Success Convert Sticker to Image!', id)
-            } else if (!quotedMsg) return aruga.reply(from, `Mohon tag sticker yang ingin dijadikan gambar!`, id)
+            } else if (!quotedMsg) return aruga.reply(from, `Mohon reply sticker yang ingin dijadikan gambar!`, id)
             break
             case 'brainly':
             if (args.length >= 2){
@@ -639,7 +639,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             if (grouppic == undefined) {
                  var pfp = errorurl
             } else {
-                 var pfp = grouppic 
+                 var pfp = errorurl 
             }
             await aruga.sendFileFromUrl(from, pfp, 'group.png', `*「 GROUP INFO 」*
 *➸ *Name : ${groupname}* 
@@ -866,7 +866,10 @@ ${desc}`)
 			.then(async(res) => {
 				await aruga.reply(from, `Arti : ${res}`, id)
 			})
-			break
+            break
+        case 'say':
+            const apa = text.replace(/#say /, "")
+            aruga.sendText(from, apa, MessageTypes.text, id)
 		case 'cekjodoh':
 			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama pasangan\n\ncontoh: ${prefix}cekjodoh aku kamu\n\nhanya bisa pakai nama panggilan (satu kata)`)
 			rugaapi.cekjodoh(args[0],args[1])
@@ -946,14 +949,14 @@ ${desc}`)
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-        case 'coolteks':
-	    case 'cooltext':
-            if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext fikriganteng`, id)
-		    rugaapi.cooltext(args[0])
-		    .then(async(res) => {
-		    await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
-		    })
-		    break
+            case 'coolteks':
+                case 'cooltext':
+                        if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext thoriqsis`, id)
+                    rugaapi.cooltext(args[0])
+                    .then(async(res) => {
+                    await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
+                    })
+                    break
         case 'fakboy':
             fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
             .then(res => res.text())
@@ -1220,20 +1223,18 @@ ${desc}`)
                     aruga.reply(from, err, id)
                 }
             break
-        case 'translate':
-            if (args.length != 1) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan reply sebuah pesan dengan caption ${prefix}translate <kode_bahasa>\ncontoh ${prefix}translate id`, id)
-            if (!quotedMsg) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan reply sebuah pesan dengan caption ${prefix}translate <kode_bahasa>\ncontoh ${prefix}translate id`, id)
-            const quoteText = quotedMsg.type == 'chat' ? quotedMsg.body : quotedMsg.type == 'image' ? quotedMsg.caption : ''
-            translate(quoteText, args[0])
-                .then((result) => aruga.sendText(from, result))
-                .catch(() => aruga.sendText(from, 'Error, Kode bahasa salah.'))
-            break
-		case 'covidindo':
-			rugaapi.covidindo()
-			.then(async (res) => {
-				await aruga.reply(from, `${res}`, id)
-			})
-			break
+            case 'translate':
+                if(args[1] == undefined || args[2] == undefined) return
+                if(args.length >= 2){
+                    var codelang = args[1]
+                    var textlol = body.slice(11+codelang.length);
+                    translatte(textlol, {to: codelang}).then(res => {
+                        aruga.sendText(from,res.text);
+                    }).catch(err => {
+                         aruga.sendText(from,`[ERROR] Teks tidak ada, atau kode bahasa ${codelang} tidak support\n~> *#bahasa* untuk melihat list kode bahasa`);
+                    });
+                }
+                break
         case 'ceklokasi':
             if (quotedMsg.type !== 'location') return aruga.reply(from, `Maaf, format pesan salah.\nKirimkan lokasi dan reply dengan caption ${prefix}ceklokasi`, id)
             console.log(`Request Status Zona Penyebaran Covid-19 (${quotedMsg.lat}, ${quotedMsg.lng}).`)
@@ -1593,7 +1594,7 @@ ${desc}`)
                     if(isKasar){
                         const denda = db.get('group').filter({id: groupId}).map('members['+isIn+']').find({ id: pengirim }).update('denda', n => n + 5000).write()
                         if(denda){
-                            await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000\nTotal : Rp"+formatin(denda.denda), id)
+                            await aruga.reply(from, "Jangan badword, bagus lu begitu?\nDenda +5.000\nTotal : Rp"+formatin(denda.denda), id)
                         }
                     }
                 } else {
@@ -1608,7 +1609,7 @@ ${desc}`)
                         const cekuser = db.get('group').filter({id: groupId}).map('members').value()[0]
                         if(isKasar){
                             cekuser.push({id: pengirim, denda: 5000})
-                            await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000", id)
+                            await aruga.reply(from, "Jangan badword, bagus lu begitu?\nDenda +5.000", id)
                         } else {
                             cekuser.push({id: pengirim, denda: 0})
                         }
@@ -1618,7 +1619,7 @@ ${desc}`)
             } else {
                 if(isKasar){
                     db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 5000}] }).write()
-                    await aruga.reply(from, "Jangan badword bodoh\nDenda +5.000\nTotal : Rp5.000", id)
+                    await aruga.reply(from, "Jangan badword, bagus lu begitu?\nDenda +5.000\nTotal : Rp5.000", id)
                 } else {
                     db.get('group').push({ id: groupId, members: [{id: pengirim, denda: 0}] }).write()
                 }

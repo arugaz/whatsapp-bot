@@ -1,0 +1,14 @@
+block  gChat = await aruga.getChatById(event.chat)
+         aruga.onGlobalParicipantsChanged(async (event) => {
+        const host = await aruga.getHostNumber() + '@c.us'
+        if (event.action === 'add' && event.who !== host) {
+            const pChat = await aruga.getContact(event.who)
+            const { contact, groupMetadata, name } = gChat
+            const pepe = await aruga.getProfilePicFromServer(event.who)
+            const capt = `*ey yo,what up!* *@${event.who.replace('@c.us','')}*\n\n*Welcome to Our Group*\n\nIntro dulu bruh\n-Nama  :\n-Umur   :\n-Askot  :\nhave fun in our group.\n\n_*Commands bot #help , #menu*_`
+            if (pepe == '' || pepe == undefined) { 
+                await aruga.sendFileFromUrl(event.chat, 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQcODjk7AcA4wb_9OLzoeAdpGwmkJqOYxEBA&usqp=CAU', 'profile.jpg', capt)
+                } else {
+                    await aruga.sendFileFromUrl(event.chat, pepe, 'profile.jpg', capt)
+                }
+        }
