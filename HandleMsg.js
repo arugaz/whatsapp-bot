@@ -930,6 +930,10 @@ module.exports = HandleMsg = async (aruga, message) => {
             console.log('Memeriksa No Resi', args[1], 'dengan ekspedisi', args[0])
             cekResi(args[0], args[1]).then((result) => aruga.sendText(from, result))
             break
+	case 'say':
+        const says = args.join(' ')
+		await kaguya.sendText(from, `${says}`)
+		break
         case 'tts':
             if (args.length == 0) return aruga.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`)
             const ttsGB = require('node-gtts')(args[0])
