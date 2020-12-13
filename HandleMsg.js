@@ -932,7 +932,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
 	case 'say':
         const says = args.join(' ')
-		await kaguya.sendText(from, `${says}`)
+		await aruga.sendText(from, `${says}`)
 		break
         case 'tts':
             if (args.length == 0) return aruga.reply(from, `Mengubah teks menjadi sound (google voice)\nketik: ${prefix}tts <kode_bahasa> <teks>\ncontoh : ${prefix}tts id halo\nuntuk kode bahasa cek disini : https://anotepad.com/note/read/5xqahdy8`)
