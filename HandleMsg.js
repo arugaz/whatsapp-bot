@@ -255,6 +255,20 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background>\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
             }
             break
+            case 'spamcall':
+                if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan fitur spamcall, ketik :\n${prefix}spamcall 8xxxxxxxxxx\n\nContoh: ${prefix}spamcall 81288888888`, id)
+                rugaapi.spamcall(args[0])
+                .then(async (res) => {
+                    await aruga.reply(from, `${res}`, id)
+                })
+                break
+            case 'spamcall2':
+                if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan fitur spamcall, ketik :\n${prefix}spamcall 8xxxxxxxxxx\n\nContoh: ${prefix}spamcall 81288888888`, id)
+                rugaapi.spamcall2(args[0])
+                .then(async (res) => {
+                    await aruga.reply(from, `${res}`, id)
+                })
+                break   			
 	case 'brainly':
             if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             
