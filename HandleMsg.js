@@ -612,7 +612,7 @@ module.exports = HandleMsg = async (aruga, message) => {
 			})
 			break
 		case 'cekjodoh':
-			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama-kamu nama-pasangan\n\ncontoh: ${prefix}cekjodoh bagas siti\n\nhanya bisa pakai nama panggilan (satu kata)`)
+			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama-kamu nama-pasangan\n\ncontoh: ${prefix}cekjodoh bagas siti\n\nhanya bisa pakai nama panggilan (satu kata)`, id)
 			rugaapi.cekjodoh(args[0],args[1])
 			.then(async(res) => {
 				await aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.text}`, id)
