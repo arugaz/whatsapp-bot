@@ -921,7 +921,12 @@ module.exports = HandleMsg = async (aruga, message) => {
 				aruga.reply(from, `Maaf format salah\n\nSilahkan kirim foto dengan caption ${prefix}whatanime\n\nAtau reply foto dengan caption ${prefix}whatanime`, id)
 			}
             break
-            
+		case 'bokep':
+			rugaapi.bokep()
+			.then(async (res) => {
+				await aruga.reply(from, `${res}`, id)
+			})
+			break             
         // Other Command
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
