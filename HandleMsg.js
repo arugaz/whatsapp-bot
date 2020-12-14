@@ -380,7 +380,13 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
-
+            case 'kodepos':
+                if (args.length !== 2) return aruga.reply(from, `Untuk mengecek kode pos, ketik:\n${prefix}kodepos [kelurahan] [kecamatan]\n\ncontoh: ${prefix}kodepos kebonagung purworejo`, id)
+                rugaapi.kodepos(args[0],args[1])
+                .then(async(res) => {
+                    await aruga.reply(from, `${res}`, id)
+                })
+                break    
         //Islam Command
         case 'listsurah':
             try {
