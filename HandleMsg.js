@@ -52,6 +52,8 @@ const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
 
+let dbcot = JSON.parse(fs.readFileSync('./lib/database/bacot.json'))
+let dsay = JSON.parse(fs.readFileSync('./lib/database/say.json'))
 let { 
     ownerNumber, 
     groupLimit, 
@@ -283,6 +285,62 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Usage :\n!brainly [pertanyaan] [.jumlah]\n\nEx : \n!brainly NKRI .2', id)
             }
             break
+            case 'addsay':{
+                if (!args.length >= 1) return aruga.reply(from, 'Kalimatnya manaa?', id)
+                const say = body.slice(8)
+                    dsay.push(say)
+                    fs.writeFileSync('./lib/database/say.json' , JSON.stringify(dsay))
+                    aruga.reply(from, `Done add say ke database\nTotal add say : *${dsay.length - 1}* ,` , id)
+            }
+            break
+            case 'setpic':
+                    if (!isOwnerBot) return aruga.reply(from, `Perintah ini hanya bisa di gunakan oleh Owner Bot!`, id)
+                    if (isMedia) {
+                        const mediaData = await decryptMedia(message)
+                        const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+                        await aruga.setProfilePic(imageBase64)
+                        aruga.sendTextWithMentions(`Makasih @${sender.id.replace('@c.us','')} Foto Profilenya 😘`)
+                    } else if (quotedMsg && quotedMsg.type == 'image') {
+                        const mediaData = await decryptMedia(quotedMsg)
+                        const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                        await aruga.setProfilePic(imageBase64)
+                        aruga.sendTextWithMentions(from, `Makasih @${sender.id.replace('@c.us','')} Foto Profilenya 😘`)
+                    } else {
+                        aruga.reply(from, `Wrong Format!\n⚠️ Harap Kirim Gambar Dengan #setprofilepic`, id)
+                    }
+                    break
+            case 'addbacot':{
+                if (!args.length >= 1) return aruga.reply(from, 'BACOTAN NYA MANA ANJING?? DASAR BODOH!', id)  
+                    const bacot = body.slice(10)
+                    dbcot.push(bacot)
+                    fs.writeFileSync('./lib/database/bacot.json', JSON.stringify(dbcot))
+                    aruga.reply(from, `Sukses menambahkan Kata bacot ke database\nTotal data bacot sekarang : *${dbcot.length - 1}*`, id)
+                }
+                break
+    case 'bacot':
+        if(args.length == 1) {
+            const no = args[0]
+            const cekdb = dbcot.length
+            if(cekdb <= no) return await aruga.reply(from, `Total data saat ini hanya sampai *${cekdb - 1}*`, id)
+            const res =  dbcot[no]
+            aruga.sendText(from, res)
+            } else {
+                const kata = dbcot[Math.floor(Math.random() * (dbcot.length))];
+                aruga.sendText(from, kata)
+            }
+        break  
+    case 'say':
+        if(args.length == 1){
+            const wuh = args[0]
+            const sayur = dsay.length
+            if(sayur <= wuh) return await aruga.reply(from, `Total database saat ini hanya sampe *${sayur - 1}` , id)
+            const lahs = dsay[wuh]
+            aruga.sendText(from, lahs)
+        } else {
+            const kata = dsay[Math.floor(Math.random() * (dsay.length))];
+            aruga.sendText(from, kata)
+        }
+        break
         case 'stickergif':
         case 'stikergif':
             if (isMedia || isQuotedVideo) {
@@ -610,7 +668,24 @@ module.exports = HandleMsg = async (aruga, message) => {
 			.then(async(res) => {
 				await aruga.reply(from, `Arti : ${res}`, id)
 			})
-			break
+            break
+        case 'resend':
+                if (!isGroupAdmins) return aruga.reply(from, 'Gagal, Fitur ini hanya bisa digunakan oleh Admin',id)
+                if (quotedMsgObj) {
+                    let encryptMedia
+                    let replyOnReply = await aruga.getMessageById(quotedMsgObj.id)
+                    let obj = replyOnReply.quotedMsgObj
+                    if (/ptt|audio|video|image|document|sticker/.test(quotedMsgObj.type)) {
+                        encryptMedia = quotedMsgObj
+                        if (encryptMedia.animated) encryptMedia.mimetype = ''
+                    } else if (obj && /ptt|audio|video|image/.test(obj.type)) {
+                        encryptMedia = obj
+                    } else return
+                    const _mimetype = encryptMedia.mimetype
+                    const mediaData = await decryptMedia(encryptMedia)
+                    await aruga.sendFile(from, `data:${_mimetype};base64,${mediaData.toString('base64')}`, 'file', ':)', encryptMedia.id)
+                } else aruga.reply(from, config.msg.noMedia, id)
+                break
 		case 'cekjodoh':
 			if (args.length !== 2) return aruga.reply(from, `Untuk mengecek jodoh melalui nama\nketik: ${prefix}cekjodoh nama-kamu nama-pasangan\n\ncontoh: ${prefix}cekjodoh bagas siti\n\nhanya bisa pakai nama panggilan (satu kata)`)
 			rugaapi.cekjodoh(args[0],args[1])
