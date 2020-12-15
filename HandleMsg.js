@@ -81,6 +81,24 @@ const inArray = (needle, haystack) => {
     return false;
 }
 
+const mess = {
+            wait: '[ WAIT ] Sedang di proses⏳ silahkan tunggu sebentar',
+            error: {
+                St: '[❗] Kirim gambar dengan caption *#sticker* atau tag gambar yang sudah dikirim',
+                Ti: '[❗] Replay sticker dengan caption *#stickertoimg* atau tag sticker yang sudah dikirim',
+                Qm: '[❗] Terjadi kesalahan, mungkin themenya tidak tersedia!',
+                Yt3: '[❗] Terjadi kesalahan, tidak dapat meng konversi ke mp3!',
+                Yt4: '[❗] Terjadi kesalahan, mungkin error di sebabkan oleh sistem.',
+                Ig: '[❗] Terjadi kesalahan, mungkin karena akunnya private',
+                Ki: '[❗] Bot tidak bisa mengeluarkan Admin group!',
+                Sp: '[❗] Bot tidak bisa mengeluarkan Admin',
+                Ow: '[❗] Bot tidak bisa mengeluarkan Owner',
+                Bk: '[❗] Bot tidak bisa memblockir Owner',
+                Ad: '[❗] Tidak dapat menambahkan target, mungkin karena di private',
+                Iv: '[❗] Link yang anda kirim tidak valid!'
+            }
+        }
+
 module.exports = HandleMsg = async (aruga, message) => {
     try {
         const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
