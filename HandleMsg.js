@@ -1242,7 +1242,11 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
             aruga.reply(from, 'Success clear all chat!', id)
             break
+        case 'snk':
+            aruga.reply(from, snk, message.id)
         default:
+			aruga.reply(from, 'Baka, Fitur Yang Kamu Ketik Gak Ada Dalam Menu Coba Liat Menunya Lagi', id)
+            console.log(color('[UNLISTED]', 'red'), color('yellow'), 'Unregistered Command from', color(pushname))
             break
         }
 		
