@@ -1243,12 +1243,14 @@ module.exports = HandleMsg = async (aruga, message) => {
             aruga.reply(from, 'Success clear all chat!', id)
             break
         case 'snk':
-            aruga.reply(from, snk, message.id)
-        default:
-			aruga.reply(from, 'Baka, Fitur Yang Kamu Ketik Gak Ada Dalam Menu Coba Liat Menunya Lagi', id)
-            console.log(color('[UNLISTED]', 'red'), color('yellow'), 'Unregistered Command from', color(pushname))
+            kaguya.reply(from, snk, id)
             break
-        }
+        default:
+            if (body.startsWith('#')) {
+                kaguya.reply(from, `Baka ${pushname}, Fitur Yang Kamu Ketik Gak Ada Di Menu`, id)
+            }
+            (color('[UNLISTED]', 'red'), color('yellow'), 'Unregistered Command from', color(pushname))
+            }
 		
 		// Simi-simi function
 		if ((!isCmd && isGroupMsg && isSimi) && message.type === 'chat') {
