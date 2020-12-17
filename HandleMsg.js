@@ -52,6 +52,10 @@ const ngegas = JSON.parse(fs.readFileSync('./settings/ngegas.json'))
 const setting = JSON.parse(fs.readFileSync('./settings/setting.json'))
 const welcome = JSON.parse(fs.readFileSync('./settings/welcome.json'))
 
+let antisticker = JSON.parse(fs.readFileSync('./lib/helper/antisticker.json'))
+let stickerspam = JSON.parse(fs.readFileSync('./lib/helper/stickerspam.json'))
+let antilink = JSON.parse(fs.readFileSync('./lib/helper/antilink.json'))
+
 let { 
     ownerNumber, 
     groupLimit, 
@@ -91,7 +95,10 @@ module.exports = HandleMsg = async (aruga, message) => {
         const groupAdmins = isGroupMsg ? await aruga.getGroupAdmins(groupId) : ''
         const isGroupAdmins = groupAdmins.includes(sender.id) || false
 		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
-		const pengirim = sender.id
+        const pengirim = sender.id
+        const GroupLinkDetector = antilink.includes(chatId)
+        const AntiStickerSpam = antisticker.includes(chatId)
+        const stickermsg = message.type === 'sticker'
         const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 
         // Bot Prefix
@@ -120,6 +127,83 @@ module.exports = HandleMsg = async (aruga, message) => {
         if(!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
         if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
         if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+
+        function isStickerMsg(id){
+            if (isOwner) {return false;}
+            let found = false;
+            for (let i of stickerspam){
+                if(i.id === id){
+                    if (i.msg >= 7) {
+                        found === true 
+                        aruga.reply(from, '*[ANTI STICKER SPAM]*\nKamu telah SPAM STICKER di grup, kamu akan di kick otomatis oleh bot', message.id).then(() => {
+                            aruga.removeParticipant(groupId, id)
+                        }).then(() => {
+                            const cus = id
+                            var found = false
+                            Object.keys(stickerspam).forEach((i) => {
+                                if(stickerspam[i].id == cus){
+                                    found = i
+                                }
+                            })
+                            if (found !== false) {
+                                stickerspam[found].msg = 1;
+                                const result = '✅ DB Sticker Spam has been reset'
+                                console.log(stickerspam[found])
+                                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+                                aruga.sendText(from, result)
+                            } else {
+                                    aruga.reply(from, `${monospace(`Di database ngga ada nomer itu ngab`)}`, id)
+                            }
+                        })
+                        return true;
+                    }else{
+                        found === true
+                        return false;
+                    }   
+                }
+            }
+            if (found === false){
+                let obj = {id: `${id}`, msg:1};
+                stickerspam.push(obj);
+                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+                return false;
+            }  
+        }
+        function addStickerCount(id){
+            if (isOwner) {return;}
+            var found = false
+            Object.keys(stickerspam).forEach((i) => {
+                if(stickerspam[i].id == id){
+                    found = i
+                }
+            })
+            if (found !== false) {
+                stickerspam[found].msg += 1;
+                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+            }
+        }
+
+        //fitur anti link
+        if (isGroupMsg && GroupLinkDetector && !isGroupAdmins && !isOwner){
+            if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
+                const check = await aruga.inviteInfo(chats);
+                if (!check) {
+                    return
+                } else {
+                    aruga.reply(from, '*[GROUP LINK DETECTOR]*\nKamu mengirimkan link grup chat, maaf kamu di kick dari grup :(', id).then(() => {
+                        aruga.removeParticipant(groupId, sender.id)
+                    })
+                }
+            }
+        }
+
+
+        if (isGroupMsg && AntiStickerSpam && !isGroupAdmins && !isOwner){
+            if(stickermsg === true){
+                if(isStickerMsg(serial)) return
+                addStickerCount(serial)
+            }
+        }
 
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
@@ -255,6 +339,61 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, `Tidak ada gambar! Untuk menggunakan ${prefix}sticker\n\n\nKirim gambar dengan caption\n${prefix}sticker <biasa>\n${prefix}sticker nobg <tanpa background>\n\natau Kirim pesan dengan\n${prefix}sticker <link_gambar>`, id)
             }
             break
+            case 'antisticker':
+            case 'antistiker':
+                    if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                    if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                    if (!isBotGroupAdmins) return aruga.reply(from, 'Wahai admin, jadikan saya sebagai admin grup dahulu :)', id)
+                    if (args[0] == 'on') {
+                        var cek = antisticker.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Spam Sticker Detector* sudah aktif di grup ini', id) //if number already exists on database
+                        } else {
+                            antisticker.push(chatId)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            aruga.reply(from, '*[Anti Sticker SPAM]* telah di aktifkan\nSetiap member grup yang spam sticker lebih dari 7 akan di kick oleh bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Spam Sticker Detector* sudah non-aktif di grup ini', id) //if number already exists on database
+                        } else {
+                            let nixx = antisticker.indexOf(chatId)
+                            antisticker.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            aruga.reply(from, '*[Anti Sticker SPAM]* telah di nonaktifkan\n', id)
+                        }
+                    } else {
+                        aruga.reply(from, `pilih on / off\n\n*[Anti Sticker SPAM]*\nSetiap member grup yang spam sticker akan di kick oleh bot!`, id)
+                    }
+                    break
+                    case 'antilink':
+                    if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                    if (!isGroupAdmins) return aruga.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+                    if (!isBotGroupAdmins) return aruga.reply(from, 'Wahai admin, jadikan saya sebagai admin grup dahulu :)', id)
+                    if (args[0] == 'on') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Group Link Detector* sudah aktif di grup ini', id) //if number already exists on database
+                        } else {
+                            antilink.push(chatId)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            aruga.reply(from, '*[Anti Group Link]* telah di aktifkan\nSetiap member grup yang mengirim pesan mengandung link grup akan di kick oleh bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(!cek){
+                            return aruga.reply(from, '*Anti Group Link Detector* sudah non-aktif di grup ini', id) //if number already exists on database
+                        } else {
+                            let nixx = antilink.indexOf(chatId)
+                            antilink.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            aruga.reply(from, '*[Anti Group Link]* telah di nonaktifkan\n', id)
+                        }
+                    } else {
+                        aruga.reply(from, `pilih on / off\n\n*[Anti Group Link]*\nSetiap member grup yang mengirim pesan mengandung link grup akan di kick oleh bot!`, id)
+                    }
+                    break  
 	case 'brainly':
             if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             
