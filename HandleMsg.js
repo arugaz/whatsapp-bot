@@ -810,6 +810,15 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
+        case 'kbbi':
+            if (args.length == 0) return aruga.reply(from, `Untuk mencari suatu kata dari Kamus Besar Bahasa Indonesia (KBBI)\nketik: ${prefix}kbbi [kata]`, id)
+            const kbbip = body.slice(6)
+            const kbbis = await rugaapi.kbbi(kbbip)
+            await aruga.reply(from, kbbis, id)
+            .catch(() => {
+                aruga.reply(from, 'ada yang error!!', id)
+            })
+            break
         case 'wiki':
             if (args.length == 0) return aruga.reply(from, `Untuk mencari suatu kata dari wikipedia\nketik: ${prefix}wiki [kata]`, id)
             const wikip = body.slice(6)
