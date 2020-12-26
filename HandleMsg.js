@@ -211,7 +211,6 @@ module.exports = HandleMsg = async (aruga, message) => {
 			
         // Sticker Creator
     case 'logopornhub':
-    if (!isGroupMsg) return aruga.reply(from, menuId.textPrem())
             if (args.length === 1) return aruga.reply(from, `Kirim perintah *#logopornhub [ |Teks1|Teks2 ]*,\n\n contoh : *#pornhub |Dimas| HUB*`, id)
             argz = body.trim().split('|')
             if (argz.length >= 2) {
