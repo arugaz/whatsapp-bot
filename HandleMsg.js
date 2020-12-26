@@ -987,7 +987,14 @@ module.exports = HandleMsg = async (aruga, message) => {
 				await aruga.reply(from, `${res}`, id)
 			})
 			break
-		
+        case 'hilihfont':
+            if (args.length == 0) return aruga.reply(from, `Mengubah kalimat menjadi hilih gitu deh\n\nketik ${prefix}hilihfont kalimat`, id)
+            rugaapi.hilihfont(body.slice(11))
+            .then(async(res) => {
+                await aruga.reply(from, `${res}`, id)
+            })
+            break
+
 		//Fun Menu
         case 'klasemen':
 		case 'klasmen':
