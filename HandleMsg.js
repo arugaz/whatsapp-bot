@@ -308,6 +308,18 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, `Wrong Format!\n[❗] Kirim perintah *#pornhub [ |Teks1| Teks2 ]*,\n\n contoh : *#logopornhub |Dimas| HUB*`, id)
             }
             break
+    case 'blackpink':
+    if (args.length == 0) return aruga.reply(from, `Membuat Gambar Text ala ala logo BlackPink gitu\n\nPemakaian: ${prefix}blackpink [teks]\ncontoh: ${prefix}blackpink Dimas`, id)
+                    await aruga.reply(from, `Wait....`, id)
+                console.log('Creating Blackpink text...')
+                const lblackpink = body.slice(11)
+                await aruga.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/blackpink?text=${lblackpink}`, '', 'Nih...', id)
+                    .then(() => console.log('Success creting image!'))
+                    .catch(async (err) => {
+                        console.error(err)
+                        await aruga.reply(from, `Error!`, id)
+                    })
+            break
 	case 'coolteks':
 	case 'cooltext':
             if (args.length == 0) return aruga.reply(from, `Untuk membuat teks keren CoolText pada gambar, gunakan ${prefix}cooltext teks\n\nContoh: ${prefix}cooltext arugaz`, id)
