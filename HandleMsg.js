@@ -488,6 +488,22 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.reply(from, 'Maaf, command sticker giphy hanya bisa menggunakan link dari giphy.  [Giphy Only]', id)
             }
             break
+      case 'qrread':
+        if (args.length !== 1) return aruga.reply(from, `Untuk menggunakan fitur qrread, ketik :\n${prefix}qrread url\n\nContoh: ${prefix}qrcode https://i.ibb.co/phSpp2h/00bed2bb-8b90-4d49-ace1-fe0ac9f73dff.jpg\n\n*Note : Upload terlebih dahaulu qrcode kamu ke https://id.imgbb.com/, kemudian copy url gambar qrcode kamu*`, id)
+        aruga.reply(from, `wait...`, id);
+        rugaapi.qrread(args[0])
+        .then(async (res) => {
+          await aruga.reply(from, `${res}`, id)
+        })
+      break
+    case 'qrcode':
+        if (args.length !== 2) return aruga.reply(from, `Untuk menggunakan fitur qrcode, ketik :\n${prefix}qrcode [kata/url] [size]\n\nContoh: ${prefix}qrcode https://google.com 300\n\n*Size minimal 100 & maksimal 500*`, id)
+        aruga.reply(from, `wait...`, id);
+        rugaapi.qrcode(args[0], args[1])
+        .then(async (res) => {
+          await aruga.sendFileFromUrl(from, `${res}`, id)
+        })
+      break			
         case 'meme':
             if ((isMedia || isQuotedImage) && args.length >= 2) {
                 const top = arg.split('|')[0]
