@@ -60,7 +60,8 @@ let {
     ownerNumber, 
     groupLimit, 
     memberLimit,
-    prefix
+    prefix,
+    vhtearkey
 } = setting
 
 const {
@@ -112,6 +113,7 @@ module.exports = HandleMsg = async (aruga, message) => {
         const url = args.length !== 0 ? args[0] : ''
         const isQuotedImage = quotedMsg && quotedMsg.type === 'image'
 	    const isQuotedVideo = quotedMsg && quotedMsg.type === 'video'
+	 const emojiUnicode = require('emoji-unicode')
 		
 		// [IDENTIFY]
 		const isOwnerBot = ownerNumber.includes(pengirim)
@@ -278,6 +280,18 @@ module.exports = HandleMsg = async (aruga, message) => {
         }
 
 	//Sticker Converter
+       case 'emojisticker':
+            if (args.length !== 1) return aruga.reply(from, 'Kirim perintah #emojisticker [emoji]\nContoh : #emojisticker 😫', id)
+            const emoji = emojiUnicode(q)
+            await aruga.reply(from, `Wait....`, id)
+            console.log(`Creating code emoji => ${emoji}`)
+            aruga.sendStickerfromUrl(from, `https://api.vhtear.com/emojitopng?code=${emoji}&apikey=${vhtearkey}`)
+             .catch ((err) => {
+                console.log(err)
+                aruga.reply(from, 'Maaf, emoji yang kamu kirim tidak support untuk dijadikan sticker, cobalah emoji lain', id)
+                aruga.sendText(ownerNumber, 'Sepertinya emojisticker sedang error : ' + err);
+            })
+            break
 	case 'stikertoimg':
 	case 'stickertoimg':
 	case 'stimg':
