@@ -55,6 +55,8 @@ Run the Whatsapp bot
 ```bash
 > npm start
 ```
+APIKEY
+you can get vhtearkey in https://vhtear.com
 
 after running it you need to scan the qr
 
