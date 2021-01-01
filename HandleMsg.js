@@ -60,6 +60,7 @@ let {
     ownerNumber, 
     groupLimit, 
     memberLimit,
+    vhtearkey,
     prefix
 } = setting
 
@@ -169,6 +170,9 @@ module.exports = HandleMsg = async (aruga, message) => {
                 return false;
             }  
         }
+        const sleep = async (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
         function addStickerCount(id){
             if (isOwner) {return;}
             var found = false
@@ -1446,6 +1450,39 @@ module.exports = HandleMsg = async (aruga, message) => {
                 await aruga.deleteChat(dchat.id)
             }
             aruga.reply(from, 'Success clear all chat!', id)
+            break
+	//NEW UPDATE
+	case 'edotensei':
+            if (!isGroupMsg) return aruga.reply(from, 'Fitur ini hanya bisa di gunakan dalam group', id)
+            if (!isOwnerBot) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan oleh Owner group', id)
+            if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
+            if (mentionedJidList.length === 0) return aruga.reply(from, 'Fitur untuk menghapus member lalu menambahkan member kembali,kirim perintah ${prefix}edotensei @tagmember', id)
+            for (let i = 0; i < mentionedJidList.length; i++) {
+                if (groupAdmins.includes(mentionedJidList[i])) return aruga.reply(from, mess.error.Ki, id)
+                if (ownerNumber.includes(mentionedJidList[i])) return aruga.reply(from, mess.error.Ki, id)
+                await aruga.removeParticipant(groupId, mentionedJidList[i])
+                aruga.reply(from, 'di add lagi sekarang!!', id)
+                await sleep(3000)
+                await aruga.addParticipant(from,`${mentionedJidList}`)
+            } 
+            break
+        case 'thundersticker':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            if (isLimit(serial)) return aruga.reply(from, `Maaf ${pushname}, Kuota Limit Kamu Sudah Habis, Ketik ${prefix}limit Untuk Mengecek Kuota Limit Kamu`, id)
+            
+            await limitAdd(serial)
+            const gledek = body.slice(16)
+            const thunders = `https://api.vhtear.com/thundertext?text=${gledek}&apikey=${vhtearkey}`
+                    await aruga.sendStickerfromUrl(from, thunders, { method: 'get' })
+            break
+        case 'thundertext':
+            if (!isGroupMsg) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            if (isLimit(serial)) return aruga.reply(from, `Maaf ${pushname}, Kuota Limit Kamu Sudah Habis, Ketik ${prefix}limit Untuk Mengecek Kuota Limit Kamu`, id)
+            
+            await limitAdd(serial)
+            const gledeks = body.slice(14)
+            const thunder = `https://api.vhtear.com/thundertext?text=${gledeks}&apikey=${vhtearkey}`
+            aruga.sendFileFromUrl(from, thunder, 'gledek.jpg', '', id)
             break
         default:
             break
