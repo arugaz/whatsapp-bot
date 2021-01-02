@@ -5,7 +5,7 @@ const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta').locale('id')
 const axios = require('axios')
 const fetch = require('node-fetch')
-
+const isPorn = require('is-porn')
 const appRoot = require('app-root-path')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
@@ -205,6 +205,27 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
         }
 
+	 // ANTI GROUP LINK && ANTI PORN
+        if (isGroupMsg && GroupLinkDetector && !isGroupAdmins && !isOwnerBot){
+            if (chats.match(/(https?:\/\/chat.whatsapp.com)/gi)) {
+                console.log('Memeriksa tautan grup yang diterima.')
+                const check = await aruga.inviteInfo(chats)
+                if (check) {
+                    aruga.removeParticipant(groupId, sender.id) // respons banjir melanggar perintah di sini, tidak lebih
+		    console.log('Itu adalah tautan asli jadi saya menghapus ' + sender.id)
+                } else {
+                    console.log('Tautan grup diterima! Tapi itu salah, itu tidak menimbulkan ancaman')
+                }
+	    } else if (chats.match(/\bhttps?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi)) {
+			const chatpn = chats.match(/\bhttps?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi)
+			const flnrl = new URL(chatpn)
+			console.log('Memeriksa porno di tautan yang diterima ...\n' + flnrl)
+			isPorn(flnrl.hostname, function(error, status) {
+					aruga.removeParticipant(groupId, sender.id)
+					console.log('Ada pornografi jadi saya menghapus ' + sender.id)
+			})
+	    }
+	}
         // [BETA] Avoid Spam Message
         msgFilter.addFilter(from)
 	
