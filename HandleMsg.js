@@ -1515,6 +1515,12 @@ module.exports = HandleMsg = async (aruga, message) => {
             aruga.reply(from, 'Success clear all chat!', id)
             break
         default:
+		if (chats.startsWith(`${prefix}`)) {
+                if(isReg(obj)) return
+                if(cekumur(cekage)) return
+                const args = body.trim().split(' ')
+                aruga.sendTextWithMentions(from, `Maaf kak @${sender.id.replace('@c.us','')} Command *${args[0]}* tidak ada di ${prefix}menu`, id)
+            }
             break
         }
 		
