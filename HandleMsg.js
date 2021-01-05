@@ -436,6 +436,73 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Usage :\n!brainly [pertanyaan] [.jumlah]\n\nEx : \n!brainly NKRI .2', id)
             }
             break
+    case 'maps'://by aqulz
+            if (args.length === 0) return tobz.reply(from, `Kirim perintah *${prefix}maps [optional]*, Contoh : *${prefix}maps Jakarta*`, id)
+            const mapz = body.slice(6)
+            try {
+            const mapz2 = await axios.get('https://mnazria.herokuapp.com/api/maps?search=' + mapz)
+            const { gambar } = mapz2.data
+            const pictk = await bent("buffer")(gambar)
+            const base64 = `data:image/jpg;base64,${pictk.toString("base64")}`
+            aruga.sendImage(from, base64, 'maps.jpg', `*Hasil Maps : ${mapz}*`)
+            } catch (err) {
+             console.error(err.message)
+             await aruga.reply(from, '💔️ Maaf, error', id)
+             aruga.sendText(ownerNumber, 'Error Maps : '+ err)
+           }
+          break
+    case 'lion'://by aqulzz
+            if (args.length === 0) return aruga.reply(from, `Kirim perintah *${prefix}lion [ |Teks1|Teks2 ]*, contoh *${prefix}lion |aqulzz|xinz*`, id)
+            argz = body.trim().split('|')
+            if (argz.length === 3) {
+                await aruga.reply(from, 'Tunggu sebentar dan pastikan format yang anda masukkan benar', id)
+                const lion1 = argz[1]
+                const lion2 = argz[2]
+                const loin = await axios.get(`https://tobz-api.herokuapp.com/api/textpro?theme=lionlogo&text1=${lion1}&text2=${lion2}`)
+                aruga.sendFileFromUrl(from, loin.data.result, 'loin.jpg', 'neh bang', id)
+            } else {
+                await aruga.reply(from, `Wrong Format!\n[❗] Kirim perintah *${prefix}lion [ |Teks1|Teks2 ]*, contoh *${prefix}lion |aqulzz|xinz*`, id)
+            }
+            break
+    case 'wolf2'://by aqulzz
+            if (args.length === 0) return aruga.reply(from, `Kirim perintah *${prefix}wolf2 [ |Teks1|Teks2 ]*, contoh *${prefix}wolf2 |aqulzz|xinz*`, id)
+            argz = body.trim().split('|')
+            if (argz.length === 3) {
+                aruga.reply(from, 'Tunggu sebentar dan pastikan format yang anda masukkan benar', id)
+                const wolf12 = argz[1]
+                const wolf22 = argz[2]
+                const wolf2 = await axios.get(`https://tobz-api.herokuapp.com/api/textpro?theme=wolflogo2&text1=${wolf12}&text2=${wolf22}`)
+                aruga.sendFileFromUrl(from, wolf2.data.result, 'wolf2.jpg', 'neh bang', id)
+            } else {
+                await aruga.reply(from, `Wrong Format!\n[❗] Kirim perintah *${prefix}wolf2 [ |Teks1|Teks2 ]*, contoh *${prefix}wolf2 |aqulzz|xinz*`, id)
+            }
+            break
+    case 'wolf'://by aqulzz
+            if (args.length === 0) return aruga.reply(from, `Kirim perintah *${prefix}wolf [ |Teks1|Teks2 ]*, contoh *${prefix}wolf |aqulzz|xinz*`, id)
+            argz = body.trim().split('|')
+            if (argz.length === 3) {
+                aruga.reply(from, 'Tunggu sebentar dan pastikan format yang anda masukkan benar', id)
+                const wolf1 = argz[1]
+                const wolf2 = argz[2]
+                const wolf = await axios.get(`https://tobz-api.herokuapp.com/api/textpro?theme=wolflogo1&text1=${wolf1}&text2=${wolf2}`)
+                aruga.sendFileFromUrl(from, wolf.data.result, 'wolf.jpg', 'neh bang', id)
+            } else {
+                await aruga.reply(from, `Wrong Format!\n[❗] Kirim perintah *${prefix}wolf [ |Teks1|Teks2 ]*, contoh *${prefix}wolf |aqulzz|xinz*`, id)
+            }
+            break
+    case 'ninja'://by aqulz
+                if (args.length === 0) return aruga.reply(from, `Kirim perintah *${prefix}ninja [ |Teks1|Teks2 ]*, contoh *${prefix}ninja |aqulzz|xinz*`, id)
+                argz = body.trim().split('|')
+                if (argz.length === 3) {
+                    aruga.reply(from, 'Tunggu sebentar dan pastikan format yang anda masukkan benar', id)
+                    const ninja1 = argz[1]
+                    const ninja2 = argz[2]
+                    const nanji = await axios.get(`https://tobz-api.herokuapp.com/api/textpro?theme=ninjalogo&text1=${ninja1}&text2=${ninja2}`)
+                    aruga.sendFileFromUrl(from, nanji.data.result, 'ninja.jpg', 'neh bang', id)
+                } else {
+                    await aruga.reply(from, `Wrong Format!\n[❗] Kirim perintah *${prefix}ninja [ |Teks1|Teks2 ]*, contoh *${prefix}ninja |aqulzz|xinz*`, id)
+                }
+                break
         case 'stickergif':
         case 'stikergif':
             if (isMedia || isQuotedVideo) {
