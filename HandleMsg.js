@@ -437,7 +437,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             }
             break
     case 'maps'://by aqulz
-            if (args.length === 0) return tobz.reply(from, `Kirim perintah *${prefix}maps [optional]*, Contoh : *${prefix}maps Jakarta*`, id)
+            if (args.length === 0) return aruga.reply(from, `Kirim perintah *${prefix}maps [optional]*, Contoh : *${prefix}maps Jakarta*`, id)
             const mapz = body.slice(6)
             try {
             const mapz2 = await axios.get('https://mnazria.herokuapp.com/api/maps?search=' + mapz)
