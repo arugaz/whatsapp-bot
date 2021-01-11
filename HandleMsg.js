@@ -789,6 +789,13 @@ module.exports = HandleMsg = async (aruga, message) => {
 			break
 			
         // Random Kata
+        case 'fml':
+            const fmlx = await rugaapi.fml()
+            await aruga.reply(from, fmlx, id)
+            .catch(() => {
+                aruga.reply(from, 'Hayolohhh, ada yang error!!', id)
+            })
+            break
       	case 'motivasi':
             fetch('https://raw.githubusercontent.com/selyxn/motivasi/main/motivasi.txt')
             .then(res => res.text())
@@ -877,6 +884,20 @@ module.exports = HandleMsg = async (aruga, message) => {
 		      	break
 
         //Random Images
+        case 'memeindo':
+            const memeindox = await rugaapi.memeindo()
+            await aruga.sendFileFromUrl(from, memeindox, 'memeindo.jpeg', 'Nih.....', id)
+            .catch(() => {
+                aruga.reply(from, 'Hayolohhh, ada yang error!!', id)
+            })
+            break
+        case 'darkjokes':
+            const darkjokesx = await rugaapi.darkjokes()
+            await aruga.sendFileFromUrl(from, darkjokesx, 'memeindo.jpeg', 'Nih.....', id)
+            .catch(() => {
+                aruga.reply(from, 'Hayolohhh, ada yang error!!', id)
+            })
+            break
         case 'anime':
             if (args.length == 0) return aruga.reply(from, `Untuk menggunakan ${prefix}anime\nSilahkan ketik: ${prefix}anime [query]\nContoh: ${prefix}anime random\n\nquery yang tersedia:\nrandom, waifu, husbu, neko`, id)
             if (args[0] == 'random' || args[0] == 'waifu' || args[0] == 'husbu' || args[0] == 'neko') {
