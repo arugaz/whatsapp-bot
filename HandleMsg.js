@@ -697,6 +697,25 @@ module.exports = HandleMsg = async (aruga, message) => {
                 aruga.reply(from, 'Ada yang Error!', id)
             })
             break
+
+        //Kristiani
+            case 'alkitab':
+            if (args.length == 0) return aruga.reply(from, `Kirim perintah *${prefix}alkitab* [ Ayat ]\n\n*Contoh :* ${prefix}alkitab matius`, id)
+            const alkitabx = body.slice(9)
+            aruga.reply(from, 'Wait.....', id)
+            try {
+                const dataplai = await axios.get(`https://docs-jojo.herokuapp.com/api/alkitabsearch?q=${alkitabx}`)
+                const dataplay = dataplai.data
+                 let alkitabb = `*「 ALKITAB SEARCH 」*\n\n*Hasil Pencarian:* ${alkitabx}\n`
+                for (let i = 0; i < dataplay.result.length; i++) {
+                    alkitabb += `\n─────────────────\n\n• *Ayat* : ${dataplay.result[i].ayat}\n• *Isi* : ${dataplay.result[i].isi}\n`
+                }
+                await aruga.reply(from, alkitabb, id)
+            } catch (err){
+                console.log(err)
+            }
+            break
+
 	//Group All User
 	case 'grouplink':
             if (!isBotGroupAdmins) return aruga.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
