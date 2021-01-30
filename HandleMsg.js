@@ -1158,6 +1158,20 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
             
         // Other Command
+             case 'dadu':
+		if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
+                fetch('https://raw.githubusercontent.com/rashidsiregar28/data/main/Dadu')
+                 .then(res => res.text())
+                 .then(body => {     
+                  const dadugerak = body.split('\n')
+                  const dadugerakx = dadugerak[Math.floor(Math.random() * dadugerak.length)]
+                   aruga.sendStickerfromUrl(from, dadugerakx)
+                    })
+                    .catch(async (err) => {
+                        console.error(err)
+                        await aruga.reply(from, 'Error!', id)
+                    })
+            break
         case 'resi':
             if (args.length !== 2) return aruga.reply(from, `Maaf, format pesan salah.\nSilahkan ketik pesan dengan ${prefix}resi <kurir> <no_resi>\n\nKurir yang tersedia:\njne, pos, tiki, wahana, jnt, rpx, sap, sicepat, pcp, jet, dse, first, ninja, lion, idl, rex`, id)
             const kurirs = ['jne', 'pos', 'tiki', 'wahana', 'jnt', 'rpx', 'sap', 'sicepat', 'pcp', 'jet', 'dse', 'first', 'ninja', 'lion', 'idl', 'rex']
@@ -1235,7 +1249,7 @@ module.exports = HandleMsg = async (aruga, message) => {
     aruga.reply(from, 'Sebelum bermain berjanjilah akan melaksanakan apapun perintah yang diberikan.\n\nSilahkan Pilih:\n➥ #truth\n➥ #dare', id)
     break
     case 'truth':
-    if (!isGroupMsg) return aruga.reply(from, menuId.textPrem())
+    if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/truth.txt')
             .then(res => res.text())
             .then(body => {
@@ -1248,7 +1262,7 @@ module.exports = HandleMsg = async (aruga, message) => {
             })
             break
     case 'dare':
-    if (!isGroupMsg) return aruga.reply(from, menuId.textPrem())
+    if (!isGroupMsg) return aruga.reply(from, 'Maaf, perintah ini hanya dapat dipakai didalam grup!', id)
             fetch('https://raw.githubusercontent.com/AlvioAdjiJanuar/random/main/dare.txt')
             .then(res => res.text())
             .then(body => {
