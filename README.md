@@ -26,7 +26,7 @@
 </details>
 
 ini semua gratis, jangan pelit ⭐️ ya :D
-<p align="center"><a href="https://arugaz.herokuapp.com/" target="_blank">My Rest APIs (Fix)</a>.</p>
+<p align="center"><a href="https://www.arugaz.my.id" target="_blank">ArugaZ Rest Api</a>.</p>
 <p align="center"><a href="https://instagram.com/ini.kocakz/" target="_blank">Chat me on Insta</a>.</p>
 </div>
 
