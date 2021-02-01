@@ -986,6 +986,20 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         
         // Search Any
+            case 'namemc':
+            if (args.length == 0) return aruga.reply(from, `Mencari Username/Account Minecraft di Website NameMC\nPemakaian: ${prefix}namemc [username]\n\ncontoh: ${prefix}namemc dimaass`, id)
+                const namamcnya = body.slice(8)
+                console.log(`Mencari Username ${namamcnya} di https://namemc.com/`)
+                await aruga.reply(from, `Sedang Username ${namamcnya} di https://namemc.com/`, id)
+                const namemc1 = await axios.get(`https://some-random-api.ml/mc?username=${namamcnya}`)
+                const namemc2 = `「 N A M E M C 」\n\n❏ *Username:* ${namemc1.data.username}\n❏ *UUID:* ${namemc1.data.uuid}\n\n❏ *LINK:* mine.ly/${namamcnya}`
+                await aruga.sendFileFromUrl(from, `https://api.apiflash.com/v1/urltoimage?access_key=${apiflashnya}&url=https://namemc.com/profile/${namamcnya}`, 'namemc.jpg', namemc2, id)
+                    .then(() => console.log(`Username ${namamcnya} di temukan`))
+                    .catch(async (err) => {
+                        console.error(err)
+                        await aruga.reply(from, `Username ${namamcnya} Tidak di Temukan!`, id)
+                    })
+            break
 	case 'dewabatch':
 		if (args.length == 0) return aruga.reply(from, `Untuk mencari anime batch dari Dewa Batch, ketik ${prefix}dewabatch judul\n\nContoh: ${prefix}dewabatch naruto`, id)
 		rugaapi.dewabatch(args[0])
