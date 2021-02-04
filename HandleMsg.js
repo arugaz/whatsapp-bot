@@ -627,6 +627,15 @@ module.exports = HandleMsg = async (aruga, message) => {
                   aruga.reply(from, pesan, message.id)
               }
               break
+	case 'randomquran':
+		await aruga.reply(from, 'Tunggu sebentar...', id)
+		rugaapi.quran()
+			.then(async(res) => {
+			const jelasin = `Surah : ${res.nama}\nArti : ${res.arti}\nAsma : ${res.asma}\nAyat : ${res.ayat}\nDiturunkan di : ${res.type}\nNomor : ${res.nomor}\n Urutan Ke : ${res.urut}`
+			await aruga.sendFileFromUrl(from, res.audio, '', '', id)
+			aruga.reply(from, jelasin, id)
+		  })
+		break
         case 'alaudio':
             if (args.length == 0) return aruga.reply(from, `*_${prefix}ALaudio <nama surah>_*\nMenampilkan tautan dari audio surah tertentu. Contoh penggunaan : ${prefix}ALaudio al-fatihah\n\n*_${prefix}ALaudio <nama surah> <ayat>_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Indonesia. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1\n\n*_${prefix}ALaudio <nama surah> <ayat> en_*\nMengirim audio surah dan ayat tertentu beserta terjemahannya dalam bahasa Inggris. Contoh penggunaan : ${prefix}ALaudio al-fatihah 1 en`, message.id)
               ayat = "ayat"
@@ -1090,14 +1099,18 @@ module.exports = HandleMsg = async (aruga, message) => {
             break
         case 'play'://silahkan kalian custom sendiri jika ada yang ingin diubah
             if (args.length == 0) return aruga.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: ${prefix}play judul lagu`, id)
-            axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
+            axios.get(`https://api.arugaz.my.id/api/media/ytsearch?query=${body.slice(6)}`)
             .then(async (res) => {
-                await aruga.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
-				rugaapi.ytmp3(`https://youtu.be/${res.data[0].id}`)
+                await aruga.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `「 *PLAY* 」\n\nJudul: ${res.data.result[0].title}\nDurasi: ${res.data.result[0].duration}detik\nUploaded: ${res.data.result[0].uploadDate}\nView: ${res.data.result[0].viewCount}\nChannel: ${res.data.result[0].channel.name}\n\n*_Wait,  lagi ngirim Audionya_*`, id)
+				rugaapi.ytmp3(`https://youtu.be/${res.data.result[0].id}`)
 				.then(async(res) => {
 					if (res.status == 'error') return aruga.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
-					await aruga.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
-					await aruga.sendFileFromUrl(from, `${res.link}`, '', '', id)
+					if (Number(res.filesize.split(' MB')[0] > 15)) return aruga.reply(from, 'Gagal, ukuran Audio terlalu besar!', id)
+                                 	const respoonn = await fetch(res.result);
+                                	const buffeerkan = await respoonn.buffer();
+                                	await sleep(1000)
+                                	await fs.writeFile(`./media/play.mp3`, buffeerkan)
+                                	await aruga.sendFile(from,'./media/play.mp3', 'play.mp',`*${res.title}*\n${res.filesize}`, id)
 					.catch(() => {
 						aruga.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL akan di Reset setelah 1 Jam/60 Menit`, id)
 					})
