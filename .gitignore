@@ -1,30 +1,6 @@
-# Dempedency directory
+# auth dir
+auth
+# module dir
 node_modules
-
-# Dot files
-.idea
-.node-persist
-
-# Log files
-debug.log
-
-# Session files
-*.data.json
-
-# Workspace files
-*.code-workspace
-
-# Lock files
-package-lock.json
-
-# Other files
-premium.js
-quotemsg.js
-lib/quran.js
-util/flat.json
-util/getScreenshot.js
-utils/canvas.js
-utils/flat.json
-utils/getScreenshot.js
-lib/instaStory.js
-lib/jiwa.js
+# storage file
+storage/baileys*.json
