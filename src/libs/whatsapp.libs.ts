@@ -1,8 +1,6 @@
 import P from 'pino';
 import cfonts from 'cfonts';
 import { Boom } from '@hapi/boom';
-import EventEmitter from 'events';
-import TypedEventEmitter from 'typed-emitter';
 import makeWASocket, {
   DisconnectReason,
   fetchLatestBaileysVersion,
@@ -19,11 +17,9 @@ import Database from '../libs/database.libs';
 import color from '../utils/color.utils';
 import { aruga, arugaConfig } from '../types/client.types';
 
-export default class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) implements aruga {
+export default class Client implements aruga {
   private aruga!: aruga;
-  constructor(private config: arugaConfig) {
-    super();
-  }
+  constructor(private config: arugaConfig) {}
 
   public startClient = async (): Promise<aruga> => {
     const logger = this.config.logger || P({ level: 'silent' });
@@ -238,10 +234,3 @@ export default class Client extends (EventEmitter as new () => TypedEventEmitter
   public uploadPreKeysToServerIfRequired!: aruga['uploadPreKeysToServerIfRequired'];
   public waitForConnectionUpdate!: aruga['waitForConnectionUpdate'];
 }
-
-type Events = {
-  new_call: (call: unknown) => void;
-  new_message: (M: unknown) => void;
-  participants_update: (event: unknown) => void;
-  new_group_joined: (group: { jid: string; subject: string }) => void;
-};
