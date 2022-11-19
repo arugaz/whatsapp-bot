@@ -21,7 +21,6 @@ const color = {
         (m, r, g, b) => `${m ? m : '#'}` + r + r + g + g + b + b,
       )}m${text}\x1B[39m`,
 
-  /** @type {(string) => HexColor} */
   cfonts<T extends string>(s: Hex<T>): HexColor {
     return s;
   },

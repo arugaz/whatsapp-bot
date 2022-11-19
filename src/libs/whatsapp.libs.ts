@@ -16,8 +16,8 @@ import makeWASocket, {
 
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
-import color from '../utils/color';
-import { aruga, arugaConfig } from '../types/client';
+import color from '../utils/color.utils';
+import { aruga, arugaConfig } from '../types/client.types';
 
 export default class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) implements aruga {
   private aruga!: aruga;
