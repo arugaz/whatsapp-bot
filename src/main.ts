@@ -9,8 +9,9 @@ const aruga = new Client({
   syncFullHistory: true,
 });
 
-const start = (): void => {
+const start = () => {
   aruga.ev.on('messages.upsert', (m) => console.log(m));
+  aruga.ev.on('call', (c) => console.log(c));
 };
 
 aruga

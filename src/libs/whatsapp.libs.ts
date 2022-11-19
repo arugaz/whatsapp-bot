@@ -29,15 +29,14 @@ export default class Client extends (EventEmitter as new () => TypedEventEmitter
     const logger = this.config.logger || P({ level: 'silent' });
     const { useDatabaseAuth } = new Auth(this.config.sessionName);
     const { saveState, state, clearState } = await useDatabaseAuth();
+    const cacheState = makeCacheableSignalKeyStore(state.keys, logger);
     const { version, isLatest } = await fetchLatestBaileysVersion();
 
     this.aruga = makeWASocket({
       ...this.config,
       auth: {
         creds: state.creds,
-        keys: makeCacheableSignalKeyStore(state.keys, logger, {
-          stdTTL: 60 * 60 * 12,
-        }),
+        keys: cacheState,
       },
       version,
       logger,
@@ -60,6 +59,7 @@ export default class Client extends (EventEmitter as new () => TypedEventEmitter
           this.log('Disconnected.', 'error');
           this.log('Deleting session and restarting', 'error');
           await clearState();
+          cacheState.clear && (await cacheState.clear());
           this.log('Session deleted', 'error');
           this.log('Starting...', 'warning');
           setTimeout(() => this.startClient(), 3000);
