@@ -1,6 +1,5 @@
-# auth dir
-auth
-# module dir
+dist
 node_modules
-# storage file
-storage/baileys*.json
+
+database/*
+!database/.gitkeep

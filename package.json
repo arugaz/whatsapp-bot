@@ -1,39 +1,44 @@
 {
-  "name": "whatsapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "name": "whatsapp-bot",
+  "version": "4.0.0",
+  "description": "Whatsapp Bot - Node Js",
+  "main": "./dist/main.js",
   "private": true,
   "scripts": {
-    "clear": "pnpm run flush && pnpm run del",
-    "dev": "pm2 start main.js --name \"wabot\" --watch --ignore-watch=\"node_modules\" && pnpm run logs",
-    "del": "pm2 delete wabot",
-    "flush": "pm2 flush wabot",
-    "list": "pm2 list",
-    "logs": "pm2 logs wabot",
-    "start": "pm2 start main.js --name \"wabot\" --max-memory-restart \"500M\" && pnpm run logs"
+    "build": "tsc --build",
+    "build:clean": "rimraf ./dist && npm run build",
+    "dev": "tsc-watch --onSuccess \"node .\" --compiler typescript/bin/tsc",
+    "format": "prettier --write \"src/**/*.+(ts|json)\"",
+    "lint": "eslint --ignore-path .eslintignore --ext .ts ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "engines": {
-    "node": ">=12.0.0",
-    "pnpm": ">=7.0.0"
+  "author": "arugaz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArugaZ/whatsapp-bot.git"
   },
+  "bugs": {
+    "url": "https://github.com/ArugaZ/whatsapp-bot/issues"
+  },
+  "homepage": "https://github.com/ArugaZ/whatsapp-bot",
+  "license": "Apache-2.0",
   "dependencies": {
     "@adiwajshing/baileys": "github:adiwajshing/baileys",
-    "@hapi/boom": "^10.0.0",
-    "chalk": "4.1.2",
-    "pino": "^8.4.0"
+    "@prisma/client": "^4.6.1",
+    "axios": "^1.1.3",
+    "cfonts": "^3.1.1",
+    "chalk": "^5.1.2"
   },
   "devDependencies": {
-    "@adiwajshing/keyed-db": "^0.2.4",
-    "eslint": "^8.0.1",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "pm2": "^5.2.0",
-    "qrcode-terminal": "^0.12.0"
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.27.0",
+    "prettier": "^2.7.1",
+    "prisma": "^4.6.1",
+    "qrcode-terminal": "^0.12.0",
+    "rimraf": "^3.0.2",
+    "tsc-watch": "^5.0.3",
+    "typed-emitter": "^2.1.0",
+    "typescript": "^4.9.3"
   }
 }
