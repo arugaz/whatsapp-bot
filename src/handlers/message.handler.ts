@@ -71,7 +71,7 @@ export default class MessageHandler {
     if (m.quoted.message) {
       m.quoted.key = {
         participant: this.aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
-        remoteJid: msg?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
+        remoteJid: m?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
         fromMe: this.aruga.decodeJid(m.message[m.type].contextInfo.participant) === this.aruga.decodeJid(this.aruga.user.id),
         id: m.message[m.type].contextInfo.stanzaId,
       };
