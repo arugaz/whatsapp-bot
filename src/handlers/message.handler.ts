@@ -5,20 +5,29 @@ import { MessageSerialize } from '../types/message.types';
 export default class MessageHandler {
   constructor(private aruga: Client) {}
   async serialize(msg: WAMessage): Promise<MessageSerialize> {
-    msg.message = msg.message?.ephemeralMessage ? msg.message.ephemeralMessage.message : msg.message?.viewOnceMessage ? msg.message.viewOnceMessage.message : msg.message;
-    msg.message?.messageContextInfo && delete msg.message.messageContextInfo;
-    msg.message?.senderKeyDistributionMessage && delete msg.message.senderKeyDistributionMessage;
+    msg.message = msg.message?.viewOnceMessage
+      ? msg.message.viewOnceMessage.message
+      : msg.message?.ephemeralMessage
+      ? msg.message.ephemeralMessage.message
+      : msg.message?.documentWithCaptionMessage
+      ? msg.message.documentWithCaptionMessage.message
+      : msg.message?.viewOnceMessageV2
+      ? msg.message.viewOnceMessageV2.message
+      : msg.message?.editedMessage
+      ? msg.message.editedMessage.message
+      : msg.message?.viewOnceMessageV2Extension
+      ? msg.message.viewOnceMessageV2Extension.message
+      : msg.message;
+
     const m = {} as MessageSerialize;
 
-    m.isGroupMsg = msg.key.remoteJid.endsWith('g.us');
-
-    m.key = msg.key;
     m.message = msg.message;
+    m.key = msg.key;
     m.id = m.key.remoteJid;
     m.isBotMsg = m.id.startsWith('BAE') && m.id.length === 16;
     m.from = this.aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
-    m.type = Object.keys(m.message)[0] === 'senderKeyDistributionMessage' ? Object.keys(m.message)[1] : Object.keys(m.message)[0] || Object.keys(m.message)[0];
+    m.type = Object.keys(m.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
     m.sender = this.aruga.decodeJid(m.fromMe ? this.aruga.user.id : m.isGroupMsg || m.from === 'status@broadcast' ? m.key.participant || msg.participant : m.from);
     msg.key.participant = !m.key.participant || m.key.participant === 'status_me' ? m.sender : m.key.participant;
     m.body =
@@ -41,27 +50,34 @@ export default class MessageHandler {
         : '';
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
 
-    const quoted: proto.IMessage = msg?.message[m.type]?.contextInfo?.quotedMessage
-      ? msg.message[m.type].contextInfo.quotedMessage.viewOnceMessage
-        ? msg.message[m.type].contextInfo.quotedMessage.viewOnceMessage.message
-        : msg.message[m.type].contextInfo.quotedMessage.ephemeralMessage
-        ? msg.message[m.type].contextInfo.quotedMessage.ephemeralMessage.message
-        : msg.message[m.type].contextInfo.quotedMessage
+    m.quoted = {} as MessageSerialize;
+    m.quoted.message = m?.message[m.type]?.contextInfo?.quotedMessage
+      ? m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessage.message
+        : m.message[m.type].contextInfo.quotedMessage?.ephemeralMessage
+        ? m.message[m.type].contextInfo.quotedMessage.ephemeralMessage.message
+        : m.message[m.type].contextInfo.quotedMessage?.documentWithCaptionMessage
+        ? m.message[m.type].contextInfo.quotedMessage.documentWithCaptionMessage.message
+        : m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2.message
+        : m.message[m.type].contextInfo.quotedMessage?.editedMessage
+        ? m.message[m.type].contextInfo.quotedMessage.editedMessage.message
+        : m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2Extension
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2Extension.message
+        : m.message[m.type].contextInfo.quotedMessage
       : null;
-    if (quoted) {
-      m.quoted = {} as MessageSerialize;
+    if (m.quoted.message) {
       m.quoted.key = {
-        participant: this.aruga.decodeJid(msg.message[m.type]?.contextInfo?.participant),
+        participant: this.aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
         remoteJid: msg?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
         fromMe: this.aruga.decodeJid(m.message[m.type].contextInfo.participant) === this.aruga.decodeJid(this.aruga.user.id),
-        id: msg.message[m.type].contextInfo.stanzaId,
+        id: m.message[m.type].contextInfo.stanzaId,
       };
-      m.quoted.message = quoted;
       m.quoted.id = m.quoted.key.id;
       m.quoted.isBotMsg = m.quoted.id.startsWith('BAE') && m.quoted.id.length === 16;
       m.quoted.from = this.aruga.decodeJid(m.quoted.key.remoteJid);
       m.quoted.fromMe = m.quoted.key.fromMe;
-      m.quoted.type = Object.keys(quoted)[0];
+      m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
       m.quoted.sender = m.quoted.key.participant;
       m.quoted.body =
         m.quoted.message.conversation && m.quoted.type === 'conversation'
@@ -82,7 +98,11 @@ export default class MessageHandler {
           ? m.quoted.message.templateButtonReplyMessage.selectedId
           : '';
       m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
-    }
+    } else delete m.quoted;
+
+    m.pushname = msg.pushName;
+    m.isGroupMsg = msg.key.remoteJid.endsWith('g.us');
+
     console.log(m);
     return m;
   }
