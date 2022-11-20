@@ -47,6 +47,8 @@ export default class MessageHandler {
         ? m.message.listResponseMessage.singleSelectReply.selectedRowId
         : m.message.templateButtonReplyMessage && m.type === 'templateButtonReplyMessage'
         ? m.message.templateButtonReplyMessage.selectedId
+        : m.message.reactionMessage && m.type === 'reactionMessage'
+        ? m.message.reactionMessage.text
         : '';
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
 
@@ -96,6 +98,8 @@ export default class MessageHandler {
           ? m.quoted.message.listResponseMessage.singleSelectReply.selectedRowId
           : m.quoted.message.templateButtonReplyMessage && m.quoted.type === 'templateButtonReplyMessage'
           ? m.quoted.message.templateButtonReplyMessage.selectedId
+          : m.quoted.message.reactionMessage && m.quoted.type === 'reactionMessage'
+          ? m.quoted.message.reactionMessage.text
           : '';
       m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
     } else delete m.quoted;
@@ -103,7 +107,6 @@ export default class MessageHandler {
     m.pushname = msg.pushName;
     m.isGroupMsg = msg.key.remoteJid.endsWith('g.us');
 
-    console.log(m);
     return m;
   }
 }
