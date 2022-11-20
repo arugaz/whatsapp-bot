@@ -13,8 +13,8 @@ const aruga = new Client({
 const start = () => {
   const messageHandler = new MessageHandler(aruga);
 
-  aruga.ev.on('messages.upsert', async (m) => {
-    await messageHandler.serialize(m.messages[0]);
+  aruga.ev.on('messages.upsert', (m) => {
+    messageHandler.serialize(m.type === 'notify' && m.messages[0]).catch((err) => aruga.log((err as Error).message, 'error'));
   });
 
   aruga.ev.on('call', (c) => console.log(c));
