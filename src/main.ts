@@ -14,10 +14,11 @@ const start = () => {
   const messageHandler = new MessageHandler(aruga);
 
   aruga.ev.on('messages.upsert', (m) => {
-    messageHandler
-      .serialize(m.messages[0])
-      .then(console.log)
-      .catch((err) => aruga.log((err as Error).message, 'error'));
+    m.type === 'notify' &&
+      messageHandler
+        .serialize(m.messages[0])
+        .then(console.log)
+        .catch((err) => aruga.log((err as Error).message, 'error'));
   });
 
   aruga.ev.on('call', (c) => console.log(c));

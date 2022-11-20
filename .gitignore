@@ -3,3 +3,6 @@ node_modules
 
 database/*
 !database/.gitkeep
+
+temp/*
+!temp/.gitkeep

@@ -1,6 +1,6 @@
 import type { WAMessage } from '@adiwajshing/baileys';
 import Client from '../libs/whatsapp.libs';
-import { MessageSerialize } from '../types/message.types';
+import type { MessageSerialize } from '../types/message.types';
 
 export default class MessageHandler {
   constructor(private aruga: Client) {}
@@ -28,9 +28,18 @@ export default class MessageHandler {
     m.isGroupMsg = m.key.remoteJid.endsWith('g.us');
     m.from = this.aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
-    m.type = Object.keys(m.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
-    m.sender = this.aruga.decodeJid(m.fromMe ? this.aruga.user.id : m.isGroupMsg || m.from === 'status@broadcast' ? m.key.participant || msg.participant : m.from);
-    msg.key.participant = !m.key.participant || m.key.participant === 'status_me' ? m.sender : m.key.participant;
+    m.type = Object.keys(m.message).find(
+      (x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo',
+    );
+    m.sender = this.aruga.decodeJid(
+      m.fromMe
+        ? this.aruga.user.id
+        : m.isGroupMsg || m.from === 'status@broadcast'
+        ? m.key.participant || msg.participant
+        : m.from,
+    );
+    msg.key.participant =
+      !m.key.participant || m.key.participant === 'status_me' ? m.sender : m.key.participant;
     m.body =
       m.message.conversation && m.type === 'conversation'
         ? m.message.conversation
@@ -52,6 +61,10 @@ export default class MessageHandler {
         ? m.message.reactionMessage.text
         : '';
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
+    m.download = async (filename?: string | null): Promise<'pathName' | Buffer> =>
+      filename
+        ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename)
+        : await this.aruga.downloadMediaMessage(m.message);
 
     m.quoted = {} as MessageSerialize;
     m.quoted.message = m?.message[m.type]?.contextInfo?.quotedMessage
@@ -74,7 +87,9 @@ export default class MessageHandler {
       m.quoted.key = {
         participant: this.aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
         remoteJid: m?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
-        fromMe: this.aruga.decodeJid(m.message[m.type].contextInfo.participant) === this.aruga.decodeJid(this.aruga.user.id),
+        fromMe:
+          this.aruga.decodeJid(m.message[m.type].contextInfo.participant) ===
+          this.aruga.decodeJid(this.aruga.user.id),
         id: m.message[m.type].contextInfo.stanzaId,
       };
       m.quoted.id = m.quoted.key.id;
@@ -82,7 +97,9 @@ export default class MessageHandler {
       m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith('g.us');
       m.quoted.from = this.aruga.decodeJid(m.quoted.key.remoteJid);
       m.quoted.fromMe = m.quoted.key.fromMe;
-      m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
+      m.quoted.type = Object.keys(m.quoted.message).find(
+        (x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo',
+      );
       m.quoted.sender = m.quoted.key.participant;
       m.quoted.body =
         m.quoted.message.conversation && m.quoted.type === 'conversation'
@@ -105,6 +122,10 @@ export default class MessageHandler {
           ? m.quoted.message.reactionMessage.text
           : '';
       m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
+      m.quoted.download = async (filename?: string | null): Promise<'pathName' | Buffer> =>
+        filename
+          ? await this.aruga.downloadAndSaveMediaMessage(m.quoted.message, filename)
+          : await this.aruga.downloadMediaMessage(m.quoted.message);
     } else delete m.quoted;
 
     m.pushname = msg.pushName;

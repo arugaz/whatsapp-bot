@@ -12,6 +12,7 @@ type MessageSerialize = {
   sender: string;
   body: string;
   mentions: string[];
+  download: (filename?: string | null) => Promise<'pathName' | Buffer>;
   quoted?: MessageSerialize;
   pushname: string;
 };

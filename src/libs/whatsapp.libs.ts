@@ -1,7 +1,9 @@
 import P from 'pino';
+import { join as pathJoin } from 'path';
 import cfonts from 'cfonts';
+import { writeFile as fsWriteFile } from 'fs/promises';
 import { Boom } from '@hapi/boom';
-import makeWASocket, { DisconnectReason, fetchLatestBaileysVersion, FullJid, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto } from '@adiwajshing/baileys';
+import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from '@adiwajshing/baileys';
 
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
@@ -84,6 +86,25 @@ export default class Client implements aruga {
       const decode = jidDecode(jid) as FullJid;
       return (decode.user && decode.server && decode.user + '@' + decode.server) || jid;
     } else return jid;
+  };
+
+  public downloadMediaMessage = async (message: proto.IMessage): Promise<Buffer> => {
+    const type = Object.keys(message)[0];
+    const mime = {
+      imageMessage: 'image',
+      videoMessage: 'video',
+      stickerMessage: 'sticker',
+      documentMessage: 'document',
+      audioMessage: 'audio',
+    };
+    return await toBuffer(await downloadContentFromMessage(message[type], mime[type]));
+  };
+
+  public downloadAndSaveMediaMessage = async (message: proto.IMessage, filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<'pathName'> => {
+    const buffer = await this.downloadMediaMessage(message);
+    const filePath = pathJoin(__dirname, '..', '..', 'temp', filename);
+    await fsWriteFile(filePath, buffer);
+    return filePath as 'pathName';
   };
 
   public DB = new Database();
