@@ -1,5 +1,9 @@
+import type { proto } from '@adiwajshing/baileys';
+
 type MessageSerialize = {
-  isGroupMsg: boolean;
+  isGroupMsg?: boolean;
+  key: proto.IMessageKey;
+  message: proto.IMessage;
   id: string;
   isBotMsg: boolean;
   from: string;
