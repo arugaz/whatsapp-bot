@@ -1,16 +1,7 @@
 import P from 'pino';
 import cfonts from 'cfonts';
 import { Boom } from '@hapi/boom';
-import makeWASocket, {
-  DisconnectReason,
-  fetchLatestBaileysVersion,
-  FullJid,
-  generateWAMessageFromContent,
-  jidDecode,
-  makeCacheableSignalKeyStore,
-  MessageGenerationOptionsFromContent,
-  proto,
-} from '@adiwajshing/baileys';
+import makeWASocket, { DisconnectReason, fetchLatestBaileysVersion, FullJid, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto } from '@adiwajshing/baileys';
 
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
@@ -40,16 +31,12 @@ export default class Client implements aruga {
       printQRInTerminal: true,
     });
 
-    for (const method of Object.keys(this.aruga))
-      this[method as keyof Client] = this.aruga[method as keyof aruga];
+    for (const method of Object.keys(this.aruga)) this[method as keyof Client] = this.aruga[method as keyof aruga];
 
     this.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
       if (connection === 'close') {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-        if (
-          reason !==
-          (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)
-        ) {
+        if (reason !== (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)) {
           this.log('Reconnecting...', 'warning');
           setTimeout(() => this.startClient(), 3000);
         } else {
@@ -99,74 +86,12 @@ export default class Client implements aruga {
     } else return jid;
   };
 
-  public sendContact = async (
-    jid: string,
-    contacts: {
-      name: string;
-      number: string;
-    }[],
-    name = 'Whatsapp',
-    opts = {},
-  ): Promise<proto.WebMessageInfo> => {
-    if (!Array.isArray(contacts) || contacts.length === 0) {
-      throw new Error('Invalid contacts array');
-    }
-    const contactList = [];
-    for (const contact of contacts) {
-      if (!(contact instanceof Object) || !contact.name || !contact.number) {
-        throw new Error('Invalid contact object');
-      }
-      const number = contact.number.split('@')[0];
-      const onWA = (await this.onWhatsApp(number)).length >= 1;
-      contactList.push({
-        displayName: contact.name,
-        vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;${contact.name};;;\nFN:${contact.name}\n${
-          onWA ? 'ORG:' + contact.name + '\n' : ''
-        }item1.TEL${onWA ? ';waid=' + number + ':' + number : ':+' + number}\nitem1.X-ABLabel:Mobile${
-          onWA
-            ? (await this.getBusinessProfile(number + '@s.whatsapp.net'))
-              ? '\nX-WA-BIZ-NAME:' + contact.name
-              : ''
-            : ''
-        }\nEND:VCARD`,
-      });
-    }
-    const waMessage = generateWAMessageFromContent(
-      jid,
-      proto.Message.fromObject({
-        [contactList.length === 1 ? 'contactMessage' : 'contactsArrayMessage']: {
-          ...(contactList.length === 1
-            ? {
-                displayName: contactList[0].displayName || name,
-                vcard: contactList[0].vcard,
-              }
-            : {
-                displayName: name,
-                contacts: contactList,
-              }),
-        },
-        ...opts,
-      }),
-      { ...(opts as MessageGenerationOptionsFromContent) },
-    );
-    waMessage.message &&
-      (await this.relayMessage(jid, waMessage.message, {
-        messageId: waMessage.key.id || '',
-      }));
-    return waMessage;
-  };
-
   public DB = new Database();
 
-  public translate = i18n;
+  public translate = i18n.t;
 
   public log = (text: string, type: 'error' | 'warning' | 'success' = 'success'): void => {
-    console.log(
-      color[type === 'error' ? 'red' : type === 'warning' ? 'yellow' : 'green'](
-        `[ ${type === 'error' ? 'X' : type === 'warning' ? '!' : 'V'} ]`,
-      ),
-      text,
-    );
+    console.log(color[type === 'error' ? 'red' : type === 'warning' ? 'yellow' : 'green'](`[ ${type === 'error' ? 'X' : type === 'warning' ? '!' : 'V'} ]`), text);
   };
 
   public getOrderDetails!: aruga['getOrderDetails'];
