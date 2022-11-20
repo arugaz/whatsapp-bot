@@ -3,6 +3,7 @@
     "allowJs": false,
     "checkJs": false,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -12,10 +13,8 @@
     "removeComments": true,
     "rootDir": "src",
     "skipLibCheck": true,
-    "strict": true,
-    "strictFunctionTypes": true,
     "target": "esnext"
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.ts"]
 }

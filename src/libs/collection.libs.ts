@@ -6,4 +6,14 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
     }
     return null;
   }
+  sort(compareFunction = Collection.defaultSort) {
+    const entries = [...this.entries()];
+    entries.sort((a, b) => compareFunction(a[1], b[1]));
+    super.clear();
+    for (const [key, value] of entries) super.set(key, value);
+    return this;
+  }
+  static defaultSort<VALUE>(firstValue: VALUE, secondValue: VALUE) {
+    return Number(firstValue > secondValue) || Number(firstValue === secondValue) - 1;
+  }
 }

@@ -15,6 +15,7 @@ import makeWASocket, {
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
 import color from '../utils/color.utils';
+import i18n from '../libs/international.libs';
 import { aruga, arugaConfig } from '../types/client.types';
 
 export default class Client implements aruga {
@@ -156,6 +157,8 @@ export default class Client implements aruga {
   };
 
   public DB = new Database();
+
+  public translate = i18n;
 
   public log = (text: string, type: 'error' | 'warning' | 'success' = 'success'): void => {
     console.log(

@@ -1,0 +1,6 @@
+{
+  "intro": {
+    "welcome": "Welcome, {{name}}!",
+    "text": "I hope you find this useful."
+  }
+}
