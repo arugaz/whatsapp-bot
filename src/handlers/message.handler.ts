@@ -1,4 +1,4 @@
-import type { WAMessage, proto } from '@adiwajshing/baileys';
+import type { WAMessage } from '@adiwajshing/baileys';
 import Client from '../libs/whatsapp.libs';
 import { MessageSerialize } from '../types/message.types';
 
@@ -20,11 +20,12 @@ export default class MessageHandler {
       : msg.message;
 
     const m = {} as MessageSerialize;
-
     m.message = msg.message;
+
     m.key = msg.key;
-    m.id = m.key.remoteJid;
+    m.id = m.key.id;
     m.isBotMsg = m.id.startsWith('BAE') && m.id.length === 16;
+    m.isGroupMsg = m.key.remoteJid.endsWith('g.us');
     m.from = this.aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
     m.type = Object.keys(m.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
@@ -68,6 +69,7 @@ export default class MessageHandler {
         ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2Extension.message
         : m.message[m.type].contextInfo.quotedMessage
       : null;
+
     if (m.quoted.message) {
       m.quoted.key = {
         participant: this.aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
@@ -77,6 +79,7 @@ export default class MessageHandler {
       };
       m.quoted.id = m.quoted.key.id;
       m.quoted.isBotMsg = m.quoted.id.startsWith('BAE') && m.quoted.id.length === 16;
+      m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith('g.us');
       m.quoted.from = this.aruga.decodeJid(m.quoted.key.remoteJid);
       m.quoted.fromMe = m.quoted.key.fromMe;
       m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== 'senderKeyDistributionMessage' && x !== 'messageContextInfo');
@@ -105,7 +108,6 @@ export default class MessageHandler {
     } else delete m.quoted;
 
     m.pushname = msg.pushName;
-    m.isGroupMsg = msg.key.remoteJid.endsWith('g.us');
 
     return m;
   }

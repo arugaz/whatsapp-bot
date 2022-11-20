@@ -5,6 +5,7 @@ type MessageSerialize = {
   key: proto.IMessageKey;
   id: string;
   isBotMsg: boolean;
+  isGroupMsg: boolean;
   from: string;
   fromMe: boolean;
   type: string;
@@ -13,5 +14,4 @@ type MessageSerialize = {
   mentions: string[];
   quoted?: MessageSerialize;
   pushname: string;
-  isGroupMsg?: boolean;
 };
