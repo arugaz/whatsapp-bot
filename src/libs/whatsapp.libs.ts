@@ -1,8 +1,8 @@
 import P from 'pino';
-import { join as pathJoin } from 'path';
 import cfonts from 'cfonts';
-import { writeFile as fsWriteFile } from 'fs/promises';
 import { Boom } from '@hapi/boom';
+import { join as pathJoin } from 'path';
+import { writeFile as fsWriteFile } from 'fs/promises';
 import makeWASocket, {
   DisconnectReason,
   downloadContentFromMessage,
@@ -16,8 +16,8 @@ import makeWASocket, {
 
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
-import color from '../utils/color.utils';
 import i18n from '../libs/international.libs';
+import color from '../utils/color.utils';
 import { aruga, arugaConfig } from '../types/client.types';
 
 export default class Client implements aruga {
