@@ -1,22 +1,67 @@
+import { basename, join } from 'path';
+import { lstatSync, readdirSync } from 'fs';
 import type { WAMessage } from '@adiwajshing/baileys';
+
 import Client from '../libs/whatsapp.libs';
+import Settings from '../constants/config.constant';
+import { commands } from '../constants/command.contants';
 import type { MessageSerialize } from '../types/message.types';
 
 export default class MessageHandler {
+  /**
+   * @param {any} aruga:Client
+   */
   constructor(private aruga: Client) {}
+
+  /**
+   * @param {any} message:MessageSerialize
+   * @returns {Promise<void>}
+   */
+  async execute(message: MessageSerialize): Promise<void> {
+    const prefix =
+      message.body &&
+      ([
+        [
+          new RegExp(
+            '^[' +
+              (Settings.prefix || '/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-').replace(
+                /[|\\{}()[\]^$+*?.\-\^]/g,
+                '\\$&',
+              ) +
+              ']',
+          ).exec(message.body),
+          Settings.prefix,
+        ],
+      ].find((p) => p[1])[0] || '')[0];
+    const args = message.body.trim().split(/ +/).slice(1);
+    const command =
+      message.body &&
+      message.body.startsWith(prefix) &&
+      message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
+    const curCommand = commands.get(command) ?? commands.find((v) => v.aliases && v.aliases.includes(command));
+
+    if (curCommand) {
+      curCommand.execute({ aruga: this.aruga, message, command, prefix, args });
+    }
+  }
+
+  /**
+   * @param {any} msg:WAMessage
+   * @return {Promise<MessageSerialize>}
+   */
   async serialize(msg: WAMessage): Promise<MessageSerialize> {
     msg.message = msg.message?.viewOnceMessage
-      ? msg.message.viewOnceMessage.message
+      ? msg.message.viewOnceMessage?.message
       : msg.message?.ephemeralMessage
-      ? msg.message.ephemeralMessage.message
+      ? msg.message.ephemeralMessage?.message
       : msg.message?.documentWithCaptionMessage
-      ? msg.message.documentWithCaptionMessage.message
+      ? msg.message.documentWithCaptionMessage?.message
       : msg.message?.viewOnceMessageV2
-      ? msg.message.viewOnceMessageV2.message
+      ? msg.message.viewOnceMessageV2?.message
       : msg.message?.editedMessage
-      ? msg.message.editedMessage.message
+      ? msg.message.editedMessage?.message
       : msg.message?.viewOnceMessageV2Extension
-      ? msg.message.viewOnceMessageV2Extension.message
+      ? msg.message.viewOnceMessageV2Extension?.message
       : msg.message;
 
     const m = {} as MessageSerialize;
@@ -38,8 +83,7 @@ export default class MessageHandler {
         ? m.key.participant || msg.participant
         : m.from,
     );
-    msg.key.participant =
-      !m.key.participant || m.key.participant === 'status_me' ? m.sender : m.key.participant;
+    m.key.participant = !m.key.participant || m.key.participant === 'status_me' ? m.sender : m.key.participant;
     m.body =
       m.message.conversation && m.type === 'conversation'
         ? m.message.conversation
@@ -129,7 +173,24 @@ export default class MessageHandler {
     } else delete m.quoted;
 
     m.pushname = msg.pushName;
-
     return m;
+  }
+
+  /**
+   * @param {string} pathname='commands'
+   * @returns {any}
+   */
+  registerCommand(pathname: string = 'commands'): any {
+    const files = readdirSync(join(__dirname, '..', pathname));
+    for (const file of files) {
+      const baseFilepath = join(__dirname, '..', pathname, file);
+      const isDir = lstatSync(baseFilepath).isDirectory();
+      const baseFilename = basename(file, file.includes('.ts') ? '.ts' : '.js').toLowerCase();
+      if (isDir) return this.registerCommand(`${pathname}/${file}`);
+      if (commands.has(baseFilename))
+        return this.aruga.log(`Command file ${file} already registered`, 'warning');
+      commands.set(baseFilename, require(baseFilepath).default);
+    }
+    commands.sort();
   }
 }

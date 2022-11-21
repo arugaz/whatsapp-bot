@@ -1,3 +1,4 @@
+// cfonts declare
 type HexDigit =
   | '0'
   | '1'

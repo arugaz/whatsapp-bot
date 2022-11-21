@@ -3,7 +3,16 @@ import { join as pathJoin } from 'path';
 import cfonts from 'cfonts';
 import { writeFile as fsWriteFile } from 'fs/promises';
 import { Boom } from '@hapi/boom';
-import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from '@adiwajshing/baileys';
+import makeWASocket, {
+  DisconnectReason,
+  downloadContentFromMessage,
+  fetchLatestBaileysVersion,
+  FullJid,
+  jidDecode,
+  makeCacheableSignalKeyStore,
+  proto,
+  toBuffer,
+} from '@adiwajshing/baileys';
 
 import Auth from '../libs/auth.libs';
 import Database from '../libs/database.libs';
@@ -15,6 +24,10 @@ export default class Client implements aruga {
   private aruga!: aruga;
   constructor(private config: arugaConfig) {}
 
+  /**
+   * Start client
+   * @returns {Promise<aruga>} aruga instance
+   */
   public startClient = async (): Promise<aruga> => {
     const logger = this.config.logger || P({ level: 'silent' });
     const { useDatabaseAuth } = new Auth(this.config.sessionName);
@@ -33,12 +46,16 @@ export default class Client implements aruga {
       printQRInTerminal: true,
     });
 
-    for (const method of Object.keys(this.aruga)) this[method as keyof Client] = this.aruga[method as keyof aruga];
+    for (const method of Object.keys(this.aruga))
+      this[method as keyof Client] = this.aruga[method as keyof aruga];
 
     this.ev.on('connection.update', async ({ connection, lastDisconnect }) => {
       if (connection === 'close') {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-        if (reason !== (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)) {
+        if (
+          reason !==
+          (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)
+        ) {
           this.log('Reconnecting...', 'warning');
           setTimeout(() => this.startClient(), 3000);
         } else {
@@ -57,7 +74,6 @@ export default class Client implements aruga {
       }
 
       if (connection === 'open') {
-        console.clear();
         cfonts.say(this.user?.name || 'whatsapp-bot', {
           align: 'center',
           colors: [color.cfonts('#8cf57b')],
@@ -81,6 +97,10 @@ export default class Client implements aruga {
     return this.aruga;
   };
 
+  /**
+   * Decode jid to make it correctly formatted
+   * @param {any} jid:string user/group jid
+   */
   public decodeJid = (jid: string): string => {
     if (/:\d+@/gi.test(jid)) {
       const decode = jidDecode(jid) as FullJid;
@@ -88,6 +108,10 @@ export default class Client implements aruga {
     } else return jid;
   };
 
+  /**
+   * Download message and return buffer
+   * @param {any} message:proto.IMessage
+   */
   public downloadMediaMessage = async (message: proto.IMessage): Promise<Buffer> => {
     const type = Object.keys(message)[0];
     const mime = {
@@ -100,19 +124,39 @@ export default class Client implements aruga {
     return await toBuffer(await downloadContentFromMessage(message[type], mime[type]));
   };
 
-  public downloadAndSaveMediaMessage = async (message: proto.IMessage, filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<'pathName'> => {
+  /**
+   * Download message and save to local storage
+   * @param {any} message:proto.IMessage
+   * @param {any} filename='random string'
+   */
+  public downloadAndSaveMediaMessage = async (
+    message: proto.IMessage,
+    filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6),
+  ): Promise<'pathName'> => {
     const buffer = await this.downloadMediaMessage(message);
     const filePath = pathJoin(__dirname, '..', '..', 'temp', filename);
     await fsWriteFile(filePath, buffer);
     return filePath as 'pathName';
   };
 
+  /** Database */
   public DB = new Database();
 
+  /** Translator helper */
   public translate = i18n.t;
 
+  /**
+   * @param {string} text:string
+   * @param {string} type:'error'|'warning'|'success' = 'success'
+   * @returns {void} print logs
+   */
   public log = (text: string, type: 'error' | 'warning' | 'success' = 'success'): void => {
-    console.log(color[type === 'error' ? 'red' : type === 'warning' ? 'yellow' : 'green'](`[ ${type === 'error' ? 'X' : type === 'warning' ? '!' : 'V'} ]`), text);
+    console.log(
+      color[type === 'error' ? 'red' : type === 'warning' ? 'yellow' : 'green'](
+        `[ ${type === 'error' ? 'X' : type === 'warning' ? '!' : 'V'} ]`,
+      ),
+      text,
+    );
   };
 
   public getOrderDetails!: aruga['getOrderDetails'];

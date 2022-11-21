@@ -28,11 +28,19 @@ export default class Auth {
       creds = initAuthCreds();
     }
 
+    /**
+     * Save the session state
+     * @returns {Promise<void>}
+     */
     const saveState = async (): Promise<void> => {
       const session = JSON.stringify({ creds, keys }, BufferJSON.replacer, 2);
       await this.DB.updateSession(this.sessionId, session);
     };
 
+    /**
+     * Remove the session from the database
+     * @returns {Promise<void>}
+     */
     const clearState = async (): Promise<void> => {
       await this.DB.deleteSession(this.sessionId);
     };

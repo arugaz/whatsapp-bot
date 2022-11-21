@@ -13,6 +13,11 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
     for (const [key, value] of entries) super.set(key, value);
     return this;
   }
+  /**
+   * Default sort compareFunction
+   * @param {any} firstValue:VALUE
+   * @param {any} secondValue:VALUE
+   */
   static defaultSort<VALUE>(firstValue: VALUE, secondValue: VALUE) {
     return Number(firstValue > secondValue) || Number(firstValue === secondValue) - 1;
   }

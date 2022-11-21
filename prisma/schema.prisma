@@ -15,13 +15,3 @@ model Session {
   sessionId String  @unique
   session   String?
 }
-
-model User {
-  number String  @unique
-  name   String?
-}
-
-model Group {
-  groupId String  @unique
-  name    String?
-}

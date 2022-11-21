@@ -14,6 +14,6 @@ i18n.set('id', id);
 // import in from './in.json';
 // i18n.set('in', in);
 
-// set default language
+// set default language!
 i18n.locale('en');
 export default i18n;
