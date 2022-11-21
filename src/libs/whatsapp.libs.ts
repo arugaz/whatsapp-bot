@@ -86,8 +86,8 @@ export default class Client implements aruga {
           gradient: ['red', color.cfonts('#ee82f8')],
         });
         this.log(' Success Connected! ');
-        this.log(' Name    : ' + this.user?.name || 'arugaz');
-        this.log(' Number  : ' + this.user?.id.split(':')[0] || '6969');
+        this.log(' Name    : ' + this.user?.name ? this.user.name : 'arugaz');
+        this.log(' Number  : ' + this.user?.id ? this.user.id.split(':')[0] : '6969');
         this.log(' Version : ' + version.join('.'));
         this.log(' Latest  : ' + `${isLatest ? 'yes' : 'nah'}`);
       }
