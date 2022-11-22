@@ -19,7 +19,7 @@ export default class Database extends PrismaClient {
    * @param {any} sessionId:string
    */
   public getSession = async (sessionId: string): Promise<Session | null> =>
-    await this.session.findUnique({
+    await this.session.findFirst({
       where: { sessionId },
     });
   /**
