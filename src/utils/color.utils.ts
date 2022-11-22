@@ -1,4 +1,4 @@
-const color = {
+const Color = {
   /**
    * Coloring string to black color
    * @param {string} text - Text to colored
@@ -70,4 +70,4 @@ const color = {
   },
 };
 
-export default color;
+export default Color;

@@ -5,27 +5,27 @@ import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
 import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
 
-// import Auth from "../libs/auth.libs";
-import MultiAuth from "../libs/authMulti.libs";
+// import AuthSingle from "../libs/authSingle.libs";
+import AuthMulti from "../libs/authMulti.libs";
 
 import Database from "../libs/database.libs";
 import i18n from "../libs/international.libs";
-import color from "../utils/color.utils";
-import { aruga, arugaConfig } from "../types/client.types";
+import Color from "../utils/color.utils";
+import { Aruga, ArugaConfig } from "../types/client.types";
 
-export default class Client implements aruga {
-  private aruga!: aruga;
-  constructor(private config: arugaConfig) {}
+export default class Client implements Aruga {
+  private aruga!: Aruga;
+  constructor(private config: ArugaConfig) {}
 
   /**
    * Start client
    * @returns {Promise<aruga>} aruga instance
    */
-  public startClient = async (): Promise<aruga> => {
+  public startClient = async (): Promise<Aruga> => {
     const logger = this.config.logger || P({ level: "silent" });
 
-    // const { useDatabaseAuth } = new Auth("baileys_auth_info");
-    const { useDatabaseAuth } = new MultiAuth();
+    // const { useDatabaseAuth } = new AuthSingle("baileys_auth_info");
+    const { useDatabaseAuth } = new AuthMulti();
 
     const { saveState, state, clearState } = await useDatabaseAuth();
     const cacheState = makeCacheableSignalKeyStore(state.keys, logger);
@@ -59,7 +59,7 @@ export default class Client implements aruga {
       version,
     });
 
-    for (const method of Object.keys(this.aruga)) this[method as keyof Client] = this.aruga[method as keyof aruga];
+    for (const method of Object.keys(this.aruga)) this[method as keyof Client] = this.aruga[method as keyof Aruga];
 
     this.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
       if (connection === "close") {
@@ -85,14 +85,14 @@ export default class Client implements aruga {
       if (connection === "open") {
         cfonts.say(this.user?.name || "whatsapp-bot", {
           align: "center",
-          colors: [color.cfonts("#8cf57b")],
+          colors: [Color.cfonts("#8cf57b")],
           font: "block",
           space: false,
         });
         cfonts.say(`'whatsapp-bot' By @arugaz`, {
           align: "center",
           font: "console",
-          gradient: ["red", color.cfonts("#ee82f8")],
+          gradient: ["red", Color.cfonts("#ee82f8")],
         });
         this.log(" Success Connected! ");
         this.log(" Name    : " + (this.user?.name ? this.user.name : "unknown"));
@@ -157,74 +157,74 @@ export default class Client implements aruga {
    * @returns {void} print logs
    */
   public log = (text: string, type: "error" | "warning" | "success" = "success"): void => {
-    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
+    console.log(Color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
   };
 
-  public getOrderDetails!: aruga["getOrderDetails"];
-  public getCatalog!: aruga["getCatalog"];
-  public getCollections!: aruga["getCollections"];
-  public productCreate!: aruga["productCreate"];
-  public productDelete!: aruga["productDelete"];
-  public productUpdate!: aruga["productUpdate"];
-  public sendMessageAck!: aruga["sendMessageAck"];
-  public sendRetryRequest!: aruga["sendRetryRequest"];
-  public rejectCall!: aruga["rejectCall"];
-  public getPrivacyTokens!: aruga["getPrivacyTokens"];
-  public assertSessions!: aruga["assertSessions"];
-  public relayMessage!: aruga["relayMessage"];
-  public sendReceipt!: aruga["sendReceipt"];
-  public sendReceipts!: aruga["sendReceipts"];
-  public readMessages!: aruga["readMessages"];
-  public refreshMediaConn!: aruga["refreshMediaConn"];
-  public waUploadToServer!: aruga["waUploadToServer"];
-  public fetchPrivacySettings!: aruga["fetchPrivacySettings"];
-  public updateMediaMessage!: aruga["updateMediaMessage"];
-  public sendMessage!: aruga["sendMessage"];
-  public groupMetadata!: aruga["groupMetadata"];
-  public groupCreate!: aruga["groupCreate"];
-  public groupLeave!: aruga["groupLeave"];
-  public groupUpdateSubject!: aruga["groupUpdateSubject"];
-  public groupParticipantsUpdate!: aruga["groupParticipantsUpdate"];
-  public groupUpdateDescription!: aruga["groupUpdateDescription"];
-  public groupInviteCode!: aruga["groupInviteCode"];
-  public groupRevokeInvite!: aruga["groupRevokeInvite"];
-  public groupAcceptInvite!: aruga["groupAcceptInvite"];
-  public groupAcceptInviteV4!: aruga["groupAcceptInviteV4"];
-  public groupGetInviteInfo!: aruga["groupGetInviteInfo"];
-  public groupToggleEphemeral!: aruga["groupToggleEphemeral"];
-  public groupSettingUpdate!: aruga["groupSettingUpdate"];
-  public groupFetchAllParticipating!: aruga["groupFetchAllParticipating"];
-  public processingMutex!: aruga["processingMutex"];
-  public upsertMessage!: aruga["upsertMessage"];
-  public appPatch!: aruga["appPatch"];
-  public sendPresenceUpdate!: aruga["sendPresenceUpdate"];
-  public presenceSubscribe!: aruga["presenceSubscribe"];
-  public profilePictureUrl!: aruga["profilePictureUrl"];
-  public onWhatsApp!: aruga["onWhatsApp"];
-  public fetchBlocklist!: aruga["fetchBlocklist"];
-  public fetchStatus!: aruga["fetchStatus"];
-  public updateProfilePicture!: aruga["updateProfilePicture"];
-  public updateProfileStatus!: aruga["updateProfileStatus"];
-  public updateProfileName!: aruga["updateProfileName"];
-  public updateBlockStatus!: aruga["updateBlockStatus"];
-  public getBusinessProfile!: aruga["getBusinessProfile"];
-  public resyncAppState!: aruga["resyncAppState"];
-  public chatModify!: aruga["chatModify"];
-  public type!: aruga["type"];
-  public ws!: aruga["ws"];
-  public ev!: aruga["ev"];
-  public authState!: aruga["authState"];
-  public user!: aruga["user"];
-  public generateMessageTag!: aruga["generateMessageTag"];
-  public query!: aruga["query"];
-  public waitForMessage!: aruga["waitForMessage"];
-  public waitForSocketOpen!: aruga["waitForSocketOpen"];
-  public sendRawMessage!: aruga["sendRawMessage"];
-  public sendNode!: aruga["sendNode"];
-  public logout!: aruga["logout"];
-  public end!: aruga["end"];
-  public onUnexpectedError!: aruga["onUnexpectedError"];
-  public uploadPreKeys!: aruga["uploadPreKeys"];
-  public uploadPreKeysToServerIfRequired!: aruga["uploadPreKeysToServerIfRequired"];
-  public waitForConnectionUpdate!: aruga["waitForConnectionUpdate"];
+  public getOrderDetails!: Aruga["getOrderDetails"];
+  public getCatalog!: Aruga["getCatalog"];
+  public getCollections!: Aruga["getCollections"];
+  public productCreate!: Aruga["productCreate"];
+  public productDelete!: Aruga["productDelete"];
+  public productUpdate!: Aruga["productUpdate"];
+  public sendMessageAck!: Aruga["sendMessageAck"];
+  public sendRetryRequest!: Aruga["sendRetryRequest"];
+  public rejectCall!: Aruga["rejectCall"];
+  public getPrivacyTokens!: Aruga["getPrivacyTokens"];
+  public assertSessions!: Aruga["assertSessions"];
+  public relayMessage!: Aruga["relayMessage"];
+  public sendReceipt!: Aruga["sendReceipt"];
+  public sendReceipts!: Aruga["sendReceipts"];
+  public readMessages!: Aruga["readMessages"];
+  public refreshMediaConn!: Aruga["refreshMediaConn"];
+  public waUploadToServer!: Aruga["waUploadToServer"];
+  public fetchPrivacySettings!: Aruga["fetchPrivacySettings"];
+  public updateMediaMessage!: Aruga["updateMediaMessage"];
+  public sendMessage!: Aruga["sendMessage"];
+  public groupMetadata!: Aruga["groupMetadata"];
+  public groupCreate!: Aruga["groupCreate"];
+  public groupLeave!: Aruga["groupLeave"];
+  public groupUpdateSubject!: Aruga["groupUpdateSubject"];
+  public groupParticipantsUpdate!: Aruga["groupParticipantsUpdate"];
+  public groupUpdateDescription!: Aruga["groupUpdateDescription"];
+  public groupInviteCode!: Aruga["groupInviteCode"];
+  public groupRevokeInvite!: Aruga["groupRevokeInvite"];
+  public groupAcceptInvite!: Aruga["groupAcceptInvite"];
+  public groupAcceptInviteV4!: Aruga["groupAcceptInviteV4"];
+  public groupGetInviteInfo!: Aruga["groupGetInviteInfo"];
+  public groupToggleEphemeral!: Aruga["groupToggleEphemeral"];
+  public groupSettingUpdate!: Aruga["groupSettingUpdate"];
+  public groupFetchAllParticipating!: Aruga["groupFetchAllParticipating"];
+  public processingMutex!: Aruga["processingMutex"];
+  public upsertMessage!: Aruga["upsertMessage"];
+  public appPatch!: Aruga["appPatch"];
+  public sendPresenceUpdate!: Aruga["sendPresenceUpdate"];
+  public presenceSubscribe!: Aruga["presenceSubscribe"];
+  public profilePictureUrl!: Aruga["profilePictureUrl"];
+  public onWhatsApp!: Aruga["onWhatsApp"];
+  public fetchBlocklist!: Aruga["fetchBlocklist"];
+  public fetchStatus!: Aruga["fetchStatus"];
+  public updateProfilePicture!: Aruga["updateProfilePicture"];
+  public updateProfileStatus!: Aruga["updateProfileStatus"];
+  public updateProfileName!: Aruga["updateProfileName"];
+  public updateBlockStatus!: Aruga["updateBlockStatus"];
+  public getBusinessProfile!: Aruga["getBusinessProfile"];
+  public resyncAppState!: Aruga["resyncAppState"];
+  public chatModify!: Aruga["chatModify"];
+  public type!: Aruga["type"];
+  public ws!: Aruga["ws"];
+  public ev!: Aruga["ev"];
+  public authState!: Aruga["authState"];
+  public user!: Aruga["user"];
+  public generateMessageTag!: Aruga["generateMessageTag"];
+  public query!: Aruga["query"];
+  public waitForMessage!: Aruga["waitForMessage"];
+  public waitForSocketOpen!: Aruga["waitForSocketOpen"];
+  public sendRawMessage!: Aruga["sendRawMessage"];
+  public sendNode!: Aruga["sendNode"];
+  public logout!: Aruga["logout"];
+  public end!: Aruga["end"];
+  public onUnexpectedError!: Aruga["onUnexpectedError"];
+  public uploadPreKeys!: Aruga["uploadPreKeys"];
+  public uploadPreKeysToServerIfRequired!: Aruga["uploadPreKeysToServerIfRequired"];
+  public waitForConnectionUpdate!: Aruga["waitForConnectionUpdate"];
 }

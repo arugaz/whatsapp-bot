@@ -1,7 +1,7 @@
 import { AuthenticationCreds, AuthenticationState, BufferJSON, initAuthCreds, proto, SignalDataTypeMap } from "@adiwajshing/baileys";
 import Database from "../libs/database.libs";
 
-export default class MultiAuth {
+export default class AuthMulti {
   public useDatabaseAuth = async (): Promise<{ state: AuthenticationState; saveState: () => Promise<void>; clearState: () => Promise<void> }> => {
     const fixFileName = (fileName?: string): string => fileName?.replace(/\//g, "__")?.replace(/:/g, "-");
 

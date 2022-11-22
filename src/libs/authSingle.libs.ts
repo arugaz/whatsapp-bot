@@ -1,7 +1,7 @@
 import { AuthenticationCreds, AuthenticationState, BufferJSON, initAuthCreds, proto, SignalDataTypeMap } from "@adiwajshing/baileys";
 import Database from "../libs/database.libs";
 
-export default class Auth {
+export default class AuthSingle {
   constructor(private sessionId: string) {}
   public useDatabaseAuth = async (): Promise<{
     state: AuthenticationState;
