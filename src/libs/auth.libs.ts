@@ -16,12 +16,12 @@ export default class Auth {
     clearState: () => Promise<void>;
   }> => {
     let creds: AuthenticationCreds;
-    let keys: any = {};
+    let keys: unknown = {};
 
     const storedCreds = await this.DB.getSession(this.sessionId);
     if (storedCreds && storedCreds.session) {
       const parsedCreds = JSON.parse(storedCreds.session, BufferJSON.reviver);
-      creds = parsedCreds.creds;
+      creds = parsedCreds.creds as AuthenticationCreds;
       keys = parsedCreds.keys;
     } else {
       if (!storedCreds) await this.DB.createSession(this.sessionId);
@@ -51,7 +51,7 @@ export default class Auth {
         keys: {
           get: (type, ids) => {
             const key = this.KEY_MAP[type];
-            return ids.reduce((dict: any, id) => {
+            return ids.reduce((dict: unknown, id) => {
               let value = keys[key]?.[id];
               if (value) {
                 if (type === "app-state-sync-key") value = proto.Message.AppStateSyncKeyData.fromObject(value);
@@ -60,7 +60,7 @@ export default class Auth {
               return dict;
             }, {});
           },
-          set: (data: any) => {
+          set: (data) => {
             for (const _key in data) {
               const key = this.KEY_MAP[_key as keyof SignalDataTypeMap];
               keys[key] = keys[key] || {};
