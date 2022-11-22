@@ -1,10 +1,10 @@
-import Collection from '../libs/collection.libs';
-import type { Command } from '../types/command.types';
+import Collection from "../libs/collection.libs";
+import type { Command } from "../types/command.types";
 
 /**
  * Commands collection for save in memory storage
  */
-export const commands = new Collection<String, Command>();
+export const commands = new Collection<string, Command>();
 
 /**
  * Coldown collection for save in memory storage

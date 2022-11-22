@@ -1,9 +1,9 @@
-import { PrismaClient, Session } from '@prisma/client';
+import { PrismaClient, Session } from "@prisma/client";
 
 export default class Database extends PrismaClient {
   constructor() {
     super({
-      errorFormat: 'pretty',
+      errorFormat: "pretty",
     });
   }
   /**

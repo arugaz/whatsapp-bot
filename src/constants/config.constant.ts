@@ -5,7 +5,7 @@ const Settings = {
    * @example
    * ['628xxxxxxxxxx', '918xxxxxxxxxx']
    */
-  ownerNumber: [''],
+  ownerNumber: [""],
 
   /**
    * Set default prefix of bot! u can fill empty '' for using multiple prefix or '#@' for double prefix maybe?
@@ -13,7 +13,7 @@ const Settings = {
    * @example
    * '/' || '/#' || ''
    */
-  prefix: '/',
+  prefix: "/",
 };
 
 export default Settings;

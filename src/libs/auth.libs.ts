@@ -1,12 +1,12 @@
 import {
-  AuthenticationState,
   AuthenticationCreds,
-  initAuthCreds,
+  AuthenticationState,
   BufferJSON,
-  SignalDataTypeMap,
+  initAuthCreds,
   proto,
-} from '@adiwajshing/baileys';
-import Database from '../libs/database.libs';
+  SignalDataTypeMap,
+} from "@adiwajshing/baileys";
+import Database from "../libs/database.libs";
 
 export default class Auth {
   constructor(private sessionId: string) {}
@@ -54,7 +54,7 @@ export default class Auth {
             return ids.reduce((dict: any, id) => {
               let value = keys[key]?.[id];
               if (value) {
-                if (type === 'app-state-sync-key') value = proto.Message.AppStateSyncKeyData.fromObject(value);
+                if (type === "app-state-sync-key") value = proto.Message.AppStateSyncKeyData.fromObject(value);
                 dict[id] = value;
               }
               return dict;
@@ -76,12 +76,12 @@ export default class Auth {
   };
 
   private KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
-    'pre-key': 'preKeys',
-    session: 'sessions',
-    'sender-key': 'senderKeys',
-    'app-state-sync-key': 'appStateSyncKeys',
-    'app-state-sync-version': 'appStateVersions',
-    'sender-key-memory': 'senderKeyMemory',
+    "pre-key": "preKeys",
+    session: "sessions",
+    "sender-key": "senderKeys",
+    "app-state-sync-key": "appStateSyncKeys",
+    "app-state-sync-version": "appStateVersions",
+    "sender-key-memory": "senderKeyMemory",
   };
 
   private DB = new Database();

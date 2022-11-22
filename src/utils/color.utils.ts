@@ -61,7 +61,7 @@ const color = {
     (text: string): string =>
       `\x1B[38;2;${hex.replace(
         /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-        (m, r, g, b) => `${m ? m : '#'}` + r + r + g + g + b + b,
+        (m, r, g, b) => `${m ? m : "#"}` + r + r + g + g + b + b,
       )}m${text}\x1B[39m`,
 
   /**

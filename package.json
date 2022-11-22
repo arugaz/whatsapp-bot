@@ -5,7 +5,7 @@
   "main": "./dist/main.js",
   "private": true,
   "scripts": {
-    "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types",
+    "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types && node uglify.script.js",
     "dev": "concurrently \"babel src --copy-files --extensions .ts --out-dir dist --watch\" \"nodemon --watch 'dist/**/*' ./dist/main.js\" -k",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "postinstall": "rimraf node_modules/@adiwajshing/baileys/node_modules/libsignal && move-cli node_modules/libsignal node_modules/@adiwajshing/baileys/node_modules/libsignal",
@@ -23,7 +23,12 @@
   "license": "Apache-2.0",
   "babel": {
     "presets": [
-      "@babel/preset-env",
+      [
+        "@babel/preset-env",
+        {
+          "bugfixes": true
+        }
+      ],
       [
         "@babel/preset-typescript",
         {
@@ -34,12 +39,11 @@
     ],
     "plugins": [
       [
-        "@babel/plugin-proposal-decorators",
+        "minify-mangle-names",
         {
-          "legacy": true
+          "topLevel": true
         }
-      ],
-      "minify-mangle-names"
+      ]
     ],
     "comments": false,
     "generatorOpts": {
@@ -57,7 +61,6 @@
   "devDependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
-    "@babel/plugin-proposal-decorators": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
     "@types/node": "^18.11.9",
@@ -69,6 +72,7 @@
     "prettier": "^2.7.1",
     "prisma": "^4.6.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "uglify-js": "^3.17.4"
   }
 }

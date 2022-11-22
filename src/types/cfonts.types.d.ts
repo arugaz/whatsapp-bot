@@ -1,4 +1,4 @@
-declare module 'cfonts' {
+declare module "cfonts" {
   /**
    * Declares for cfonts modules
    * @param {string} text Text to display
@@ -9,58 +9,58 @@ declare module 'cfonts' {
     text: string,
     opts: {
       font?:
-        | '3d'
-        | 'block'
-        | 'chrome'
-        | 'console'
-        | 'grid'
-        | 'huge'
-        | 'pallet'
-        | 'shade'
-        | 'simple'
-        | 'simple3d'
-        | 'simpleblock'
-        | 'slick'
-        | 'tiny';
-      align?: 'center' | 'right';
+        | "3d"
+        | "block"
+        | "chrome"
+        | "console"
+        | "grid"
+        | "huge"
+        | "pallet"
+        | "shade"
+        | "simple"
+        | "simple3d"
+        | "simpleblock"
+        | "slick"
+        | "tiny";
+      align?: "center" | "right";
       colors?: Array<
-        | 'system'
-        | 'black'
-        | 'red'
-        | 'green'
-        | 'yellow'
-        | 'blue'
-        | 'magenta'
-        | 'cyan'
-        | 'white'
-        | 'gray'
-        | 'redBright'
-        | 'greenBright'
-        | 'yellowBright'
-        | 'blueBright'
-        | 'magentaBright'
-        | 'cyanBright'
-        | 'whiteBright'
+        | "system"
+        | "black"
+        | "red"
+        | "green"
+        | "yellow"
+        | "blue"
+        | "magenta"
+        | "cyan"
+        | "white"
+        | "gray"
+        | "redBright"
+        | "greenBright"
+        | "yellowBright"
+        | "blueBright"
+        | "magentaBright"
+        | "cyanBright"
+        | "whiteBright"
         | HexColor
       >;
       background?: Array<
-        | 'transparent'
-        | 'black'
-        | 'red'
-        | 'green'
-        | 'yellow'
-        | 'blue'
-        | 'magenta'
-        | 'cyan'
-        | 'white'
-        | 'gray'
-        | 'redBright'
-        | 'greenBright'
-        | 'yellowBright'
-        | 'blueBright'
-        | 'magentaBright'
-        | 'cyanBright'
-        | 'whiteBright'
+        | "transparent"
+        | "black"
+        | "red"
+        | "green"
+        | "yellow"
+        | "blue"
+        | "magenta"
+        | "cyan"
+        | "white"
+        | "gray"
+        | "redBright"
+        | "greenBright"
+        | "yellowBright"
+        | "blueBright"
+        | "magentaBright"
+        | "cyanBright"
+        | "whiteBright"
         | HexColor
       >;
       letterSpacing?: number;
@@ -68,16 +68,16 @@ declare module 'cfonts' {
       space?: boolean;
       maxLength?: string;
       gradient?: Array<
-        | 'system'
-        | 'black'
-        | 'red'
-        | 'green'
-        | 'yellow'
-        | 'blue'
-        | 'magenta'
-        | 'cyan'
-        | 'white'
-        | 'gray'
+        | "system"
+        | "black"
+        | "red"
+        | "green"
+        | "yellow"
+        | "blue"
+        | "magenta"
+        | "cyan"
+        | "white"
+        | "gray"
         | HexColor
       >;
       independentGradient?: boolean;

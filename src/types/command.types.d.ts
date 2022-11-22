@@ -1,7 +1,7 @@
-import type { aruga } from '../types/client.types';
-import type { MessageSerialize } from '../types/message.types';
+import type { aruga } from "../types/client.types";
+import type { MessageSerialize } from "../types/message.types";
 
-type Command = {
+declare type Command = {
   /**
    * Set commands aliases for match users messages
    * @type {string[]}
@@ -22,7 +22,7 @@ type Command = {
    * Set commands coldown for users, in seconds value
    * @type {boolean}
    * @example
-   * cd: 10 // 10 seconds
+   * cd: 10 // default 5 seconds :)
    */
   cd?: number;
 
@@ -109,9 +109,9 @@ type Command = {
   execute?: (obj: CommandObject) => any;
 };
 
-type CommandObject = {
+declare type CommandObject = {
   aruga: aruga;
-  message: WAMessage;
+  message: MessageSerialize;
   command: string;
   prefix: string;
   args: string[];

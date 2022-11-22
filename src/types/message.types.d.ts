@@ -1,6 +1,6 @@
-import type { proto } from '@adiwajshing/baileys';
+import type { proto } from "@adiwajshing/baileys";
 
-type MessageSerialize = {
+declare type MessageSerialize = {
   /** Properties of a Message. */
   message: proto.IMessage;
 
@@ -35,14 +35,21 @@ type MessageSerialize = {
   mentions: string[];
 
   /**
+   * @param {string} text:string
+   * @param {boolean} quoted?:boolean
+   * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
+   */
+  reply: (text: string, quoted?: boolean) => Promise<proto.WebMessageInfo>;
+
+  /**
    * @param {string|null} filename?:string|null
    * @returns {Promise<'pathName' | Buffer>} if filename is empty return buffers otherwise return filename
    */
-  download: (filename?: string | null) => Promise<'pathName' | Buffer>;
+  download: (filename?: string | null) => Promise<"pathName" | Buffer>;
 
   /** Properties of a Quoted Message. */
   quoted?: MessageSerialize;
 
   /** Nickname for users */
-  pushname: string;
+  pushname?: string;
 };

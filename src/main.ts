@@ -1,11 +1,11 @@
-import { Browsers } from '@adiwajshing/baileys';
-import Client from './libs/whatsapp.libs';
-import MessageHandler from './handlers/message.handler';
+import { Browsers } from "@adiwajshing/baileys";
+import Client from "./libs/whatsapp.libs";
+import MessageHandler from "./handlers/message.handler";
 
 const aruga = new Client({
-  browser: Browsers.appropriate('Desktop'),
+  browser: Browsers.appropriate("Desktop"),
   generateHighQualityLinkPreview: true,
-  sessionName: 'baileys_auth_info',
+  sessionName: "baileys_auth_info",
   syncFullHistory: true,
 });
 
@@ -14,9 +14,9 @@ const start = () => {
 
   messageHandler.registerCommand();
   aruga.ev.on(
-    'messages.upsert',
+    "messages.upsert",
     (msg) =>
-      msg.type === 'notify' &&
+      msg.type === "notify" &&
       msg.messages.length >= 1 &&
       msg.messages[0].message &&
       messageHandler
@@ -24,13 +24,18 @@ const start = () => {
         .then((message) =>
           messageHandler
             .execute(message)
-            .catch((err) => aruga.log((err as Error).message || (typeof err === 'string' && err), 'error')),
+            .catch((err) =>
+              aruga.log(
+                (err as Error).message || (typeof err === "string" ? err : "Unexpected error"),
+                "error",
+              ),
+            ),
         )
         // log full error for debugging purposes
         .catch((err) => console.error(err as Error)),
   );
 
-  aruga.ev.on('call', (c) => console.log(c));
+  aruga.ev.on("call", (c) => console.log(c));
 };
 
 aruga
