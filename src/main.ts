@@ -41,8 +41,8 @@ const start = () => {
 aruga
   .startClient()
   .then(() => start())
-  .catch(() =>
-    aruga.DB.$disconnect()
-      .then(() => process.exit(0))
-      .catch(() => process.exit(1)),
-  );
+  .catch((err) => {
+    // log full error for debugging purposes
+    console.log(err as Error);
+    aruga.DB.$disconnect().then(process.exit(0)).catch(process.exit(1));
+  });
