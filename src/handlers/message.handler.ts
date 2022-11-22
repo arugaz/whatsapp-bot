@@ -25,7 +25,7 @@ export default class MessageHandler {
           new RegExp(
             "^[" +
               (Settings.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(
-                /[|\\{}()[\]^$+*?.\-\^]/g,
+                /[|\\{}()[\]^$+*?.\-^]/g,
                 "\\$&",
               ) +
               "]",
@@ -190,9 +190,9 @@ export default class MessageHandler {
 
   /**
    * @param {string} pathname='commands'
-   * @returns {any}
+   * @returns {void}
    */
-  registerCommand(pathname: string = "commands"): any {
+  registerCommand(pathname: string = "commands"): void {
     const files = readdirSync(join(__dirname, "..", pathname));
     for (const file of files) {
       const filePath = join(__dirname, "..", pathname, file);
