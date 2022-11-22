@@ -40,4 +40,8 @@ export default class Database extends PrismaClient {
     await this.session.delete({
       where: { sessionId },
     });
+  /**
+   * Delete all sessions
+   */
+  public deleteAllSession = async () => await this.session.deleteMany();
 }

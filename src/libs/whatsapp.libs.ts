@@ -5,7 +5,9 @@ import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
 import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
 
-import Auth from "../libs/auth.libs";
+// import Auth from "../libs/auth.libs";
+import MultiAuth from "../libs/authMulti.libs";
+
 import Database from "../libs/database.libs";
 import i18n from "../libs/international.libs";
 import color from "../utils/color.utils";
@@ -21,7 +23,10 @@ export default class Client implements aruga {
    */
   public startClient = async (): Promise<aruga> => {
     const logger = this.config.logger || P({ level: "silent" });
-    const { useDatabaseAuth } = new Auth("baileys_auth_info");
+
+    // const { useDatabaseAuth } = new Auth("baileys_auth_info");
+    const { useDatabaseAuth } = new MultiAuth();
+
     const { saveState, state, clearState } = await useDatabaseAuth();
     const cacheState = makeCacheableSignalKeyStore(state.keys, logger);
     const { version, isLatest } = await fetchLatestBaileysVersion();
@@ -90,8 +95,8 @@ export default class Client implements aruga {
           gradient: ["red", color.cfonts("#ee82f8")],
         });
         this.log(" Success Connected! ");
-        this.log(" Name    : " + (this.user?.name ? this.user.name : "arugaz"));
-        this.log(" Number  : " + (this.user?.id ? this.user.id.split(":")[0] : "6969"));
+        this.log(" Name    : " + (this.user?.name ? this.user.name : "unknown"));
+        this.log(" Number  : " + (this.user?.id ? this.user.id.split(":")[0] : "unknown"));
         this.log(" Version : " + version.join("."));
         this.log(" Latest  : " + `${isLatest ? "yes" : "nah"}`);
       }
