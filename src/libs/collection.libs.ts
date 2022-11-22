@@ -1,13 +1,13 @@
 // inspired from discord.js
 export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
-  /** Searches for a single item where the given function returns a truthy value. This behaves like*/
+  /** Searches for a single item where the given function returns a truthy value*/
   find(func: (v: VALUE, k: KEY, collection: this) => boolean): VALUE | null {
     for (const [k, v] of this) {
       if (func(v, k, this)) return v;
     }
     return null;
   }
-  /** Searches for the key of a single item where the given function returns a truthy value. This behaves like*/
+  /** Searches for the key of a single item where the given function returns a truthy value*/
   findKey(func: (v: VALUE, k: KEY, collection: this) => boolean): KEY | null {
     for (const [k, v] of this) {
       if (func(v, k, this)) return k;
@@ -30,11 +30,7 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
       return func(value, key, this);
     });
   }
-  /**
-   * Default sort compareFunction
-   * @param {any} firstKey:KEY
-   * @param {any} secondKey:KEY
-   */
+  /** Default sort compareFunction. */
   static defaultSort<KEY>(firstKey: KEY, secondKey: KEY) {
     return Number(firstKey > secondKey) || Number(firstKey === secondKey) - 1;
   }

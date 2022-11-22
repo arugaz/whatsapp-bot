@@ -1,11 +1,4 @@
-import {
-  AuthenticationCreds,
-  AuthenticationState,
-  BufferJSON,
-  initAuthCreds,
-  proto,
-  SignalDataTypeMap,
-} from "@adiwajshing/baileys";
+import { AuthenticationCreds, AuthenticationState, BufferJSON, initAuthCreds, proto, SignalDataTypeMap } from "@adiwajshing/baileys";
 import Database from "../libs/database.libs";
 
 export default class Auth {

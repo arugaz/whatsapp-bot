@@ -4,7 +4,7 @@ const Ping: Command = {
   category: "general",
   desc: "Ping bot",
   execute: async ({ message, args }) => {
-    await message.reply(`pong! ${args.join(" ")}`, true);
+    return await message.reply(`pong! ${args.join(" ")}`, true);
   },
 };
 

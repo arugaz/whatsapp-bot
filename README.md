@@ -47,6 +47,7 @@ Install the dependencies:
 
 ```bash
 > npm install
+> npx prisma db push
 ```
 
 ### Usage

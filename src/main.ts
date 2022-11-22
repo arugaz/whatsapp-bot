@@ -5,7 +5,6 @@ import MessageHandler from "./handlers/message.handler";
 const aruga = new Client({
   browser: Browsers.appropriate("Desktop"),
   generateHighQualityLinkPreview: true,
-  sessionName: "baileys_auth_info",
   syncFullHistory: true,
 });
 
@@ -18,19 +17,10 @@ const start = () => {
     (msg) =>
       msg.type === "notify" &&
       msg.messages.length >= 1 &&
-      msg.messages[0].message &&
+      !!msg.messages[0].message &&
       messageHandler
         .serialize(msg.messages[0])
-        .then((message) =>
-          messageHandler
-            .execute(message)
-            .catch((err) =>
-              aruga.log(
-                (err as Error).message || (typeof err === "string" ? err : "Unexpected error"),
-                "error",
-              ),
-            ),
-        )
+        .then((message) => messageHandler.execute(message).catch((err) => aruga.log((err as Error).message || (typeof err === "string" ? err : "Unexpected error"), "error")))
         // log full error for debugging purposes
         .catch((err) => console.error(err as Error)),
   );
@@ -43,6 +33,6 @@ aruga
   .then(() => start())
   .catch((err) => {
     // log full error for debugging purposes
-    console.log(err as Error);
+    console.error(err as Error);
     aruga.DB.$disconnect().then(process.exit(0)).catch(process.exit(1));
   });

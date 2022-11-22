@@ -6,3 +6,5 @@ database/*
 
 temp/*
 !temp/.gitkeep
+
+test.js

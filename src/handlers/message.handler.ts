@@ -18,26 +18,9 @@ export default class MessageHandler {
    * @returns {Promise<void>}
    */
   async execute(message: MessageSerialize): Promise<void> {
-    const prefix =
-      message.body &&
-      ([
-        [
-          new RegExp(
-            "^[" +
-              (Settings.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(
-                /[|\\{}()[\]^$+*?.\-^]/g,
-                "\\$&",
-              ) +
-              "]",
-          ).exec(message.body),
-          Settings.prefix,
-        ],
-      ].find((p) => p[1])[0] || "")[0];
+    const prefix = message.body && ([[new RegExp("^[" + (Settings.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), Settings.prefix]].find((p) => p[1])[0] || "")[0];
     const args = message.body.trim().split(/ +/).slice(1);
-    const command =
-      message.body &&
-      message.body.startsWith(prefix) &&
-      message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
+    const command = message.body && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
     const curCommand = commands.get(command) ?? commands.find((v) => v.aliases && v.aliases.includes(command));
 
     if (curCommand) {
@@ -73,16 +56,8 @@ export default class MessageHandler {
     m.isGroupMsg = m.key.remoteJid.endsWith("g.us");
     m.from = this.aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
-    m.type = Object.keys(m.message).find(
-      (x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo",
-    );
-    m.sender = this.aruga.decodeJid(
-      m.fromMe
-        ? this.aruga.user.id
-        : m.isGroupMsg || m.from === "status@broadcast"
-        ? m.key.participant || msg.participant
-        : m.from,
-    );
+    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo");
+    m.sender = this.aruga.decodeJid(m.fromMe ? this.aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from);
     m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant;
     m.body =
       m.message.conversation && m.type === "conversation"
@@ -105,31 +80,23 @@ export default class MessageHandler {
         ? m.message.reactionMessage.text
         : "";
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
-    m.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> =>
-      await this.aruga.sendMessage(
-        m.from,
-        { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) },
-        quoted && { quoted: { key: m.key, message: m.message } },
-      );
-    m.download = async (filename?: string | null): Promise<"pathName" | Buffer> =>
-      filename
-        ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename)
-        : await this.aruga.downloadMediaMessage(m.message);
+    m.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> => await this.aruga.sendMessage(m.from, { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) }, quoted && { quoted: { key: m.key, message: m.message } });
+    m.download = async (filename?: string): Promise<"pathName" | Buffer> => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename) : await this.aruga.downloadMediaMessage(m.message));
 
     m.quoted = {} as MessageSerialize;
     m.quoted.message = m?.message[m.type]?.contextInfo?.quotedMessage
       ? m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage
-        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessage.message
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessage?.message
         : m.message[m.type].contextInfo.quotedMessage?.ephemeralMessage
-        ? m.message[m.type].contextInfo.quotedMessage.ephemeralMessage.message
+        ? m.message[m.type].contextInfo.quotedMessage.ephemeralMessage?.message
         : m.message[m.type].contextInfo.quotedMessage?.documentWithCaptionMessage
-        ? m.message[m.type].contextInfo.quotedMessage.documentWithCaptionMessage.message
+        ? m.message[m.type].contextInfo.quotedMessage.documentWithCaptionMessage?.message
         : m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2
-        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2.message
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2?.message
         : m.message[m.type].contextInfo.quotedMessage?.editedMessage
-        ? m.message[m.type].contextInfo.quotedMessage.editedMessage.message
+        ? m.message[m.type].contextInfo.quotedMessage.editedMessage?.message
         : m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2Extension
-        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2Extension.message
+        ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessageV2Extension?.message
         : m.message[m.type].contextInfo.quotedMessage
       : null;
 
@@ -137,9 +104,7 @@ export default class MessageHandler {
       m.quoted.key = {
         participant: this.aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
         remoteJid: m?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
-        fromMe:
-          this.aruga.decodeJid(m.message[m.type].contextInfo.participant) ===
-          this.aruga.decodeJid(this.aruga.user.id),
+        fromMe: this.aruga.decodeJid(m.message[m.type].contextInfo.participant) === this.aruga.decodeJid(this.aruga.user.id),
         id: m.message[m.type].contextInfo.stanzaId,
       };
       m.quoted.id = m.quoted.key.id;
@@ -147,9 +112,7 @@ export default class MessageHandler {
       m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith("g.us");
       m.quoted.from = this.aruga.decodeJid(m.quoted.key.remoteJid);
       m.quoted.fromMe = m.quoted.key.fromMe;
-      m.quoted.type = Object.keys(m.quoted.message).find(
-        (x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo",
-      );
+      m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo");
       m.quoted.sender = m.quoted.key.participant;
       m.quoted.body =
         m.quoted.message.conversation && m.quoted.type === "conversation"
@@ -172,19 +135,12 @@ export default class MessageHandler {
           ? m.quoted.message.reactionMessage.text
           : "";
       m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
-      m.quoted.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> =>
-        await this.aruga.sendMessage(
-          m.from,
-          { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) },
-          quoted && { quoted: { key: m.quoted.key, message: m.quoted.message } },
-        );
-      m.quoted.download = async (filename?: string | null): Promise<"pathName" | Buffer> =>
-        filename
-          ? await this.aruga.downloadAndSaveMediaMessage(m.quoted.message, filename)
-          : await this.aruga.downloadMediaMessage(m.quoted.message);
+      m.quoted.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> => await this.aruga.sendMessage(m.from, { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) }, quoted && { quoted: { key: m.quoted.key, message: m.quoted.message } });
+      m.quoted.download = async (filename?: string): Promise<"pathName" | Buffer> => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.quoted.message, filename) : await this.aruga.downloadMediaMessage(m.quoted.message));
     } else delete m.quoted;
 
     m.pushname = msg.pushName;
+    m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg ? await this.aruga.groupMetadata(m.from) : null;
     return m;
   }
 

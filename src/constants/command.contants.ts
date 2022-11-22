@@ -9,4 +9,4 @@ export const commands = new Collection<string, Command>();
 /**
  * Coldown collection for save in memory storage
  */
-export const cooldown = new Collection<string, number>();
+export const cooldowns = new Collection<string, number>();

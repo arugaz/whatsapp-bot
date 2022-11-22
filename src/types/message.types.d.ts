@@ -1,4 +1,4 @@
-import type { proto } from "@adiwajshing/baileys";
+import type { proto, GroupMetadata } from "@adiwajshing/baileys";
 
 declare type MessageSerialize = {
   /** Properties of a Message. */
@@ -52,4 +52,7 @@ declare type MessageSerialize = {
 
   /** Nickname for users */
   pushname?: string;
+
+  /** Group Metadata */
+  groupMetadata?: GroupMetadata;
 };

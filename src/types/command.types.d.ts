@@ -106,7 +106,7 @@ declare type Command = {
    *  await aruga.sendMessage(message.from, { text: 'pong!' })
    * }
    */
-  execute?: (obj: CommandObject) => any;
+  execute?: (obj: CommandObject) => unknown;
 };
 
 declare type CommandObject = {

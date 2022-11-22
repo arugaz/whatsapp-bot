@@ -6,11 +6,9 @@ const Menu: Command = {
   desc: "Landing menu",
   maintenance: false,
   execute: async ({ aruga, message }) => {
-    const templateButtons = [
-      { index: 1, urlButton: { displayText: aruga.user.name, url: "https://wa.me/arugaz" } },
-    ];
+    const templateButtons = [{ index: 1, urlButton: { displayText: aruga.user.name, url: "https://wa.me/arugaz" } }];
 
-    await aruga.sendMessage(message.from, {
+    return await aruga.sendMessage(message.from, {
       text: `Hi ${message.pushname}`,
       footer: "Hi there~",
       templateButtons,

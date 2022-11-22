@@ -43,7 +43,7 @@ const ListMenu: Command = {
       });
     }
 
-    await aruga.sendMessage(message.from, {
+    return await aruga.sendMessage(message.from, {
       text: `Hi ${message.pushname}`,
       footer: "Hi there~",
       title: "Hi there",
