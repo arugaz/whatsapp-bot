@@ -8,7 +8,7 @@
 <a href="https://github.com/ArugaZ"><img title="Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
 </p>
 <p align="center">
-<a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/master"><img title="Rating" src="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/badge/master"></a>
+<a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/md"><img title="Rating" src="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/badge/md"></a>
 </p>
 <p align="center">
 <a href="https://github.com/arugaz/followers"><img title="Followers" src="https://img.shields.io/github/followers/arugaz?color=blue&style=flat-square"></a>
@@ -39,7 +39,7 @@ This project require NodeJS
 Clone this project
 
 ```bash
-> git clone https://github.com/ArugaZ/whatsapp-bot.git
+> git clone -b md https://github.com/ArugaZ/whatsapp-bot.git
 > cd whatsapp-bot
 ```
 
@@ -54,6 +54,7 @@ Install the dependencies:
 Run the Whatsapp bot
 
 ```bash
+> npm run build
 > npm start
 ```
 
