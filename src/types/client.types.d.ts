@@ -1,4 +1,4 @@
-import type makeWASocket, { SocketConfig } from "@adiwajshing/baileys";
+import makeWASocket, { SocketConfig } from "@adiwajshing/baileys";
 
 declare type Aruga = ReturnType<typeof makeWASocket>;
 

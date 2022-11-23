@@ -3,9 +3,8 @@ import cfonts from "cfonts";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
+import makeWASocket, { AuthenticationState, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
 
-import Auth from "../libs/auth.libs";
 import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
 import Color from "../utils/color.utils";
@@ -22,7 +21,11 @@ export default class Client implements Aruga {
   public async startClient(): Promise<Aruga> {
     const logger = this.config.logger || P({ level: "silent" });
 
-    const { saveState, state, clearState } = await Auth(this.config.authType, this.DB);
+    const { saveState, clearState, state } = (this.config.authType === "single" ? await require("../libs/auth.libs/single").default(this.DB) : await require("../libs/auth.libs/multi").default(this.DB)) as {
+      saveState: () => Promise<void>;
+      clearState: () => Promise<void>;
+      state: AuthenticationState;
+    };
     const cacheState = makeCacheableSignalKeyStore(state.keys, logger, {
       stdTTL: 3600,
     });
@@ -67,10 +70,10 @@ export default class Client implements Aruga {
           this.log("Disconnected.", "error");
           this.log("Deleting session and restarting", "error");
           await clearState();
+          cacheState.clear && (await cacheState.clear());
           this.log("Session deleted", "error");
           this.log("Starting...", "warning");
         }
-        cacheState.clear && (await cacheState.clear());
         setTimeout(() => this.startClient(), 1000);
       }
 
