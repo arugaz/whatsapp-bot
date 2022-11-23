@@ -5,11 +5,11 @@ import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
 import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
 
-// import AuthSingle from "../libs/authSingle.libs";
-import AuthMulti from "../libs/authMulti.libs";
+// import AuthSingle from "../libs/auth-single.libs";
+import AuthMulti from "../libs/auth-multi.libs";
 
+import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
-import i18n from "../libs/international.libs";
 import Color from "../utils/color.utils";
 import { Aruga, ArugaConfig } from "../types/client.types";
 
@@ -24,7 +24,8 @@ export default class Client implements Aruga {
   public startClient = async (): Promise<Aruga> => {
     const logger = this.config.logger || P({ level: "silent" });
 
-    // const { useDatabaseAuth } = new AuthSingle("baileys_auth_info");
+    // use multiple auth instead of single auth
+    // const { useDatabaseAuth } = new AuthSingle();
     const { useDatabaseAuth } = new AuthMulti();
 
     const { saveState, state, clearState } = await useDatabaseAuth();
@@ -39,7 +40,7 @@ export default class Client implements Aruga {
       },
       logger,
       patchMessageBeforeSending: (message) => {
-        const requiresPatch = !!(message.buttonsMessage || message.templateMessage || message.listMessage);
+        const requiresPatch = !!(message.buttonsMessage || message.listMessage || message.templateMessage);
         if (requiresPatch) {
           message = {
             viewOnceMessage: {
@@ -66,16 +67,15 @@ export default class Client implements Aruga {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         if (reason !== (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)) {
           this.log("Reconnecting...", "warning");
-          setTimeout(() => this.startClient(), 3000);
         } else {
           this.log("Disconnected.", "error");
           this.log("Deleting session and restarting", "error");
           await clearState();
-          cacheState.clear && (await cacheState.clear());
           this.log("Session deleted", "error");
           this.log("Starting...", "warning");
-          setTimeout(() => this.startClient(), 3000);
         }
+        cacheState.clear && (await cacheState.clear());
+        setTimeout(() => this.startClient(), 1000);
       }
 
       if (connection === "connecting") {
@@ -83,13 +83,13 @@ export default class Client implements Aruga {
       }
 
       if (connection === "open") {
-        cfonts.say(this.user?.name || "whatsapp-bot", {
+        cfonts.say("Whatsapp Bot", {
           align: "center",
           colors: [Color.cfonts("#8cf57b")],
           font: "block",
           space: false,
         });
-        cfonts.say(`'whatsapp-bot' By @arugaz`, {
+        cfonts.say(`'whatsapp-bot' By @arugaz @tobyg74`, {
           align: "center",
           font: "console",
           gradient: ["red", Color.cfonts("#ee82f8")],
@@ -119,7 +119,7 @@ export default class Client implements Aruga {
 
   /**
    * Download message and return buffer
-   * @param {any} message:proto.IMessage
+   * @param {proto.IMessage} message:proto.IMessage
    */
   public downloadMediaMessage = async (message: proto.IMessage): Promise<Buffer> => {
     const type = Object.keys(message)[0];
@@ -135,10 +135,10 @@ export default class Client implements Aruga {
 
   /**
    * Download message and save to local storage
-   * @param {any} message:proto.IMessage
-   * @param {any} filename='random string'
+   * @param {proto.IMessage} message:proto.IMessage
+   * @param {string} filename='random string'
    */
-  public downloadAndSaveMediaMessage = async (message: proto.IMessage, filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<"pathName"> => {
+  public downloadAndSaveMediaMessage = async (message: proto.IMessage, filename: string = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<"pathName"> => {
     const buffer = await this.downloadMediaMessage(message);
     const filePath = pathJoin(__dirname, "..", "..", "temp", filename);
     await fsWriteFile(filePath, buffer);
@@ -149,7 +149,7 @@ export default class Client implements Aruga {
   public DB = new Database();
 
   /** Translator helper */
-  public translate = i18n.t;
+  public translate = International.t;
 
   /**
    * @param {string} text:string

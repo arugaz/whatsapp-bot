@@ -2,10 +2,17 @@ import { AuthenticationCreds, AuthenticationState, BufferJSON, initAuthCreds, pr
 import Database from "../libs/database.libs";
 
 export default class AuthSingle {
-  constructor(private sessionId: string) {}
   public useDatabaseAuth = async (): Promise<{
     state: AuthenticationState;
+    /**
+     * Save the session state
+     * @returns {Promise<void>}
+     */
     saveState: () => Promise<void>;
+    /**
+     * Remove the session from the database
+     * @returns {Promise<void>}
+     */
     clearState: () => Promise<void>;
   }> => {
     let creds: AuthenticationCreds;
@@ -21,19 +28,11 @@ export default class AuthSingle {
       creds = initAuthCreds();
     }
 
-    /**
-     * Save the session state
-     * @returns {Promise<void>}
-     */
     const saveState = async (): Promise<void> => {
       const session = JSON.stringify({ creds, keys }, BufferJSON.replacer, 2);
       await this.DB.updateSession(this.sessionId, session);
     };
 
-    /**
-     * Remove the session from the database
-     * @returns {Promise<void>}
-     */
     const clearState = async (): Promise<void> => {
       await this.DB.deleteSession(this.sessionId);
     };
@@ -67,6 +66,8 @@ export default class AuthSingle {
       clearState,
     };
   };
+
+  private sessionId = "creds";
 
   private KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
     "pre-key": "preKeys",

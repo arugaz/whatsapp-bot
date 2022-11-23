@@ -8,7 +8,7 @@ const Settings = {
   ownerNumber: [""],
 
   /**
-   * Set default prefix of bot! u can fill empty '' for using multiple prefix or '#@' for double prefix maybe?
+   * Set default prefix of bot! u can fill empty '' for using multiple prefix or '#@' for double prefix or as much as you want '!@#$%. etc'
    * @type {string}
    * @example
    * '/' || '/#' || ''

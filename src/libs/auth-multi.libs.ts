@@ -1,14 +1,24 @@
 import { AuthenticationCreds, AuthenticationState, BufferJSON, initAuthCreds, proto, SignalDataTypeMap } from "@adiwajshing/baileys";
-import Database from "../libs/database.libs";
+import Database from "./database.libs";
 
 export default class AuthMulti {
-  public useDatabaseAuth = async (): Promise<{ state: AuthenticationState; saveState: () => Promise<void>; clearState: () => Promise<void> }> => {
+  public useDatabaseAuth = async (): Promise<{
+    state: AuthenticationState;
+    /**
+     * Save the session state
+     * @returns {Promise<void>}
+     */
+    saveState: () => Promise<void>;
+    /**
+     * Remove the session from the database
+     * @returns {Promise<void>}
+     */
+    clearState: () => Promise<void>;
+  }> => {
     const fixFileName = (fileName?: string): string => fileName?.replace(/\//g, "__")?.replace(/:/g, "-");
 
     const writeData = async (data: unknown, fileName: string): Promise<void> => {
-      const getSession = await this.DB.getSession(fixFileName(fileName));
-      if (getSession && getSession.session) await this.DB.updateSession(fixFileName(fileName), JSON.stringify(data, BufferJSON.replacer));
-      else await this.DB.createSession(fixFileName(fileName), JSON.stringify(data, BufferJSON.replacer));
+      await this.DB.createSession(fixFileName(fileName), JSON.stringify(data, BufferJSON.replacer));
     };
 
     const readData = async (fileName: string): Promise<AuthenticationCreds> => {
@@ -34,12 +44,10 @@ export default class AuthMulti {
             const data: { [_: string]: SignalDataTypeMap[typeof type] } = {};
             await Promise.all(
               ids.map(async (id) => {
-                let fixValue: proto.Message.AppStateSyncKeyData;
                 const value = await readData(`${type}-${id}`);
                 if (type === "app-state-sync-key" && value) {
-                  fixValue = proto.Message.AppStateSyncKeyData.fromObject(value);
+                  data[id] = proto.Message.AppStateSyncKeyData.fromObject(value);
                 }
-                data[id] = fixValue;
               }),
             );
             return data;

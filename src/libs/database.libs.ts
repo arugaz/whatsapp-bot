@@ -11,8 +11,13 @@ export default class Database extends PrismaClient {
    * @param {any} sessionId:string
    */
   public createSession = async (sessionId: string, session?: string): Promise<Session> =>
-    await this.session.create({
-      data: { sessionId, session },
+    await this.session.upsert({
+      where: { sessionId },
+      update: {
+        sessionId,
+        session,
+      },
+      create: { sessionId, session },
     });
   /**
    * Get a session by Id
