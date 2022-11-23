@@ -1,4 +1,4 @@
-import type { aruga } from "../types/client.types";
+import type { Aruga } from "../types/client.types";
 import type { MessageSerialize } from "../types/message.types";
 
 declare type Command = {
@@ -110,7 +110,7 @@ declare type Command = {
 };
 
 declare type CommandObject = {
-  aruga: aruga;
+  aruga: Aruga;
   message: MessageSerialize;
   command: string;
   prefix: string;

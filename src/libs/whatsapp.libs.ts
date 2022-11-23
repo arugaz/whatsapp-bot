@@ -38,23 +38,6 @@ export default class Client implements Aruga {
         keys: cacheState,
       },
       logger,
-      patchMessageBeforeSending: (message) => {
-        const requiresPatch = !!(message.buttonsMessage || message.listMessage || message.templateMessage);
-        if (requiresPatch) {
-          message = {
-            viewOnceMessage: {
-              message: {
-                messageContextInfo: {
-                  deviceListMetadataVersion: 2,
-                  deviceListMetadata: {},
-                },
-                ...message,
-              },
-            },
-          };
-        }
-        return message;
-      },
       printQRInTerminal: true,
       version,
     });
@@ -88,14 +71,14 @@ export default class Client implements Aruga {
           font: "block",
           space: false,
         });
-        cfonts.say(`'whatsapp-bot' By @arugaz @tobyg74`, {
+        cfonts.say("'whatsapp-bot' By @arugaz @tobyg74", {
           align: "center",
           font: "console",
           gradient: ["red", Color.cfonts("#ee82f8")],
         });
-        this.log(" Success Connected! ");
-        this.log(" Name    : " + (this.user?.name ? this.user.name : "unknown"));
-        this.log(" Number  : " + (this.user?.id ? this.user.id.split(":")[0] : "unknown"));
+        this.log("Connected!");
+        this.log(" Name    : " + (this.user?.name || "unknown"));
+        this.log(" Number  : " + (this.user?.id?.split(":")[0] || "unknown"));
         this.log(" Version : " + version.join("."));
         this.log(" Latest  : " + `${isLatest ? "yes" : "nah"}`);
       }

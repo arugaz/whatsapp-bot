@@ -10,7 +10,7 @@ const International = rosetta({
 import id from "./id.json";
 International.set("id", id);
 
-// you can add your language
+/** you can add your language || disable the language you dont want to use */
 // import in from './in.json';
 // International.set('in', in);
 

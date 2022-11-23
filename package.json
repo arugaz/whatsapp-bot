@@ -5,12 +5,11 @@
   "main": "./dist/main.js",
   "private": true,
   "scripts": {
-    "build:tsc": "rimraf dist && tsc --build && rimraf dist/types && node uglify.script.js",
+    "build:tsc": "rimraf dist && tsc --build && rimraf dist/types",
     "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types && node uglify.script.js",
     "dev": "concurrently \"babel src --copy-files --extensions .ts --out-dir dist --watch\" \"nodemon --watch 'dist/**/*' ./dist/main.js\" -k",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "postinstall": "rimraf node_modules/@adiwajshing/baileys/node_modules/libsignal && move-cli node_modules/libsignal node_modules/@adiwajshing/baileys/node_modules/libsignal",
-    "prisma": "npx prisma db push",
     "start": "node ."
   },
   "author": "arugaz",

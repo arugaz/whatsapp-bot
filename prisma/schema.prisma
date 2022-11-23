@@ -15,3 +15,8 @@ model Session {
   sessionId String  @unique
   session   String?
 }
+
+model User {
+  number String  @unique
+  name   String?
+}

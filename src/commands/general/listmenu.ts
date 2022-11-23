@@ -49,6 +49,7 @@ const ListMenu: Command = {
       title: "Hi there",
       buttonText: "LIST MENU",
       sections,
+      viewOnce: true,
     });
   },
 };

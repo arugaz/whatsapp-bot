@@ -13,6 +13,7 @@ const Menu: Command = {
         { index: 1, urlButton: { displayText: aruga.user.name, url: "https://wa.me/arugaz" } },
         { index: 2, quickReplyButton: { displayText: "Click here to see the menu list!", id: prefix + "info" } },
       ],
+      viewOnce: true,
     });
   },
 };
