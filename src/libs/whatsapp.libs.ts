@@ -5,9 +5,7 @@ import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
 import makeWASocket, { DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
 
-// import AuthSingle from "../libs/auth-single.libs";
-import AuthMulti from "../libs/auth-multi.libs";
-
+import Auth from "../libs/auth.libs";
 import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
 import Color from "../utils/color.utils";
@@ -21,15 +19,13 @@ export default class Client implements Aruga {
    * Start client
    * @returns {Promise<aruga>} aruga instance
    */
-  public startClient = async (): Promise<Aruga> => {
+  public async startClient(): Promise<Aruga> {
     const logger = this.config.logger || P({ level: "silent" });
 
-    // use multiple auth instead of single auth
-    // const { useDatabaseAuth } = new AuthSingle();
-    const { useDatabaseAuth } = new AuthMulti();
-
-    const { saveState, state, clearState } = await useDatabaseAuth();
-    const cacheState = makeCacheableSignalKeyStore(state.keys, logger);
+    const { saveState, state, clearState } = await Auth(this.config.authType, this.DB);
+    const cacheState = makeCacheableSignalKeyStore(state.keys, logger, {
+      stdTTL: 3600,
+    });
     const { version, isLatest } = await fetchLatestBaileysVersion();
 
     this.aruga = makeWASocket({
@@ -104,24 +100,24 @@ export default class Client implements Aruga {
 
     this.ev.on("creds.update", async () => await saveState());
     return this.aruga;
-  };
+  }
 
   /**
    * Decode jid to make it correctly formatted
    * @param {any} jid:string user/group jid
    */
-  public decodeJid = (jid: string): string => {
+  public decodeJid(jid: string): string {
     if (/:\d+@/gi.test(jid)) {
       const decode = jidDecode(jid) as FullJid;
       return (decode.user && decode.server && decode.user + "@" + decode.server) || jid;
     } else return jid;
-  };
+  }
 
   /**
    * Download message and return buffer
    * @param {proto.IMessage} message:proto.IMessage
    */
-  public downloadMediaMessage = async (message: proto.IMessage): Promise<Buffer> => {
+  public async downloadMediaMessage(message: proto.IMessage): Promise<Buffer> {
     const type = Object.keys(message)[0];
     const mime = {
       imageMessage: "image",
@@ -131,22 +127,22 @@ export default class Client implements Aruga {
       audioMessage: "audio",
     };
     return await toBuffer(await downloadContentFromMessage(message[type], mime[type]));
-  };
+  }
 
   /**
    * Download message and save to local storage
    * @param {proto.IMessage} message:proto.IMessage
    * @param {string} filename='random string'
    */
-  public downloadAndSaveMediaMessage = async (message: proto.IMessage, filename: string = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<"pathName"> => {
+  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<"pathName"> {
     const buffer = await this.downloadMediaMessage(message);
     const filePath = pathJoin(__dirname, "..", "..", "temp", filename);
     await fsWriteFile(filePath, buffer);
     return filePath as "pathName";
-  };
+  }
 
   /** Database */
-  public DB = new Database();
+  public DB = Database;
 
   /** Translator helper */
   public translate = International.t;
@@ -156,9 +152,9 @@ export default class Client implements Aruga {
    * @param {string} type:'error'|'warning'|'success' = 'success'
    * @returns {void} print logs
    */
-  public log = (text: string, type: "error" | "warning" | "success" = "success"): void => {
+  public log(text: string, type: "error" | "warning" | "success" = "success"): void {
     console.log(Color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
-  };
+  }
 
   public getOrderDetails!: Aruga["getOrderDetails"];
   public getCatalog!: Aruga["getCatalog"];

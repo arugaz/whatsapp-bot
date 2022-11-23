@@ -3,6 +3,7 @@ import Client from "./libs/whatsapp.libs";
 import MessageHandler from "./handlers/message.handler";
 
 const aruga = new Client({
+  authType: "multi",
   browser: Browsers.appropriate("Desktop"),
   generateHighQualityLinkPreview: true,
   syncFullHistory: true,

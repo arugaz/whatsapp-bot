@@ -5,7 +5,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// For production you should use other database like postgresql or mongodb or something similar
+// For production you should use other provider like postgresql or mongodb or something similar
 datasource db {
   provider = "sqlite"
   url      = "file:../database/database.db?socket_timeout=10&connection_limit=1"

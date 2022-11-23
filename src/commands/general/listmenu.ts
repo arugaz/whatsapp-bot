@@ -13,7 +13,7 @@ const ListMenu: Command = {
       if (!cmd || cmd.category === "private") return await message.reply("No command found", true);
       const text =
         `⍟──── *${name}* ────⍟\n\n` +
-        `*Alias:* ${cmd.aliases ? cmd.aliases.join(", ").trim() : "-"}\n` +
+        `*Alias:* ${cmd.aliases ? [name].concat(cmd.aliases).join(", ").trim() : "-"}\n` +
         `*Category:* ${cmd.category || `-`}\n` +
         `*Description:* ${cmd.desc || "-"}\n` +
         `*Usage:* ${prefix}${name} ${cmd.example || ``}\n` +

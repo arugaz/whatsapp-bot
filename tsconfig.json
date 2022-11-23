@@ -8,7 +8,6 @@
     "isolatedModules": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
     "noImplicitThis": true,
     "outDir": "dist",
     "resolveJsonModule": true,

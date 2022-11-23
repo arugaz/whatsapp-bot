@@ -5,7 +5,8 @@
   "main": "./dist/main.js",
   "private": true,
   "scripts": {
-    "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types",
+    "build:tsc": "rimraf dist && tsc --build && rimraf dist/types && node uglify.script.js",
+    "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types && node uglify.script.js",
     "dev": "concurrently \"babel src --copy-files --extensions .ts --out-dir dist --watch\" \"nodemon --watch 'dist/**/*' ./dist/main.js\" -k",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "postinstall": "rimraf node_modules/@adiwajshing/baileys/node_modules/libsignal && move-cli node_modules/libsignal node_modules/@adiwajshing/baileys/node_modules/libsignal",
@@ -40,7 +41,7 @@
   "dependencies": {
     "@adiwajshing/baileys": "git+https://github.com/adiwajshing/baileys",
     "@prisma/client": "^4.6.1",
-    "axios": "^1.1.3",
+    "axios": "^1.2.0",
     "cfonts": "^3.1.1",
     "qrcode-terminal": "^0.12.0",
     "rosetta": "^1.1.0"
@@ -58,6 +59,7 @@
     "prettier": "^2.7.1",
     "prisma": "^4.6.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "uglify-js": "^3.17.4"
   }
 }
