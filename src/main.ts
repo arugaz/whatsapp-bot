@@ -18,7 +18,7 @@ const start = () => {
     (msg) =>
       msg.type === "notify" &&
       msg.messages.length >= 1 &&
-      !!msg.messages[0].message &&
+      msg.messages[0].message &&
       messageHandler
         .serialize(msg.messages[0])
         .then((message) => messageHandler.execute(message).catch((err) => aruga.log((err as Error).message || (typeof err === "string" ? err : "Unexpected error"), "error")))

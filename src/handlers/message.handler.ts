@@ -1,37 +1,84 @@
+import { inspect } from "util";
 import { basename, join } from "path";
 import { lstatSync, readdirSync } from "fs";
 import type { proto, WAMessage } from "@adiwajshing/baileys";
-
 import Client from "../libs/whatsapp.libs";
-import Settings from "../constants/config.constant";
-import { commands } from "../constants/command.contants";
 import type { MessageSerialize } from "../types/message.types";
+import { commands } from "../utils/command.utils";
 
 export default class MessageHandler {
-  /**
-   * @param {Client} aruga:Client
-   */
   constructor(private aruga: Client) {}
 
-  /**
-   * @param {MessageSerialize} message:MessageSerialize
-   * @returns {Promise<void>}
-   */
-  async execute(message: MessageSerialize): Promise<void> {
-    const prefix = message.body && ([[new RegExp("^[" + (Settings.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), Settings.prefix]].find((p) => p[1])[0] || "")[0];
+  async execute(message: MessageSerialize) {
+    // Parsing the message
+    const prefix = message.body && ([[new RegExp("^[" + (this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || "")[0];
+    const cmd = message.body && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
     const args = message.body.trim().split(/ +/).slice(1);
-    const command = message.body && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
-    const curCommand = commands.get(command) ?? commands.find((v) => v.aliases && v.aliases.includes(command));
+    const arg = message.body.trim().substring(message.body.indexOf(" ") + 1);
+    const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd));
 
-    if (curCommand) {
-      await curCommand.execute({ aruga: this.aruga, message, command, prefix, args });
+    if (command) {
+      const botNumber = this.aruga.decodeJid(this.aruga.user.id);
+      const groupAdmins = message.isGroupMsg && (message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []) as { id: string; admin: string }[]);
+      const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender);
+      const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender);
+      const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === botNumber);
+      const isOwner = message.sender && this.aruga.config.ownerNumber.includes(message.sender.replace(/\D+/g, ""));
+
+      const group = message.isGroupMsg && (await this.aruga.DB.group.upsert({ where: { groupId: message.from }, create: { groupId: message.from }, update: {} }));
+      const user = message.sender && (await this.aruga.DB.user.upsert({ where: { userId: message.sender }, create: { userId: message.sender, name: message.pushname }, update: {} }));
+
+      // maintenance and only can use by owners bot
+      if (command.maintenance && !isOwner) return await message.reply("Cmd maintenance");
+
+      // only for owners bot
+      if (command.ownerOnly && !isOwner) return await message.reply("Cmd only for owner bot");
+
+      // only for private chats
+      if (command.privateOnly && message.isGroupMsg) return await message.reply("Cmd only for private chats");
+
+      // only for group chats
+      if (command.groupOnly && !message.isGroupMsg) return await message.reply("Cmd only for group chats");
+
+      // only if bot it group admin
+      if (command.botGroupAdmin && message.isGroupMsg && !isBotGroupAdmin) return await message.reply("Cmd can only be used when bot is a group admin");
+
+      // only for group owner
+      if (command.groupOnly && message.isGroupMsg && command.ownerGroup && !isGroupOwner) return await message.reply("Cmd only for group admins");
+
+      // only for group admins
+      if (command.groupOnly && message.isGroupMsg && command.adminGroup && !isGroupAdmin) return await message.reply("Cmd only for group owner");
+
+      // only for premium users
+      if (command.premiumOnly && !user.premium) return await message.reply("Cmd for premium users");
+
+      await command.execute({ aruga: this.aruga, message, command: cmd, prefix, args });
+    }
+
+    /**
+     * Eval Command for Development purposes
+     * @example
+     * >> return 123 // bot will reply 123
+     */
+    if (message.body.startsWith(">>") && this.aruga.config.ownerNumber.includes(message.sender.replace(/\D+/g, ""))) {
+      const evalCmd: unknown = eval("(async() => {" + arg + "})()");
+      new Promise((resolve, reject) => {
+        try {
+          resolve(evalCmd);
+        } catch (err: unknown) {
+          reject(err);
+        }
+      })
+        .then((res: unknown) => {
+          message.reply(inspect(res, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err)));
+        })
+        .catch((err: unknown) => {
+          message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err)));
+        })
+        .finally(() => this.aruga.log("Running eval code...", "warning"));
     }
   }
 
-  /**
-   * @param {WAMessage} msg:WAMessage
-   * @return {Promise<MessageSerialize>}
-   */
   async serialize(msg: WAMessage): Promise<MessageSerialize> {
     msg.message = msg.message?.viewOnceMessage
       ? msg.message.viewOnceMessage?.message
@@ -80,8 +127,8 @@ export default class MessageHandler {
         ? m.message.reactionMessage.text
         : "";
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
-    m.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> => await this.aruga.sendMessage(m.from, { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) }, quoted && { quoted: { key: m.key, message: m.message } });
-    m.download = async (filename?: string): Promise<"pathName" | Buffer> => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename) : await this.aruga.downloadMediaMessage(m.message));
+    m.reply = async (text, quoted): Promise<proto.WebMessageInfo> => await this.aruga.sendMessage(m.from, { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) }, quoted && { quoted: { key: m.key, message: m.message } });
+    m.download = async (filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)) => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename) : await this.aruga.downloadMediaMessage(m.message));
 
     m.quoted = {} as MessageSerialize;
     m.quoted.message = m?.message[m.type]?.contextInfo?.quotedMessage
@@ -135,19 +182,16 @@ export default class MessageHandler {
           ? m.quoted.message.reactionMessage.text
           : "";
       m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
-      m.quoted.reply = async (text: string, quoted = false): Promise<proto.WebMessageInfo> => await this.aruga.sendMessage(m.from, { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) }, quoted && { quoted: { key: m.quoted.key, message: m.quoted.message } });
-      m.quoted.download = async (filename?: string): Promise<"pathName" | Buffer> => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.quoted.message, filename) : await this.aruga.downloadMediaMessage(m.quoted.message));
+      m.quoted.reply = async (text, quoted) => await this.aruga.sendMessage(m.from, { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) }, quoted && { quoted: { key: m.quoted.key, message: m.quoted.message } });
+      m.quoted.download = async (filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)) => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.quoted.message, filename) : await this.aruga.downloadMediaMessage(m.quoted.message));
     } else delete m.quoted;
 
     m.pushname = msg.pushName;
-    m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg ? await this.aruga.groupMetadata(m.from) : null;
+    // lag anying
+    m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && (await this.aruga.groupMetadata(m.from));
     return m;
   }
 
-  /**
-   * @param {string} pathname='commands'
-   * @returns {void}
-   */
   registerCommand(pathname: string = "commands"): void {
     const files = readdirSync(join(__dirname, "..", pathname));
     for (const file of files) {

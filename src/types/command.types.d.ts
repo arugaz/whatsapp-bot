@@ -6,7 +6,7 @@ declare type Command = {
    * Set commands aliases for match users messages
    * @type {string[]}
    * @example
-   * aliases: ['help'] // default match by filename
+   * aliases: ['menu'] // default match message by filename /menu === menu.ts
    */
   aliases?: string[];
 
@@ -59,20 +59,28 @@ declare type Command = {
   premiumOnly?: boolean;
 
   /**
-   * Set commands that only bot owners can use
-   * @type {boolean}
-   * @example
-   * ownerOnly: true // default false
-   */
-  ownerOnly?: boolean;
-
-  /**
    * Set commands that only group admins can use
    * @type {boolean}
    * @example
    * adminGroup: true // default false
    */
   adminGroup?: boolean;
+
+  /**
+   * Set commands that only group owner can use
+   * @type {boolean}
+   * @example
+   * ownerGroup: true // default false
+   */
+  ownerGroup?: boolean;
+
+  /**
+   * Set commands that can only be used when the bot is a group admin
+   * @type {boolean}
+   * @example
+   * maintenance: true // default false
+   */
+  botGroupAdmin?: boolean;
 
   /**
    * Set commands to maintenance mode that only owner can use
@@ -83,10 +91,18 @@ declare type Command = {
   maintenance?: boolean;
 
   /**
+   * Set commands that only bot owners can use
+   * @type {boolean}
+   * @example
+   * ownerOnly: true // default false
+   */
+  ownerOnly?: boolean;
+
+  /**
    * To reduce the limit when the command is success
    * @type {number}
    * @example
-   * limit: 3 // 3 limit
+   * limit: 3 // default 0
    */
   limit?: number;
 
@@ -94,7 +110,7 @@ declare type Command = {
    * To write how to use the command
    * @type {string}
    * @example
-   * example: "/ping satu"
+   * example: "/ping 69"
    */
   example?: string;
 
@@ -102,8 +118,8 @@ declare type Command = {
    * Fill it with the features you want
    * @type {CommandObject}
    * @example
-   * execute: async ({ aruga, message }) => {
-   *  await aruga.sendMessage(message.from, { text: 'pong!' })
+   * execute: async ({ aruga, message, command, prefix, args }) => {
+   *  await aruga.sendMessage(message.from, { text: `pong! ${args.join(' ')}` })
    * }
    */
   execute?: (obj: CommandObject) => unknown;
@@ -114,5 +130,6 @@ declare type CommandObject = {
   message: MessageSerialize;
   command: string;
   prefix: string;
+  arg: string;
   args: string[];
 };

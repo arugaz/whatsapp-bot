@@ -5,18 +5,33 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// For production you should use other provider like postgresql or mongodb or something similar
+// For production you should use other provider like 
+// postgreSQL, mySQL, mongoDB or something similar, just read prisma docs
 datasource db {
   provider = "sqlite"
-  url      = "file:../database/database.db?socket_timeout=10&connection_limit=1"
+  url      = "file:../database/database.db?socket_timeout=5"
 }
 
+// storing session state information
 model Session {
   sessionId String  @unique
   session   String?
 }
 
 model User {
-  number String  @unique
-  name   String?
+  userId  String  @unique
+  name    String?
+  limit   Int     @default(30)
+  // for premium users
+  premium Boolean @default(false)
+  expire  Int?
+}
+
+model Group {
+  groupId String  @unique
+  ban     Boolean @default(false)
+  mute    Boolean @default(false)
+  // for premium groups
+  premium Boolean @default(false)
+  expire  Int?
 }

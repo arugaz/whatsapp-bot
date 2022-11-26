@@ -1,8 +1,8 @@
 import type { proto } from "@adiwajshing/baileys";
 import type { Command } from "../../types/command.types";
-import { commands } from "../../constants/command.contants";
+import { commands } from "../../utils/command.utils";
 
-const ListMenu: Command = {
+export default {
   aliases: ["listhelp", "menulist", "helplist", "info"],
   category: "general",
   desc: "To display the menu by list, and see how to use the menu",
@@ -19,7 +19,7 @@ const ListMenu: Command = {
         `*Usage:* ${prefix}${name} ${cmd.example || ``}\n` +
         `*Only in groups:* ${cmd.groupOnly ? "Yes" : "No"}\n` +
         `*Only private chat :* ${cmd.privateOnly ? "Yes" : "No"}\n` +
-        `*Cooldown :* ${cmd.cd ? (cmd.cd % 1000) + "s" : "5s"}\n` +
+        `*Cooldown :* ${cmd.cd ? (cmd.cd % 1000) + "s" : "3s"}\n` +
         `*Only for premium :* ${cmd.premiumOnly ? "Yes" : "No"}\n` +
         `*Using limit :* ${cmd.limit ? cmd.limit : "No"}\n` +
         `*Maintenance :* ${cmd.maintenance ? "Yes" : "No"}\n`;
@@ -52,6 +52,4 @@ const ListMenu: Command = {
       viewOnce: true,
     });
   },
-};
-
-export default ListMenu;
+} as Command;

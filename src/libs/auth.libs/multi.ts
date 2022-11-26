@@ -1,20 +1,12 @@
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
 import type { AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from "@adiwajshing/baileys";
 
-const useMultiAuthState = async (
-  Database: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation>,
+export const useMultiAuthState = async (
+  Database: PrismaClient,
 ): Promise<{
   state: AuthenticationState;
-  /**
-   * Save the session state
-   * @returns {Promise<void>}
-   */
   saveState: () => Promise<void>;
-  /**
-   * Remove the session from the database
-   * @returns {Promise<void>}
-   */
   clearState: () => Promise<void>;
 }> => {
   const fixFileName = (fileName?: string): string => fileName?.replace(/\//g, "__")?.replace(/:/g, "-");
@@ -97,5 +89,3 @@ const useMultiAuthState = async (
     },
   };
 };
-
-export default useMultiAuthState;

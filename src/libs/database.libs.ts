@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
-// Learn more:
-// https://www.prisma.io/docs/getting-started/quickstart
-
-const Database = new PrismaClient();
+const Database = new PrismaClient({
+  log: ["warn", "error"],
+  errorFormat: "pretty",
+});
 
 export default Database;

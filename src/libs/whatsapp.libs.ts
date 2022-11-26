@@ -3,40 +3,35 @@ import cfonts from "cfonts";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, { AuthenticationState, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, makeCacheableSignalKeyStore, proto, toBuffer } from "@adiwajshing/baileys";
+import makeWASocket, { AuthenticationState, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
 
 import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
-import Color from "../utils/color.utils";
+import color from "../utils/color.utils";
+import config from "../utils/config.utils";
 import { Aruga, ArugaConfig } from "../types/client.types";
 
 export default class Client implements Aruga {
   private aruga!: Aruga;
-  constructor(private config: ArugaConfig) {}
+  constructor(private cfg: ArugaConfig) {}
 
   /**
    * Start client
    * @returns {Promise<aruga>} aruga instance
    */
   public async startClient(): Promise<Aruga> {
-    const logger = this.config.logger || P({ level: "silent" });
+    const logger = this.cfg.logger || P({ level: "silent" });
 
-    const { saveState, clearState, state } = (this.config.authType === "single" ? await require("../libs/auth.libs/single").default(this.DB) : await require("../libs/auth.libs/multi").default(this.DB)) as {
+    const { saveState, clearState, state } = (this.cfg.authType === "single" ? await require("../libs/auth.libs").useSingleAuthState(this.DB) : await require("../libs/auth.libs").useMultiAuthState(this.DB)) as {
       saveState: () => Promise<void>;
       clearState: () => Promise<void>;
       state: AuthenticationState;
     };
-    const cacheState = makeCacheableSignalKeyStore(state.keys, logger, {
-      stdTTL: 3600,
-    });
     const { version, isLatest } = await fetchLatestBaileysVersion();
 
     this.aruga = makeWASocket({
-      ...this.config,
-      auth: {
-        creds: state.creds,
-        keys: cacheState,
-      },
+      ...this.cfg,
+      auth: state,
       logger,
       printQRInTerminal: true,
       version,
@@ -53,7 +48,6 @@ export default class Client implements Aruga {
           this.log("Disconnected.", "error");
           this.log("Deleting session and restarting", "error");
           await clearState();
-          cacheState.clear && (await cacheState.clear());
           this.log("Session deleted", "error");
           this.log("Starting...", "warning");
         }
@@ -67,14 +61,14 @@ export default class Client implements Aruga {
       if (connection === "open") {
         cfonts.say("Whatsapp Bot", {
           align: "center",
-          colors: [Color.cfonts("#8cf57b")],
+          colors: [color.cfonts("#8cf57b")],
           font: "block",
           space: false,
         });
         cfonts.say("'whatsapp-bot' By @arugaz @tobyg74", {
           align: "center",
           font: "console",
-          gradient: ["red", Color.cfonts("#ee82f8")],
+          gradient: ["red", color.cfonts("#ee82f8")],
         });
         this.log("Connected!");
         this.log(" Name    : " + (this.user?.name || "unknown"));
@@ -90,7 +84,7 @@ export default class Client implements Aruga {
 
   /**
    * Decode jid to make it correctly formatted
-   * @param {any} jid:string user/group jid
+   * @param {string} jid:string user/group jid
    */
   public decodeJid(jid: string): string {
     if (/:\d+@/gi.test(jid)) {
@@ -100,7 +94,7 @@ export default class Client implements Aruga {
   }
 
   /**
-   * Download message and return buffer
+   * Download media message and return buffer
    * @param {proto.IMessage} message:proto.IMessage
    */
   public async downloadMediaMessage(message: proto.IMessage): Promise<Buffer> {
@@ -116,22 +110,25 @@ export default class Client implements Aruga {
   }
 
   /**
-   * Download message and save to local storage
+   * Download media message and save to local storage
    * @param {proto.IMessage} message:proto.IMessage
-   * @param {string} filename='random string'
+   * @param {string} filename='random string' | filename
    */
-  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)): Promise<"pathName"> {
+  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string): Promise<"pathName"> {
     const buffer = await this.downloadMediaMessage(message);
     const filePath = pathJoin(__dirname, "..", "..", "temp", filename);
     await fsWriteFile(filePath, buffer);
     return filePath as "pathName";
   }
 
+  /** Config */
+  public config = config;
+
   /** Database */
   public DB = Database;
 
   /** Translator helper */
-  public translate = International.t;
+  public translate = International;
 
   /**
    * @param {string} text:string
@@ -139,7 +136,7 @@ export default class Client implements Aruga {
    * @returns {void} print logs
    */
   public log(text: string, type: "error" | "warning" | "success" = "success"): void {
-    console.log(Color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
+    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
   }
 
   public getOrderDetails!: Aruga["getOrderDetails"];

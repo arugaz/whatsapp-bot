@@ -1,5 +1,5 @@
-// inspired from discord.js
-export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
+/** Collection extends Map with additional properties */
+class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
   /** Searches for a single item where the given function returns a truthy value*/
   find(func: (v: VALUE, k: KEY, collection: this) => boolean): VALUE | null {
     for (const [k, v] of this) {
@@ -7,6 +7,7 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
     }
     return null;
   }
+
   /** Searches for the key of a single item where the given function returns a truthy value*/
   findKey(func: (v: VALUE, k: KEY, collection: this) => boolean): KEY | null {
     for (const [k, v] of this) {
@@ -14,6 +15,7 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
     }
     return null;
   }
+
   /** Sorts the items of a collection in place and returns it. */
   sort(compareFunction = Collection.defaultSort) {
     const entries = [...this.entries()];
@@ -22,6 +24,7 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
     for (const [key, value] of entries) super.set(key, value);
     return this;
   }
+
   /** Maps each item to another value into a collection. Identical in behavior to */
   map<T>(func: (value: VALUE, key: KEY, collection: this) => T): T[] {
     const iter = this.entries();
@@ -30,8 +33,11 @@ export default class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
       return func(value, key, this);
     });
   }
+
   /** Default sort compareFunction. */
   static defaultSort<KEY>(firstKey: KEY, secondKey: KEY) {
     return Number(firstKey > secondKey) || Number(firstKey === secondKey) - 1;
   }
 }
+
+export default Collection;

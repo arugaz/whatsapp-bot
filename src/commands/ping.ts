@@ -1,11 +1,10 @@
 import type { Command } from "../types/command.types";
 
-const Ping: Command = {
+export default {
   category: "general",
   desc: "Ping bot",
+  ownerOnly: true,
   execute: async ({ message, args }) => {
     return await message.reply(`pong! ${args.join(" ")}`, true);
   },
-};
-
-export default Ping;
+} as Command;

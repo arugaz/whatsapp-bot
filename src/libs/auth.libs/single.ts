@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
 import type { AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from "@adiwajshing/baileys";
 
@@ -11,19 +11,11 @@ const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
   "sender-key-memory": "senderKeyMemory",
 };
 
-const useSingleAuthState = async (
-  Database: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation>,
+export const useSingleAuthState = async (
+  Database: PrismaClient,
 ): Promise<{
   state: AuthenticationState;
-  /**
-   * Save the session state
-   * @returns {Promise<void>}
-   */
   saveState: () => Promise<void>;
-  /**
-   * Remove the session from the database
-   * @returns {Promise<void>}
-   */
   clearState: () => Promise<void>;
 }> => {
   let creds: AuthenticationCreds;
@@ -88,5 +80,3 @@ const useSingleAuthState = async (
     clearState,
   };
 };
-
-export default useSingleAuthState;

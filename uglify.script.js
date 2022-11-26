@@ -13,11 +13,11 @@ const Uglifies = async (pathname = "dist") => {
     } else if (file.endsWith(".js")) {
       const code = await fs.promises.readFile(filePath, "utf8");
       const result = UglifyJS.minify(code, {
-        compress: true,
-        mangle: {
-          toplevel: true,
+        compress: {
+          module: true,
+          passes: 2,
         },
-        module: true,
+        mangle: true,
         toplevel: true,
       });
       await fs.promises.writeFile(filePath, result.code);

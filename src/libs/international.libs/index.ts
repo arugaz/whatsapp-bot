@@ -1,19 +1,21 @@
-import rosetta from "rosetta";
+import Translate from "@arugaz/translator";
 
-// import english dict & call rosetta function
-import en from "./en.json";
-const International = rosetta({
-  en: en,
-});
+// call function
+
+const International = Translate();
 
 // import & set indonesian dict
 import id from "./id.json";
 International.set("id", id);
 
-/** you can add your language || disable the language you dont want to use */
+// import & set english dict
+import en from "./en.json";
+International.set("en", en);
+
+/** you can add your language || disable the languages you don't want to use as it will eat up a lot of ram as well :> */
 // import in from './in.json';
 // International.set('in', in);
 
 // set default language!
 International.locale("en");
-export default International;
+export default International.translate;

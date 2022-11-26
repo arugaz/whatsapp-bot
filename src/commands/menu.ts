@@ -1,6 +1,6 @@
 import type { Command } from "../types/command.types";
 
-const Menu: Command = {
+export default {
   aliases: ["help"],
   category: "general",
   desc: "Landing menu",
@@ -16,6 +16,4 @@ const Menu: Command = {
       viewOnce: true,
     });
   },
-};
-
-export default Menu;
+} as Command;
