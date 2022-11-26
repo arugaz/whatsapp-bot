@@ -6,8 +6,7 @@ import type { Command } from "../../types/command.types";
 
 export default {
   category: "owner",
-  desc: "Landing menu",
-  maintenance: false,
+  desc: "Culik member lol",
   ownerOnly: true,
   execute: async ({ aruga, message, arg }) => {
     const url = arg.match(/chat.whatsapp.com\/([\w\d]*)/g);
