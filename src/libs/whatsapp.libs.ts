@@ -3,7 +3,7 @@ import cfonts from "cfonts";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, { AuthenticationState, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
+import makeWASocket, { AuthenticationState, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
 
 import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
@@ -42,16 +42,21 @@ export default class Client implements Aruga {
     this.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-        if (reason !== (DisconnectReason.loggedOut || DisconnectReason.badSession || DisconnectReason.connectionReplaced)) {
-          this.log("Reconnecting...", "warning");
-        } else {
+        if (reason === 401 || reason === 500 || reason === 440 || reason === 403) {
           this.log("Disconnected.", "error");
           this.log("Deleting session and restarting", "error");
-          await clearState();
+          clearState && (await clearState());
           this.log("Session deleted", "error");
+          if (reason === 403) {
+            this.log("Your account got banned? idk tho i got this when i got banned...", "warning");
+            this.aruga.logout();
+            throw new Error("Error Forbidden, Connection failure");
+          }
           this.log("Starting...", "warning");
+        } else {
+          this.log("Reconnecting...", "warning");
         }
-        setTimeout(() => this.startClient(), 1000);
+        setTimeout(() => this.startClient(), 3000);
       }
 
       if (connection === "connecting") {
@@ -128,15 +133,15 @@ export default class Client implements Aruga {
   public DB = Database;
 
   /** Translator helper */
-  public translate = International;
+  public i18n = International;
 
   /**
    * @param {string} text:string
-   * @param {string} type:'error'|'warning'|'success' = 'success'
+   * @param {string=} type?:string
    * @returns {void} print logs
    */
-  public log(text: string, type: "error" | "warning" | "success" = "success"): void {
-    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
+  public log(text: string, type: "error" | "warning" | "info" | "success" = "success"): void {
+    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
   }
 
   public getOrderDetails!: Aruga["getOrderDetails"];

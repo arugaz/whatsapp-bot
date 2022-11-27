@@ -18,4 +18,4 @@ International.set("en", en);
 
 // set default language!
 International.locale("en");
-export default International.translate;
+export default International;

@@ -11,7 +11,7 @@ export default {
       footer: "Hi there~",
       templateButtons: [
         { index: 1, urlButton: { displayText: aruga.user.name, url: "https://wa.me/arugaz" } },
-        { index: 2, quickReplyButton: { displayText: "Click here to see the menu list!", id: prefix + "info" } },
+        { index: 2, quickReplyButton: { displayText: "Click here to see the menu list!", id: prefix + "listmenu" } },
       ],
       viewOnce: true,
     });

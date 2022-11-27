@@ -4,7 +4,7 @@ import { lstatSync, readdirSync } from "fs";
 import type { proto, WAMessage } from "@adiwajshing/baileys";
 import Client from "../libs/whatsapp.libs";
 import type { MessageSerialize } from "../types/message.types";
-import { commands } from "../utils/command.utils";
+import { commands, cooldowns } from "../utils/command.utils";
 
 export default class MessageHandler {
   constructor(private aruga: Client) {}
@@ -14,7 +14,7 @@ export default class MessageHandler {
     const prefix = message.body && ([[new RegExp("^[" + (this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || "")[0];
     const cmd = message.body && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
     const args = message.body.trim().split(/ +/).slice(1);
-    const arg = message.body.trim().substring(message.body.indexOf(" ") + 1);
+    const arg = message.body && args.join(" ").trim();
     const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd));
 
     if (command) {
@@ -40,19 +40,32 @@ export default class MessageHandler {
       // only for group chats
       if (command.groupOnly && !message.isGroupMsg) return await message.reply("Cmd only for group chats");
 
-      // only if bot it group admin
+      // only if the bot is the group admin
       if (command.botGroupAdmin && message.isGroupMsg && !isBotGroupAdmin) return await message.reply("Cmd can only be used when bot is a group admin");
 
       // only for group owner
-      if (command.groupOnly && message.isGroupMsg && command.ownerGroup && !isGroupOwner) return await message.reply("Cmd only for group admins");
+      if (command.ownerGroup && message.isGroupMsg && !isGroupOwner) return await message.reply("Cmd only for group owner");
 
       // only for group admins
-      if (command.groupOnly && message.isGroupMsg && command.adminGroup && !isGroupAdmin) return await message.reply("Cmd only for group owner");
+      if (command.adminGroup && message.isGroupMsg && !isGroupAdmin) return await message.reply("Cmd only for group admins");
 
       // only for premium users
       if (command.premiumOnly && !user.premium) return await message.reply("Cmd for premium users");
 
-      await command.execute({ aruga: this.aruga, message, command: cmd, prefix, args });
+      // cooldowns for every user rather every chat, avoid spam message
+      if (cooldowns.has(message.sender)) return await message.reply(`Cmd cooldown! please wait ${((cooldowns.get(message.sender) - Date.now()) / 1000).toFixed(1)}s`);
+
+      try {
+        await command.execute({ aruga: this.aruga, message, command: cmd, prefix, args, arg });
+
+        // if command success then add cooldowns for every user rather every chat, excepts bot owner and premium users
+        if (!isOwner || !user.premium) {
+          cooldowns.set(message.sender, Date.now());
+          setTimeout(() => cooldowns.delete(message.sender), (!!command.cd ? command.cd : 3) * 1000);
+        }
+      } catch {
+        console.log("error");
+      }
     }
 
     /**
@@ -70,10 +83,10 @@ export default class MessageHandler {
         }
       })
         .then((res: unknown) => {
-          message.reply(inspect(res, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err)));
+          message.reply(inspect(res, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error"));
         })
         .catch((err: unknown) => {
-          message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err)));
+          message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error"));
         })
         .finally(() => this.aruga.log("Running eval code...", "warning"));
     }

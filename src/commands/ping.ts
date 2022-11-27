@@ -4,7 +4,7 @@ export default {
   category: "general",
   desc: "Ping bot",
   ownerOnly: true,
-  execute: async ({ message, args }) => {
-    return await message.reply(`pong! ${args.join(" ")}`, true);
+  execute: async ({ message, arg }) => {
+    return await message.reply(`pong! ${arg}`, true);
   },
 } as Command;

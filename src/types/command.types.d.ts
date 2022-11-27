@@ -22,7 +22,7 @@ declare type Command = {
    * Set commands coldown for users, in seconds value
    * @type {boolean}
    * @example
-   * cd: 10 // default 5 seconds :)
+   * cd: 10 // default 3 seconds :)
    */
   cd?: number;
 
@@ -118,8 +118,8 @@ declare type Command = {
    * Fill it with the features you want
    * @type {CommandObject}
    * @example
-   * execute: async ({ aruga, message, command, prefix, args }) => {
-   *  await aruga.sendMessage(message.from, { text: `pong! ${args.join(' ')}` })
+   * execute: async ({ aruga, message, command, prefix, args, arg }) => {
+   *  await aruga.sendMessage(message.from, { text: `pong! ${arg}` })
    * }
    */
   execute?: (obj: CommandObject) => unknown;

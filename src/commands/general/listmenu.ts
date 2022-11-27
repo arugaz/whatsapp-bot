@@ -29,14 +29,14 @@ export default {
     const sections = [] as proto.Message.ListMessage.ISection[];
     const categories = [...new Set(commands.map((v) => v.category !== "private" && v.category))];
     for (const category of categories) {
-      const cmd = commands.map((v) => v.category === category && v);
+      const cmd = commands.map((v) => v.category === category && v).filter((v) => v);
       sections.push({
         title: category.toUpperCase(),
         rows: cmd.map((value) => {
           const title = commands.findKey((v) => v === value);
           return {
             title,
-            rowId: prefix + "info " + title,
+            rowId: `${prefix}listmenu ${title}`,
             description: value.desc,
           };
         }),

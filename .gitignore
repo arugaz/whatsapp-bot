@@ -8,3 +8,4 @@ temp/*
 !temp/.gitkeep
 
 test.js
+test.ts
