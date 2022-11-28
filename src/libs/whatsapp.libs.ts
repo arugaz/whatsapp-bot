@@ -3,7 +3,7 @@ import EventEmitter from "events";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, { AuthenticationState, downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
+import makeWASocket, { downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
 
 import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
