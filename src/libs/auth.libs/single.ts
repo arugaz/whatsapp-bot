@@ -1,6 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
-import type { AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from "@adiwajshing/baileys";
+import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys";
+import type { ArugaAuth } from "../../types/auth.types";
 
 const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
   "pre-key": "preKeys",
@@ -11,13 +12,7 @@ const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
   "sender-key-memory": "senderKeyMemory",
 };
 
-export const useSingleAuthState = async (
-  Database: PrismaClient,
-): Promise<{
-  state: AuthenticationState;
-  saveState: () => Promise<void>;
-  clearState: () => Promise<void>;
-}> => {
+export const useSingleAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
   let creds: AuthenticationCreds;
   let keys: unknown = {};
 
@@ -41,7 +36,7 @@ export const useSingleAuthState = async (
   }
 
   const saveState = async (): Promise<void> => {
-    const session = JSON.stringify({ creds, keys }, BufferJSON.replacer, 2);
+    const session = JSON.stringify({ creds, keys }, BufferJSON.replacer);
     await Database.session.update({ where: { sessionId: "creds" }, data: { session } });
   };
 
@@ -58,9 +53,9 @@ export const useSingleAuthState = async (
         get: (type, ids) => {
           const key = KEY_MAP[type];
           return ids.reduce((dict: unknown, id) => {
-            let value = keys[key]?.[id];
+            const value = keys[key]?.[id];
             if (value) {
-              if (type === "app-state-sync-key") value = proto.Message.AppStateSyncKeyData.fromObject(value);
+              if (type === "app-state-sync-key") dict[id] = proto.Message.AppStateSyncKeyData.fromObject(value);
               dict[id] = value;
             }
             return dict;

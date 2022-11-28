@@ -1,3 +1,4 @@
+import type Client from "../libs/whatsapp.libs";
 import type { Aruga } from "../types/client.types";
 import type { MessageSerialize } from "../types/message.types";
 
@@ -6,7 +7,7 @@ declare type Command = {
    * Set commands aliases for match users messages
    * @type {string[]}
    * @example
-   * aliases: ['menu'] // default match message by filename /menu === menu.ts
+   * aliases: ['help'] // default match message by filename /menu === menu.ts
    */
   aliases?: string[];
 
@@ -19,10 +20,10 @@ declare type Command = {
   category: string;
 
   /**
-   * Set commands coldown for users, in seconds value
+   * Set commands cooldown, every user will have their own cooldown
    * @type {boolean}
    * @example
-   * cd: 10 // default 3 seconds :)
+   * cd: 10 // default 3 seconds  for every command, avoid spam message
    */
   cd?: number;
 
@@ -115,7 +116,7 @@ declare type Command = {
   example?: string;
 
   /**
-   * Fill it with the features you want
+   * Fill with the features you want
    * @type {CommandObject}
    * @example
    * execute: async ({ aruga, message, command, prefix, args, arg }) => {
@@ -126,8 +127,9 @@ declare type Command = {
 };
 
 declare type CommandObject = {
-  aruga: Aruga;
+  aruga: Client;
   message: MessageSerialize;
+  messageTimestamp: number;
   command: string;
   prefix: string;
   arg: string;

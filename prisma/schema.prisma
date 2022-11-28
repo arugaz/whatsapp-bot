@@ -6,10 +6,10 @@ generator client {
 }
 
 // For production you should use other provider like 
-// postgreSQL, mySQL, mongoDB or something similar, just read prisma docs
+// postgreSQL, mariaDB, mySQL, mongoDB or something similar, just read prisma docs
 datasource db {
   provider = "sqlite"
-  url      = "file:../database/database.db?socket_timeout=5"
+  url      = "file:../database/database.db?socket_timeout=15&pool_timeout=5"
 }
 
 // storing session state information
@@ -18,20 +18,25 @@ model Session {
   session   String?
 }
 
-model User {
-  userId  String  @unique
-  name    String?
-  limit   Int     @default(30)
-  // for premium users
-  premium Boolean @default(false)
-  expire  Int?
-}
-
 model Group {
   groupId String  @unique
+  name    String?
+  // additional
   ban     Boolean @default(false)
   mute    Boolean @default(false)
   // for premium groups
   premium Boolean @default(false)
   expire  Int?
+}
+
+model User {
+  userId   String  @unique
+  name     String?
+  // default user language
+  language String
+  // user limit
+  limit    Int
+  // for premium users
+  premium  Boolean @default(false)
+  expire   Int?
 }

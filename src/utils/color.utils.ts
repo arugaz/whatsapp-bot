@@ -59,7 +59,12 @@ const color = {
      * @returns {string}
      */
     (text: string): string =>
-      `\x1B[38;2;${hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => `${m ? m : "#"}` + r + r + g + g + b + b)}m${text}\x1B[39m`,
+      `\x1B[38;2;${hex
+        .replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => `${m ? m : "#"}` + r + r + g + g + b + b)
+        .substring(1)
+        .match(/.{2}/g)
+        .map((x) => parseInt(x, 16))
+        .join(";")}m${text}\x1B[39m`,
 
   /**
    * @param {any} s:Hex<T> - Hex color

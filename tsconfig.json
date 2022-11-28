@@ -1,21 +1,8 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": false,
-    "checkJs": false,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitThis": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
+    "noEmit": true,
     "removeComments": true,
-    "rootDir": "src",
-    "skipLibCheck": true,
-    "target": "esnext"
-  },
-  "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts"]
+    "skipLibCheck": true
+  }
 }

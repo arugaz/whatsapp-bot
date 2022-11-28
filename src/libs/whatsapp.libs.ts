@@ -1,5 +1,5 @@
 import P from "pino";
-import cfonts from "cfonts";
+import EventEmitter from "events";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
@@ -9,24 +9,21 @@ import International from "../libs/international.libs";
 import Database from "../libs/database.libs";
 import color from "../utils/color.utils";
 import config from "../utils/config.utils";
-import { Aruga, ArugaConfig } from "../types/client.types";
+import type { ArugaAuth } from "../types/auth.types";
+import type { ArugaEvents, Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.types";
 
-export default class Client implements Aruga {
+let first = true;
+export default class Client extends (EventEmitter as new () => ArugaEventEmitter<ArugaEvents>) implements Aruga {
   private aruga!: Aruga;
-  constructor(private cfg: ArugaConfig) {}
+  constructor(private cfg: ArugaConfig) {
+    super();
+  }
 
-  /**
-   * Start client
-   * @returns {Promise<aruga>} aruga instance
-   */
-  public async startClient(): Promise<Aruga> {
+  /** Start client */
+  public async startClient() {
     const logger = this.cfg.logger || P({ level: "silent" });
 
-    const { saveState, clearState, state } = (this.cfg.authType === "single" ? await require("../libs/auth.libs").useSingleAuthState(this.DB) : await require("../libs/auth.libs").useMultiAuthState(this.DB)) as {
-      saveState: () => Promise<void>;
-      clearState: () => Promise<void>;
-      state: AuthenticationState;
-    };
+    const { saveState, clearState, state }: ArugaAuth = this.cfg.authType === "single" ? await require("../libs/auth.libs").useSingleAuthState(this.DB) : await require("../libs/auth.libs").useMultiAuthState(this.DB);
     const { version, isLatest } = await fetchLatestBaileysVersion();
 
     this.aruga = makeWASocket({
@@ -43,47 +40,44 @@ export default class Client implements Aruga {
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         if (reason === 401 || reason === 500 || reason === 440 || reason === 403) {
-          this.log("Disconnected.", "error");
-          this.log("Deleting session and restarting", "error");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Disconnected!"}`, "error");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Deleting session..."}`, "error");
           clearState && (await clearState());
-          this.log("Session deleted", "error");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Session deleted!"}`, "error");
           if (reason === 403) {
-            this.log("Your account got banned? idk tho i got this when i got banned...", "warning");
-            this.aruga.logout();
+            this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Your account got banned? idk tho i got this when i got banned..."}`, "error");
             throw new Error("Error Forbidden, Connection failure");
           }
-          this.log("Starting...", "warning");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Starting..."}`, "warning");
         } else {
-          this.log("Reconnecting...", "warning");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Reconnecting..."}`, "warning");
         }
-        setTimeout(() => this.startClient(), 3000);
+        setTimeout(() => this.startClient(), 1000);
       }
 
       if (connection === "connecting") {
-        this.log("Connecting...", "warning");
+        this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Connecting..."}`, "warning");
       }
 
       if (connection === "open") {
-        cfonts.say("Whatsapp Bot", {
-          align: "center",
-          colors: [color.cfonts("#8cf57b")],
-          font: "block",
-          space: false,
-        });
-        cfonts.say("'whatsapp-bot' By @arugaz @tobyg74", {
-          align: "center",
-          font: "console",
-          gradient: ["red", color.cfonts("#ee82f8")],
-        });
-        this.log("Connected!");
-        this.log(" Name    : " + (this.user?.name || "unknown"));
-        this.log(" Number  : " + (this.user?.id?.split(":")[0] || "unknown"));
-        this.log(" Version : " + version.join("."));
-        this.log(" Latest  : " + `${isLatest ? "yes" : "nah"}`);
+        this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Connected!"}`);
+        if (first) {
+          console.log(" ");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Name    : " + (this.user?.name || "unknown")}`, "info");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Number  : " + (this.user?.id?.split(":")[0] || "unknown")}`, "info");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Version : " + version.join(".")}`, "info");
+          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Latest  : " + `${isLatest ? "yes" : "nah"}`}`, "info");
+          first = false;
+          console.log(" ");
+        }
       }
     });
 
+    this.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
+    this.ev.on("messages.upsert", (msg) => msg.type === "notify" && msg.messages.length >= 1 && msg.messages[0].message && this.emit("message", msg.messages[0]));
+
     this.ev.on("creds.update", async () => await saveState());
+
     return this.aruga;
   }
 

@@ -13,21 +13,23 @@ export default {
       if (!cmd || cmd.category === "private") return await message.reply("No command found", true);
       const text =
         `⍟──── *${name}* ────⍟\n\n` +
-        `*Alias:* ${cmd.aliases ? [name].concat(cmd.aliases).join(", ").trim() : "-"}\n` +
-        `*Category:* ${cmd.category || `-`}\n` +
-        `*Description:* ${cmd.desc || "-"}\n` +
-        `*Usage:* ${prefix}${name} ${cmd.example || ``}\n` +
-        `*Only in groups:* ${cmd.groupOnly ? "Yes" : "No"}\n` +
-        `*Only private chat :* ${cmd.privateOnly ? "Yes" : "No"}\n` +
-        `*Cooldown :* ${cmd.cd ? (cmd.cd % 1000) + "s" : "3s"}\n` +
+        `*Alias :* ${cmd.aliases ? [name].concat(cmd.aliases).join(", ").trim() : name}\n` +
+        `*Category :* ${cmd.category || `-`}\n` +
+        `*Description :* ${cmd.desc || "-"}\n` +
+        `*Usage :* ${prefix}${name} ${cmd.example || ``}\n` +
+        `*Only in group chat :* ${cmd.groupOnly ? "Yes" : "No"}\n` +
+        (message.isGroupMsg ? `*Only for group admins :* ${cmd.adminGroup ? "Yes" : "No"}\n` + `*Only for group owner :* ${cmd.ownerGroup ? "Yes" : "No"}\n` : "") +
+        `*Only in private chat :* ${cmd.privateOnly ? "Yes" : "No"}\n` +
         `*Only for premium :* ${cmd.premiumOnly ? "Yes" : "No"}\n` +
+        `*Only for bot owner :* ${cmd.ownerOnly ? "Yes" : "No"}\n` +
         `*Using limit :* ${cmd.limit ? cmd.limit : "No"}\n` +
+        `*Cooldown :* ${cmd.cd ? (cmd.cd % 1000) + "s" : "3s"}\n` +
         `*Maintenance :* ${cmd.maintenance ? "Yes" : "No"}\n`;
       return await message.reply(text, true);
     }
 
     const sections = [] as proto.Message.ListMessage.ISection[];
-    const categories = [...new Set(commands.map((v) => v.category !== "private" && v.category))];
+    const categories = [...new Set(commands.map((v) => v.category !== "private" && v.category).sort())];
     for (const category of categories) {
       const cmd = commands.map((v) => v.category === category && v).filter((v) => v);
       sections.push({
@@ -45,7 +47,7 @@ export default {
 
     return await aruga.sendMessage(message.from, {
       text: `Hi ${message.pushname}`,
-      footer: "Hi there~",
+      footer: aruga.config.footer,
       title: "Hi there",
       buttonText: "LIST MENU",
       sections,

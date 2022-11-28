@@ -1,14 +1,9 @@
 import type { PrismaClient } from "@prisma/client";
 import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
-import type { AuthenticationCreds, AuthenticationState, SignalDataTypeMap } from "@adiwajshing/baileys";
+import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys";
+import type { ArugaAuth } from "../../types/auth.types";
 
-export const useMultiAuthState = async (
-  Database: PrismaClient,
-): Promise<{
-  state: AuthenticationState;
-  saveState: () => Promise<void>;
-  clearState: () => Promise<void>;
-}> => {
+export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
   const fixFileName = (fileName?: string): string => fileName?.replace(/\//g, "__")?.replace(/:/g, "-");
 
   const writeData = async (data: unknown, fileName: string): Promise<void> => {

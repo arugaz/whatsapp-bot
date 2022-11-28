@@ -1,4 +1,10 @@
 {
   "ownerNumber": ["62895324834879"],
-  "prefix": "/"
+  "prefix": "/",
+  "timeZone": "Asia/Jakarta",
+  "language": "en",
+  "user": {
+    "limit": 30
+  },
+  "footer": "github.com/arugaz/whatsapp-bot"
 }

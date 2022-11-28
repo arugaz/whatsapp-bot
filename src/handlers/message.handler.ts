@@ -2,22 +2,34 @@ import { inspect } from "util";
 import { basename, join } from "path";
 import { lstatSync, readdirSync } from "fs";
 import type { proto, WAMessage } from "@adiwajshing/baileys";
-import Client from "../libs/whatsapp.libs";
+import type Client from "../libs/whatsapp.libs";
 import type { MessageSerialize } from "../types/message.types";
+import color from "../utils/color.utils";
 import { commands, cooldowns } from "../utils/command.utils";
 
 export default class MessageHandler {
   constructor(private aruga: Client) {}
 
-  async execute(message: MessageSerialize) {
+  async execute(messageTimestamp: number, message: MessageSerialize) {
     // Parsing the message
-    const prefix = message.body && ([[new RegExp("^[" + (this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || "")[0];
-    const cmd = message.body && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
+    const prefix = message.body && ([[new RegExp("^[" + (this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), this.aruga.config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0];
+    const cmd = message.body && !!prefix && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase();
     const args = message.body.trim().split(/ +/).slice(1);
-    const arg = message.body && args.join(" ").trim();
+    const arg = args.join(" ").trim();
     const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd));
 
     if (command) {
+      // avoid spam messages
+      if (cooldowns.has(message.sender)) {
+        this.aruga.log(
+          `${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${
+            message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""
+          }`.trim(),
+          "warning",
+        );
+        return await message.reply(`Cmd cooldown! please wait ${((command.cd || 3) - (Date.now() - cooldowns.get(message.sender)) / 1000).toFixed(1)}s`);
+      }
+
       const botNumber = this.aruga.decodeJid(this.aruga.user.id);
       const groupAdmins = message.isGroupMsg && (message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []) as { id: string; admin: string }[]);
       const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender);
@@ -25,13 +37,13 @@ export default class MessageHandler {
       const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === botNumber);
       const isOwner = message.sender && this.aruga.config.ownerNumber.includes(message.sender.replace(/\D+/g, ""));
 
-      const group = message.isGroupMsg && (await this.aruga.DB.group.upsert({ where: { groupId: message.from }, create: { groupId: message.from }, update: {} }));
-      const user = message.sender && (await this.aruga.DB.user.upsert({ where: { userId: message.sender }, create: { userId: message.sender, name: message.pushname }, update: {} }));
+      const group = message.isGroupMsg && (await this.aruga.DB.group.upsert({ where: { groupId: message.from }, create: { groupId: message.from, name: message.groupMetadata.subject }, update: {} }));
+      const user = message.sender && (await this.aruga.DB.user.upsert({ where: { userId: message.sender }, create: { userId: message.sender, name: message.pushname, language: this.aruga.config.language, limit: this.aruga.config.user.limit || 30 }, update: {} }));
 
-      // maintenance and only can use by owners bot
+      // maintenance and only can used by the bot owner
       if (command.maintenance && !isOwner) return await message.reply("Cmd maintenance");
 
-      // only for owners bot
+      // only for bot owner
       if (command.ownerOnly && !isOwner) return await message.reply("Cmd only for owner bot");
 
       // only for private chats
@@ -52,24 +64,23 @@ export default class MessageHandler {
       // only for premium users
       if (command.premiumOnly && !user.premium) return await message.reply("Cmd for premium users");
 
-      // cooldowns for every user rather every chat, avoid spam message
-      if (cooldowns.has(message.sender)) return await message.reply(`Cmd cooldown! please wait ${((cooldowns.get(message.sender) - Date.now()) / 1000).toFixed(1)}s`);
-
       try {
-        await command.execute({ aruga: this.aruga, message, command: cmd, prefix, args, arg });
+        await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg });
 
-        // if command success then add cooldowns for every user rather every chat, excepts bot owner and premium users
-        if (!isOwner || !user.premium) {
-          cooldowns.set(message.sender, Date.now());
-          setTimeout(() => cooldowns.delete(message.sender), (!!command.cd ? command.cd : 3) * 1000);
-        }
+        this.aruga.log(`${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim());
       } catch {
-        console.log("error");
+        this.aruga.log(`${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "error");
+      } finally {
+        // after running the command add cooldown even if there is an error, for every user except bot owners and premium users
+        if (!isOwner && !user.premium) {
+          cooldowns.set(message.sender, Date.now());
+          setTimeout(() => cooldowns.delete(message.sender), (command.cd || 3) * 1000);
+        }
       }
     }
 
     /**
-     * Eval Command for Development purposes
+     * Eval command for development purposes, only for bot owner
      * @example
      * >> return 123 // bot will reply 123
      */
@@ -82,17 +93,20 @@ export default class MessageHandler {
           reject(err);
         }
       })
-        .then((res: unknown) => {
-          message.reply(inspect(res, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error"));
-        })
-        .catch((err: unknown) => {
-          message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error"));
-        })
-        .finally(() => this.aruga.log("Running eval code...", "warning"));
+        .then((res: unknown) => message.reply(inspect(res, false)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error")))
+        .catch((err: unknown) => message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error")))
+        .finally(() =>
+          this.aruga.log(
+            `${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.purple("[EVAL]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${
+              message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""
+            }`.trim(),
+            "info",
+          ),
+        );
     }
   }
 
-  async serialize(msg: WAMessage): Promise<MessageSerialize> {
+  async serialize(msg: WAMessage) {
     msg.message = msg.message?.viewOnceMessage
       ? msg.message.viewOnceMessage?.message
       : msg.message?.ephemeralMessage
@@ -200,12 +214,13 @@ export default class MessageHandler {
     } else delete m.quoted;
 
     m.pushname = msg.pushName;
+
     // lag anying
     m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && (await this.aruga.groupMetadata(m.from));
     return m;
   }
 
-  registerCommand(pathname: string = "commands"): void {
+  registerCommand(pathname: string = "commands") {
     const files = readdirSync(join(__dirname, "..", pathname));
     for (const file of files) {
       const filePath = join(__dirname, "..", pathname, file);

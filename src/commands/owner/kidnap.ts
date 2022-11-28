@@ -34,8 +34,8 @@ export default {
         .filter((v) => v.id === result.id)
         .map((x) => x.participants)[0]
         .map((v) => v.id);
-      // remove this comments if u wanna use it
-      // return await aruga.groupParticipantsUpdate(message.from, participants, "add");
+
+      return await aruga.groupParticipantsUpdate(message.from, participants, "add");
     } else message.reply("Invalid url", true);
   },
 } as Command;

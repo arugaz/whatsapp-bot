@@ -1,5 +1,5 @@
 import Translate from "@arugaz/translator";
-
+import config from "../../utils/config.utils";
 // call function
 
 const International = Translate();
@@ -17,5 +17,5 @@ International.set("en", en);
 // International.set('in', in);
 
 // set default language!
-International.locale("en");
+International.locale(config.language);
 export default International;
