@@ -10,10 +10,10 @@ import Database from "../libs/database.libs";
 import color from "../utils/color.utils";
 import config from "../utils/config.utils";
 import type { ArugaAuth } from "../types/auth.types";
-import type { ArugaEvents, Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.types";
+import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.types";
 
 let first = true;
-export default class Client extends (EventEmitter as new () => ArugaEventEmitter<ArugaEvents>) implements Aruga {
+export default class Client extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
   private aruga!: Aruga;
   constructor(private cfg: ArugaConfig) {
     super();
