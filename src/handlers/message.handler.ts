@@ -60,7 +60,7 @@ export default class MessageHandler {
       if (command.premiumOnly && !user.premium) return await message.reply("Cmd for premium users");
 
       try {
-        await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg });
+        await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg, isGroupOwner, isGroupAdmin, isBotGroupAdmin, isOwner });
 
         this.aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "success", messageTimestamp);
       } catch {
@@ -118,7 +118,7 @@ export default class MessageHandler {
     m.isGroupMsg = m.key.remoteJid.endsWith("g.us");
     m.from = this.aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
-    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo");
+    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2");
     m.sender = this.aruga.decodeJid(m.fromMe ? this.aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from);
     m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant;
     m.body =
@@ -174,7 +174,7 @@ export default class MessageHandler {
       m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith("g.us");
       m.quoted.from = this.aruga.decodeJid(m.quoted.key.remoteJid);
       m.quoted.fromMe = m.quoted.key.fromMe;
-      m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo");
+      m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2");
       m.quoted.sender = m.quoted.key.participant;
       m.quoted.body =
         m.quoted.message.conversation && m.quoted.type === "conversation"

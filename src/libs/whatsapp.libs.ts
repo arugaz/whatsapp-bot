@@ -20,8 +20,8 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
   }
 
   /** Start client */
-  public async startClient() {
-    const logger = this.cfg.logger || P({ level: "silent" });
+  public async startClient(): Promise<void> {
+    const logger = this.cfg.logger || P({ level: "silent" }).child({ level: "silent" });
 
     const { saveState, clearState, state }: ArugaAuth = this.cfg.authType === "single" ? await require("../libs/auth.libs").useSingleAuthState(this.DB) : await require("../libs/auth.libs").useMultiAuthState(this.DB);
     const { version, isLatest } = await fetchLatestBaileysVersion();
@@ -78,8 +78,6 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
     this.ev.on("messages.upsert", (msg) => msg.type === "notify" && msg.messages.length >= 1 && msg.messages[0].message && this.emit("message", msg.messages[0]));
 
     this.ev.on("creds.update", async () => await saveState());
-
-    return this.aruga;
   }
 
   /**

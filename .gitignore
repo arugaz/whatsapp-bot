@@ -9,3 +9,6 @@ temp/*
 
 test.js
 test.ts
+
+package-lock.json
+yarn.lock

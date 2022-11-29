@@ -9,7 +9,6 @@
     "dev": "rimraf dist && tsc-watch -p ./tsconfig.dev.json --outDir ./dist --onSuccess \"node .\" --compiler typescript/bin/tsc --noClear",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "pm2": "pm2 start ecosystem.config.js && pm2 logs whatsappbot --raw",
-    "postinstall": "rimraf node_modules/@adiwajshing/baileys/node_modules/libsignal && move-cli node_modules/libsignal node_modules/@adiwajshing/baileys/node_modules/libsignal",
     "start": "node ./dist/main.js"
   },
   "author": "arugaz",
@@ -39,7 +38,7 @@
     ]
   },
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/adiwajshing/baileys",
+    "@adiwajshing/baileys": "git+https://gitlab.com/arugaz/Baileys",
     "@arugaz/translator": "1.0.0-z.4",
     "@prisma/client": "4.6.1",
     "axios": "1.1.3",
@@ -56,8 +55,6 @@
     "@babel/preset-env": "7.20.2",
     "@babel/preset-typescript": "7.18.6",
     "@types/node": "18.11.9",
-    "libsignal": "git+https://github.com/arugaz/libsignal-node",
-    "move-cli": "2.0.0",
     "prettier": "2.8.0",
     "prisma": "4.6.1",
     "rimraf": "3.0.2",

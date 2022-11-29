@@ -6,11 +6,11 @@ export default {
   aliases: ["listhelp", "menulist", "helplist", "info"],
   category: "general",
   desc: "To display the menu by list, and see how to use the menu",
-  execute: async ({ aruga, message, prefix, args }) => {
+  execute: async ({ aruga, message, prefix, args, isOwner }) => {
     if (args.length >= 1) {
       const name = args[0].toLowerCase();
       const cmd = commands.get(name) || commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
-      if (!cmd || cmd.category === "private") return await message.reply("No command found", true);
+      if ((!cmd || cmd.category === "owner") && !isOwner) return await message.reply("No command found", true);
       const text =
         `⍟──── *${name}* ────⍟\n\n` +
         `*Alias :* ${cmd.aliases ? [name].concat(cmd.aliases).join(", ").trim() : name}\n` +
@@ -29,7 +29,7 @@ export default {
     }
 
     const sections = [] as proto.Message.ListMessage.ISection[];
-    const categories = [...new Set(commands.map((v) => v.category !== "private" && v.category).sort())];
+    const categories = [...new Set(commands.map((v) => (!isOwner ? v.category !== "owner" && v.category : v.category)).sort())];
     for (const category of categories) {
       const cmd = commands.map((v) => v.category === category && v).filter((v) => v);
       sections.push({

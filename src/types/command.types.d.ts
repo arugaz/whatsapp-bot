@@ -17,7 +17,7 @@ declare type Command = {
    * @example
    * category: 'general'
    */
-  category: string;
+  category: "general" | "misc" | "owner";
 
   /**
    * Set commands cooldown, every user will have their own cooldown
@@ -132,6 +132,10 @@ declare type CommandObject = {
   messageTimestamp: number;
   command: string;
   prefix: string;
-  arg: string;
   args: string[];
+  arg: string;
+  isGroupOwner: boolean;
+  isGroupAdmin: boolean;
+  isBotGroupAdmin: boolean;
+  isOwner: boolean;
 };
