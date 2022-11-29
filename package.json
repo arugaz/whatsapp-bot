@@ -8,7 +8,7 @@
     "build": "rimraf dist && babel src --copy-files --extensions .ts --out-dir dist && rimraf dist/types",
     "dev": "rimraf dist && tsc-watch -p ./tsconfig.dev.json --outDir ./dist --onSuccess \"node .\" --compiler typescript/bin/tsc --noClear",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
-    "generateLang": "bytenode ./generateLang.jsc",
+    "generateLang": "node -r ./generateLang.js ./generateLang.arugaz",
     "pm2": "pm2 start ecosystem.config.js && pm2 logs whatsappbot --raw",
     "start": "node ./dist/main.js"
   },
@@ -56,7 +56,6 @@
     "@babel/preset-env": "7.20.2",
     "@babel/preset-typescript": "7.18.6",
     "@types/node": "18.11.9",
-    "bytenode": "1.3.7",
     "prettier": "2.8.0",
     "prisma": "4.6.1",
     "rimraf": "3.0.2",
