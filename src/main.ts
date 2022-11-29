@@ -34,7 +34,7 @@ const start = () => {
 
 const CronJob = fork(pathJoin(__dirname, "utils", "cron.utils"));
 const clearProcess = () => {
-  aruga.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: aruga.config.timeZone })}`) + " " + "Clear all process"}`, "info");
+  aruga.log("Clear all process", "info");
   CronJob.send("suicide", (err) => {
     if (err) process.kill(CronJob.pid, "SIGINT");
     aruga.DB.$disconnect().then(process.exit(0)).catch(process.exit(1));
@@ -55,7 +55,7 @@ aruga
       font: "console",
       gradient: ["red", color.cfonts("#ee82f8")],
     });
-    CronJob.send(color.blue("[ V ]") + ` ${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: aruga.config.timeZone })}`) + " " + "Running CronJob"}`);
+    CronJob.send("Running CronJob");
     start();
   })
   .catch((err) => {

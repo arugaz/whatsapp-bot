@@ -37,5 +37,5 @@ process.on("message", (message) => {
       })
       .catch(process.exit(1));
   }
-  console.log(message, "with pid", process.pid);
+  console.log("%s %s %d%s", message, "with pid", process.pid, "...");
 });

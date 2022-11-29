@@ -40,33 +40,33 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         if (reason === 401 || reason === 500 || reason === 440 || reason === 403) {
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Disconnected!"}`, "error");
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Deleting session..."}`, "error");
+          this.log("Disconnected!", "error");
+          this.log("Deleting session...", "error");
           clearState && (await clearState());
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Session deleted!"}`, "error");
+          this.log("Session deleted!", "error");
           if (reason === 403) {
-            this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Your account got banned? idk tho i got this when i got banned..."}`, "error");
+            this.log("Your account is blocked? idk tho i got this when i was banned from whatsapp...", "error");
             throw new Error("Error Forbidden, Connection failure");
           }
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Starting..."}`, "warning");
+          this.log("Starting...", "warning");
         } else {
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Reconnecting..."}`, "warning");
+          this.log("Reconnecting...", "warning");
         }
         setTimeout(() => this.startClient(), 1000);
       }
 
       if (connection === "connecting") {
-        this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Connecting..."}`, "warning");
+        this.log("Connecting...", "warning");
       }
 
       if (connection === "open") {
-        this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Connected!"}`);
+        this.log("Connected!");
         if (first) {
           console.log(" ");
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Name    : " + (this.user?.name || "unknown")}`, "info");
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Number  : " + (this.user?.id?.split(":")[0] || "unknown")}`, "info");
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Version : " + version.join(".")}`, "info");
-          this.log(`${color.hex("#ff7f00")(`${new Date(Date.now()).toLocaleString("en-US", { timeZone: this.config.timeZone })}`) + " " + "Latest  : " + `${isLatest ? "yes" : "nah"}`}`, "info");
+          this.log("Name    : " + (this.user?.name || "unknown"), "info");
+          this.log("Number  : " + (this.user?.id?.split(":")[0] || "unknown"), "info");
+          this.log("Version : " + version.join("."), "info");
+          this.log("Latest  : " + `${isLatest ? "yes" : "nah"}`, "info");
           first = false;
           console.log(" ");
         }
@@ -134,8 +134,8 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
    * @param {string=} type?:string
    * @returns {void} print logs
    */
-  public log(text: string, type: "error" | "warning" | "info" | "success" = "success"): void {
-    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), text);
+  public log(text: string, type: "error" | "warning" | "info" | "success" = "success", date: number = 0): void {
+    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), color.hex("#ff7f00")(`${new Date(!date ? Date.now() : date).toLocaleString("en-US", { timeZone: this.config.timeZone })}`), text);
   }
 
   public getOrderDetails!: Aruga["getOrderDetails"];

@@ -21,12 +21,7 @@ export default class MessageHandler {
     if (command) {
       // avoid spam messages
       if (cooldowns.has(message.sender)) {
-        this.aruga.log(
-          `${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${
-            message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""
-          }`.trim(),
-          "warning",
-        );
+        this.aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "warning", messageTimestamp);
         return await message.reply(`Cmd cooldown! please wait ${((command.cd || 3) - (Date.now() - cooldowns.get(message.sender)) / 1000).toFixed(1)}s`);
       }
 
@@ -67,9 +62,9 @@ export default class MessageHandler {
       try {
         await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg });
 
-        this.aruga.log(`${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim());
+        this.aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "success", messageTimestamp);
       } catch {
-        this.aruga.log(`${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "error");
+        this.aruga.log(`${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "error", messageTimestamp);
       } finally {
         // after running the command add cooldown even if there is an error, for every user except bot owners and premium users
         if (!isOwner && !user.premium) {
@@ -95,14 +90,7 @@ export default class MessageHandler {
       })
         .then((res: unknown) => message.reply(inspect(res, false)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error")))
         .catch((err: unknown) => message.reply(inspect(err, true)).catch((err) => this.aruga.log((err as Error).message || (typeof err === "string" && err), "error")))
-        .finally(() =>
-          this.aruga.log(
-            `${color.hex("#ff7f00")(`${new Date(messageTimestamp).toLocaleString("en-US", { timeZone: this.aruga.config.timeZone })}`)} ${color.purple("[EVAL]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${
-              message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""
-            }`.trim(),
-            "info",
-          ),
-        );
+        .finally(() => this.aruga.log(`${color.purple("[EVAL]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", messageTimestamp));
     }
   }
 
