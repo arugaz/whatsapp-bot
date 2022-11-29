@@ -34,9 +34,9 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
       version,
     });
 
-    for (const method of Object.keys(this.aruga)) this[method as keyof Client] = this.aruga[method as keyof Aruga];
+    for (const method of Object.keys(this.aruga).filter((v) => v !== "ws" && v !== "ev")) this[method as keyof Client] = this.aruga[method as keyof Aruga];
 
-    this.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+    this.aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         if (reason === 401 || reason === 500 || reason === 440 || reason === 403) {
@@ -74,10 +74,10 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
       }
     });
 
-    this.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
-    this.ev.on("messages.upsert", (msg) => msg.type === "notify" && msg.messages.length >= 1 && msg.messages[0].message && this.emit("message", msg.messages[0]));
+    this.aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
+    this.aruga.ev.on("messages.upsert", (msg) => msg.type === "notify" && msg.messages.length >= 1 && msg.messages[0].message && this.emit("message", msg.messages[0]));
 
-    this.ev.on("creds.update", async () => await saveState());
+    this.aruga.ev.on("creds.update", async () => await saveState());
   }
 
   /**
@@ -188,8 +188,6 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
   public resyncAppState!: Aruga["resyncAppState"];
   public chatModify!: Aruga["chatModify"];
   public type!: Aruga["type"];
-  public ws!: Aruga["ws"];
-  public ev!: Aruga["ev"];
   public authState!: Aruga["authState"];
   public user!: Aruga["user"];
   public generateMessageTag!: Aruga["generateMessageTag"];

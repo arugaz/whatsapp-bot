@@ -11,8 +11,8 @@ export default {
       footer: aruga.config.footer,
       templateButtons: [
         { index: 1, urlButton: { displayText: "Source Code", url: "https://github.com/arugaz/whatsapp-bot" } },
-        { index: 2, quickReplyButton: { displayText: "Change your language!", id: `${prefix}language` } },
-        { index: 5, quickReplyButton: { displayText: "Click here to see the menu list!", id: prefix + "listmenu" } },
+        { index: 2, quickReplyButton: { displayText: "Click here to see the menu list!", id: prefix + "listmenu" } },
+        !message.isGroupMsg ? { index: 3, quickReplyButton: { displayText: "Change your language!", id: `${prefix}language` } } : {},
       ],
       viewOnce: true,
     });

@@ -2,5 +2,12 @@
   "intro": {
     "welcome": "Welcome, {{name}}!",
     "text": "I hope you find this useful."
+  },
+  "commands": {
+    "general": {
+      "language": {
+        "changed": "Language has been changed to {{lang}}!"
+      }
+    }
   }
 }

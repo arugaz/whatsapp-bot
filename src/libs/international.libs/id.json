@@ -2,5 +2,12 @@
   "intro": {
     "welcome": "Selamat Datang, {{name}}!",
     "text": "Saya harap Anda menemukan ini berguna."
+  },
+  "commands": {
+    "general": {
+      "language": {
+        "changed": "Bahasa telah diubah menjadi {{lang}}!"
+      }
+    }
   }
 }

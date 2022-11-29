@@ -1,5 +1,7 @@
 dist
 node_modules
+.pnp
+.pnp.js
 
 database/*
 !database/.gitkeep
@@ -12,3 +14,13 @@ test.ts
 
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+.DS_Store
+*.pem
+*.tsbuildinfo
