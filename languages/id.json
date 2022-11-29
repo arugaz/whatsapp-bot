@@ -1,0 +1,19 @@
+{
+  "handlers": {
+    "message": {
+      "cooldown": "Perintah sedang cooldown, silahkan tunggu selama {{sknds}} detik",
+      "maintenance": "Perintah sedang dalam pemeliharaan, kamu tidak dapat menggunakannya saat ini",
+      "ownerOnly": "Perintah hanya dapat digunakan oleh pemilik bot, kamu tidak dapat menggunakannya",
+      "premiumOnly": "Perintah hanya dapat digunakan oleh pengguna premium, kamu tidak dapat menggunakannya",
+      "privateOnly": "Perintah hanya dapat digunakan dalam obrolan pribadi, kamu tidak dapat menggunakannya dalam obrolan grup",
+      "groupOnly": "Perintah hanya dapat digunakan dalam obrolan grup, kamu tidak dapat menggunakannya dalam obrolan pribadi"
+    }
+  },
+  "commands": {
+    "general": {
+      "language": {
+        "changed": "Bahasa telah diubah menjadi {{lang}}!"
+      }
+    }
+  }
+}

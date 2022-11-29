@@ -19,10 +19,13 @@ export default class MessageHandler {
     const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd));
 
     if (command) {
+      const group = message.isGroupMsg && (await this.aruga.DB.group.upsert({ where: { groupId: message.from }, create: { groupId: message.from, name: message.groupMetadata.subject }, update: {} }));
+      const user = message.sender && (await this.aruga.DB.user.upsert({ where: { userId: message.sender }, create: { userId: message.sender, name: message.pushname, language: this.aruga.config.language, limit: this.aruga.config.user.limit || 30 }, update: {} }));
+
       // avoid spam messages
       if (cooldowns.has(message.sender)) {
         this.aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "warning", messageTimestamp);
-        return await message.reply(`Cmd cooldown! please wait ${((command.cd || 3) - (Date.now() - cooldowns.get(message.sender)) / 1000).toFixed(1)}s`);
+        return await message.reply(this.aruga.i18n.translate("handlers.message.cooldown", { sknds: ((command.cd || 3) - (Date.now() - cooldowns.get(message.sender)) / 1000).toFixed(1) }, user.language), true);
       }
 
       const botNumber = this.aruga.decodeJid(this.aruga.user.id);
@@ -32,17 +35,17 @@ export default class MessageHandler {
       const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === botNumber);
       const isOwner = message.sender && this.aruga.config.ownerNumber.includes(message.sender.replace(/\D+/g, ""));
 
-      const group = message.isGroupMsg && (await this.aruga.DB.group.upsert({ where: { groupId: message.from }, create: { groupId: message.from, name: message.groupMetadata.subject }, update: {} }));
-      const user = message.sender && (await this.aruga.DB.user.upsert({ where: { userId: message.sender }, create: { userId: message.sender, name: message.pushname, language: this.aruga.config.language, limit: this.aruga.config.user.limit || 30 }, update: {} }));
-
       // maintenance and only can used by the bot owner
-      if (command.maintenance && !isOwner) return await message.reply("Cmd maintenance");
+      if (command.maintenance && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.maintenance", {}, user.language));
 
       // only for bot owner
-      if (command.ownerOnly && !isOwner) return await message.reply("Cmd only for owner bot");
+      if (command.ownerOnly && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.ownerOnly", {}, user.language));
+
+      // only for premium users
+      if (command.premiumOnly && (!user.premium || !isOwner)) return await message.reply(this.aruga.i18n.translate("handlers.message.premiumOnly", {}, user.language));
 
       // only for private chats
-      if (command.privateOnly && message.isGroupMsg) return await message.reply("Cmd only for private chats");
+      if (command.privateOnly && message.isGroupMsg) return await message.reply(this.aruga.i18n.translate("handlers.message.privateOnly", {}, user.language));
 
       // only for group chats
       if (command.groupOnly && !message.isGroupMsg) return await message.reply("Cmd only for group chats");
@@ -55,9 +58,6 @@ export default class MessageHandler {
 
       // only for group admins
       if (command.adminGroup && message.isGroupMsg && !isGroupAdmin) return await message.reply("Cmd only for group admins");
-
-      // only for premium users
-      if (command.premiumOnly && !user.premium) return await message.reply("Cmd for premium users");
 
       try {
         await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg, isGroupOwner, isGroupAdmin, isBotGroupAdmin, isOwner });

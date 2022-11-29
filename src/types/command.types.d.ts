@@ -23,7 +23,7 @@ declare type Command = {
    * Set commands cooldown, every user will have their own cooldown
    * @type {boolean}
    * @example
-   * cd: 10 // default 3 seconds  for every command, avoid spam message
+   * cd: 10 // default 3 seconds for every command, pls add cd atleast 1 sec for avoid spam message
    */
   cd?: number;
 
