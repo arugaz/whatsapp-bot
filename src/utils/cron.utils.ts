@@ -1,20 +1,17 @@
 import { Cron } from "croner";
 import config from "./config.utils";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import Database from "../libs/database.libs";
 
 /**
  * Run CronJob every midnight for reset user limit!
  */
-const job = Cron(
+const job1 = Cron(
   "0 0 0 * * *",
   {
-    maxRuns: Infinity,
     timezone: config.timeZone,
   },
   async () => {
-    await prisma.user.updateMany({
+    await Database.user.updateMany({
       where: {
         userId: {
           contains: "@s.whatsapp.net",
@@ -29,13 +26,10 @@ const job = Cron(
 
 process.on("message", (message) => {
   if (message === "suicide") {
-    job.stop();
-    prisma
-      .$disconnect()
-      .then(() => {
-        process.exit(0);
-      })
-      .catch(process.exit(1));
+    job1.stop();
+    Database.$disconnect()
+      .then(() => process.exit(0))
+      .catch(() => process.exit(1));
   }
   console.log("%s %s %d%s", message, "with pid", process.pid, "...");
 });

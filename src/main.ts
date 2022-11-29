@@ -35,9 +35,11 @@ const start = () => {
 const CronJob = fork(pathJoin(__dirname, "utils", "cron.utils"));
 const clearProcess = () => {
   aruga.log("Clear all process", "info");
-  CronJob.send("suicide", (err) => {
-    if (err) process.kill(CronJob.pid, "SIGINT");
-    aruga.DB.$disconnect().then(process.exit(0)).catch(process.exit(1));
+  CronJob.send("suicide", (gmau) => {
+    if (gmau) process.kill(CronJob.pid, "SIGINT");
+    aruga.DB.$disconnect()
+      .then(() => process.exit(0))
+      .catch(() => process.exit(1));
   });
 };
 

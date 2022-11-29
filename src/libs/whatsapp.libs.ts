@@ -49,10 +49,11 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
             throw new Error("Error Forbidden, Connection failure");
           }
           this.log("Starting...", "warning");
+          setTimeout(() => this.startClient(), 1000);
         } else {
           this.log("Reconnecting...", "warning");
+          setTimeout(() => this.startClient(), 1000);
         }
-        setTimeout(() => this.startClient(), 1000);
       }
 
       if (connection === "connecting") {
