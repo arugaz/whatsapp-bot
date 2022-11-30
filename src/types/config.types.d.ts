@@ -11,7 +11,7 @@ declare type Config = {
    * Set a default prefix of bot! u can fill '#@' for double prefix or as much as you want '!@#$%^&/.'
    * @type {string}
    * @example
-   * prefix: "/" || "/#" || "!@#$%^"
+   * prefix: "/" || "/#" || "!@#$%^."
    */
   prefix: string;
 
@@ -27,7 +27,7 @@ declare type Config = {
    * Set a default bot language
    * @type {string}
    * @example
-   * language: "en" | "id" | "pt" | "in"
+   * language: "en" | "id" | "pt" | "in" or other..
    */
   language: string;
 

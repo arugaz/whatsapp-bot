@@ -6,7 +6,10 @@
       "ownerOnly": "Perintah hanya dapat digunakan oleh pemilik bot, kamu tidak dapat menggunakannya",
       "premiumOnly": "Perintah hanya dapat digunakan oleh pengguna premium, kamu tidak dapat menggunakannya",
       "privateOnly": "Perintah hanya dapat digunakan dalam obrolan pribadi, kamu tidak dapat menggunakannya dalam obrolan grup",
-      "groupOnly": "Perintah hanya dapat digunakan dalam obrolan grup, kamu tidak dapat menggunakannya dalam obrolan pribadi"
+      "groupOnly": "Perintah hanya dapat digunakan dalam obrolan grup, kamu tidak dapat menggunakannya dalam obrolan pribadi",
+      "botGroupAdmin": "Perintah hanya dapat digunakan jika bot merupakan salah satu admin grup",
+      "ownerGroup": "Perintah hanya dapat digunakan oleh pemilik grup, kamu tidak dapat menggunakannya",
+      "adminGroup": "Perintah hanya dapat digunakan oleh admin grup, kamu tidak dapat menggunakannya"
     }
   },
   "commands": {

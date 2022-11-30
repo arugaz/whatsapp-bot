@@ -21,7 +21,7 @@ const start = () => {
       .serialize(msg)
       .then((message) =>
         messageHandler
-          .execute((msg?.messageTimestamp as number) * 1000 || Date.now(), message)
+          .execute((msg.messageTimestamp as number) * 1000 || Date.now(), message)
           // log full error for debugging purposes
           .catch((err) => console.error(err)),
       )

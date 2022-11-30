@@ -24,7 +24,7 @@ export default class MessageHandler {
 
       // avoid spam messages
       if (cooldowns.has(message.sender)) {
-        this.aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "warning", messageTimestamp);
+        this.aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(group.name || "unknown")}` : ""}`.trim(), "warning", messageTimestamp);
         return await message.reply(this.aruga.i18n.translate("handlers.message.cooldown", { sknds: ((command.cd || 3) - (Date.now() - cooldowns.get(message.sender)) / 1000).toFixed(1) }, user.language), true);
       }
 
@@ -42,22 +42,22 @@ export default class MessageHandler {
       if (command.ownerOnly && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.ownerOnly", {}, user.language));
 
       // only for premium users
-      if (command.premiumOnly && (!user.premium || !isOwner)) return await message.reply(this.aruga.i18n.translate("handlers.message.premiumOnly", {}, user.language));
+      if (command.premiumOnly && !user.premium && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.premiumOnly", {}, user.language));
 
       // only for private chats
       if (command.privateOnly && message.isGroupMsg) return await message.reply(this.aruga.i18n.translate("handlers.message.privateOnly", {}, user.language));
 
       // only for group chats
-      if (command.groupOnly && !message.isGroupMsg) return await message.reply("Cmd only for group chats");
+      if (command.groupOnly && !message.isGroupMsg) return await message.reply(this.aruga.i18n.translate("handlers.message.groupOnly", {}, user.language));
 
       // only if the bot is the group admin
-      if (command.botGroupAdmin && message.isGroupMsg && !isBotGroupAdmin) return await message.reply("Cmd can only be used when bot is a group admin");
+      if (command.botGroupAdmin && message.isGroupMsg && !isBotGroupAdmin) return await message.reply(this.aruga.i18n.translate("handlers.message.botGroupAdmin", {}, user.language));
 
       // only for group owner
-      if (command.ownerGroup && message.isGroupMsg && !isGroupOwner) return await message.reply("Cmd only for group owner");
+      if (command.ownerGroup && message.isGroupMsg && !isGroupOwner && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.ownerGroup", {}, user.language));
 
       // only for group admins
-      if (command.adminGroup && message.isGroupMsg && !isGroupAdmin) return await message.reply("Cmd only for group admins");
+      if (command.adminGroup && message.isGroupMsg && !isGroupAdmin && !isOwner) return await message.reply(this.aruga.i18n.translate("handlers.message.adminGroup", {}, user.language));
 
       try {
         await command.execute({ aruga: this.aruga, message, messageTimestamp, command: cmd, prefix, args, arg, isGroupOwner, isGroupAdmin, isBotGroupAdmin, isOwner });
@@ -146,7 +146,7 @@ export default class MessageHandler {
     m.download = async (filename = (Date.now() + Math.floor(Math.random() * 20 + 1)).toString(36).slice(-6)) => (filename ? await this.aruga.downloadAndSaveMediaMessage(m.message, filename) : await this.aruga.downloadMediaMessage(m.message));
 
     m.quoted = {} as MessageSerialize;
-    m.quoted.message = m?.message[m.type]?.contextInfo?.quotedMessage
+    m.quoted.message = m.message[m.type]?.contextInfo?.quotedMessage
       ? m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage
         ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessage?.message
         : m.message[m.type].contextInfo.quotedMessage?.ephemeralMessage
