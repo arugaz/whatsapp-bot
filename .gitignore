@@ -10,6 +10,7 @@ database/*
 
 languages/*
 !languages/id.json
+!languages/en.json
 !languages/.gitkeep
 
 temp/*

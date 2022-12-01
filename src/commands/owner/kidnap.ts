@@ -13,7 +13,7 @@ import type { Command } from "../../types/command.types";
 export default {
   category: "owner",
   desc: "Kidnap other group members to your group",
-  example: "https://chat.whatsapp.com/code, change with group url",
+  example: "https://chat.whatsapp.com/code, change with target group url",
   ownerOnly: true,
   execute: async ({ aruga, message, prefix, command, arg }) => {
     if (!arg) return await message.reply(`${prefix}info ${command}`);
@@ -36,6 +36,6 @@ export default {
         .map((v) => v.id);
 
       return await aruga.groupParticipantsUpdate(message.from, participants, "add");
-    } else message.reply("Invalid url", true);
+    } else return await message.reply("Invalid url", true);
   },
 } as Command;

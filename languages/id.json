@@ -1,7 +1,7 @@
 {
   "handlers": {
     "message": {
-      "cooldown": "Perintah sedang cooldown, silahkan tunggu selama {{sknds}} detik",
+      "cooldown": "Perintah sedang cooldown, silahkan tunggu selama {{SKNDS}}",
       "maintenance": "Perintah sedang dalam pemeliharaan, kamu tidak dapat menggunakannya saat ini",
       "ownerOnly": "Perintah hanya dapat digunakan oleh pemilik bot, kamu tidak dapat menggunakannya",
       "premiumOnly": "Perintah hanya dapat digunakan oleh pengguna premium, kamu tidak dapat menggunakannya",
@@ -15,7 +15,24 @@
   "commands": {
     "general": {
       "language": {
-        "changed": "Bahasa telah diubah menjadi {{lang}}!"
+        "changed": "Bahasa telah diubah menjadi {{LANGUAGE}}!"
+      },
+      "menu": {
+        "intro": {
+          "one": "Halo {{PUSHNAME}} 👋️,",
+          "two": "Ada yang bisa saya bantu?"
+        },
+        "detail": {
+          "one": "RAM server: {{SZEE}}",
+          "two": "Total komando: {{CMDS}}",
+          "three": "Waktu aktif: {{UPTMS}}",
+          "four": "Bahasa Program: JavaScript dengan sintaks untuk tipe."
+        },
+        "template": {
+          "one": "⭐ Bintangi Bot di GitHub!",
+          "two": "Klik di sini untuk melihat daftar menunya!",
+          "three": "Klik di sini untuk mengubah bahasa kamu!"
+        }
       }
     }
   }

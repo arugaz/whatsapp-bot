@@ -1,10 +1,13 @@
 {
-  "ownerNumber": ["62895324834879"],
+  "ownerNumber": ["62895324834879", "558188263143"],
   "prefix": "/",
   "timeZone": "Asia/Jakarta",
   "language": "en",
+  "bot": {
+    "name": "Hɪᴛᴏʀɪ Gᴏᴛᴏᴜ",
+    "footer": "arugaz/whatsapp-bot"
+  },
   "user": {
     "limit": 30
-  },
-  "footer": "arugaz/whatsapp-bot"
+  }
 }

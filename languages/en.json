@@ -1,0 +1,39 @@
+{
+  "handlers": {
+    "message": {
+      "cooldown": "Command is on cooldown, please wait for {{SKNDS}}",
+      "maintenance": "The command is under maintenance, you can't use it at the moment",
+      "ownerOnly": "Commands can only be used by the bot owner, you cannot use them",
+      "premiumOnly": "Commands can only be used by premium users, you cannot use them",
+      "privateOnly": "Commands can only be used in private chats, you cannot use them in group chats",
+      "groupOnly": "Commands can only be used in group chats, you cannot use them in private chats",
+      "botGroupAdmin": "The command can only be used if the bot is an admin of the group",
+      "ownerGroup": "Commands can only be used by the group owner, you cannot use them",
+      "adminGroup": "Commands can only be used by group admins, you cannot use them"
+    }
+  },
+  "commands": {
+    "general": {
+      "language": {
+        "changed": "Language has been changed to {{LANGUAGE}}!"
+      },
+      "menu": {
+        "intro": {
+          "one": "Hello {{PUSHNAME}} 👋️,",
+          "two": "How can I help you?"
+        },
+        "detail": {
+          "one": "Server RAM: {{SZEE}}",
+          "two": "Total command: {{CMDS}}",
+          "three": "Active time: {{UPTMS}}",
+          "four": "Programming Language: JavaScript with syntax for types."
+        },
+        "template": {
+          "one": "⭐ Star Bots on GitHub!",
+          "two": "Click here to see the menu list!",
+          "three": "Click here to change your language!"
+        }
+      }
+    }
+  }
+}

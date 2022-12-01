@@ -3,9 +3,14 @@ import EventEmitter from "events";
 import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, { downloadContentFromMessage, fetchLatestBaileysVersion, FullJid, jidDecode, proto, toBuffer } from "@adiwajshing/baileys";
-
-import International from "../libs/international.libs";
+import makeWASocket, {
+  downloadContentFromMessage,
+  fetchLatestBaileysVersion,
+  FullJid,
+  jidDecode,
+  proto,
+  toBuffer,
+} from "@adiwajshing/baileys";
 import Database from "../libs/database.libs";
 import color from "../utils/color.utils";
 import config from "../utils/config.utils";
@@ -14,29 +19,51 @@ import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.type
 
 let first = true;
 export default class Client extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
-  private aruga!: Aruga;
-  constructor(private cfg: ArugaConfig) {
+  #cfg: ArugaConfig;
+  constructor(cfg: ArugaConfig) {
     super();
+    this.#cfg = cfg;
   }
 
   /** Start client */
   public async startClient(): Promise<void> {
-    const logger = this.cfg.logger || P({ level: "silent" }).child({ level: "silent" });
+    const logger = this.#cfg.logger || P({ level: "silent" }).child({ level: "silent" });
 
-    const { saveState, clearState, state }: ArugaAuth = this.cfg.authType === "single" ? await require("../libs/auth.libs").useSingleAuthState(this.DB) : await require("../libs/auth.libs").useMultiAuthState(this.DB);
+    const { saveState, clearState, state }: ArugaAuth =
+      this.#cfg.authType === "single"
+        ? await require("../libs/auth.libs").useSingleAuthState(Database)
+        : await require("../libs/auth.libs").useMultiAuthState(Database);
     const { version, isLatest } = await fetchLatestBaileysVersion();
 
-    this.aruga = makeWASocket({
-      ...this.cfg,
+    const aruga = makeWASocket({
+      ...this.#cfg,
       auth: state,
       logger,
+      patchMessageBeforeSending: (message) => {
+        const requiresPatch = !!(message.buttonsMessage || message.listMessage);
+        if (requiresPatch) {
+          message = {
+            viewOnceMessage: {
+              message: {
+                messageContextInfo: {
+                  deviceListMetadataVersion: 2,
+                  deviceListMetadata: {},
+                },
+                ...message,
+              },
+            },
+          };
+        }
+        return message;
+      },
       printQRInTerminal: true,
       version,
     });
 
-    for (const method of Object.keys(this.aruga).filter((v) => v !== "ws" && v !== "ev")) this[method as keyof Client] = this.aruga[method as keyof Aruga];
+    for (const method of Object.keys(aruga).filter((v) => v !== "ws" && v !== "ev"))
+      this[method as keyof Client] = aruga[method as keyof Aruga];
 
-    this.aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+    aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         if (reason === 401 || reason === 500 || reason === 440 || reason === 403) {
@@ -49,11 +76,10 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
             throw new Error("Error Forbidden, Connection failure");
           }
           this.log("Starting...", "warning");
-          setTimeout(() => this.startClient(), 1000);
         } else {
           this.log("Reconnecting...", "warning");
-          setTimeout(() => this.startClient(), 1000);
         }
+        setTimeout(() => this.startClient(), 1000);
       }
 
       if (connection === "connecting") {
@@ -74,10 +100,17 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
       }
     });
 
-    this.aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
-    this.aruga.ev.on("messages.upsert", (msg) => msg.type === "notify" && msg.messages.length >= 1 && msg.messages[0].message && this.emit("message", msg.messages[0]));
+    aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
+    aruga.ev.on(
+      "messages.upsert",
+      (msg) =>
+        msg.type === "notify" &&
+        msg.messages.length >= 1 &&
+        msg.messages[0].message &&
+        this.emit("message", msg.messages[0]),
+    );
 
-    this.aruga.ev.on("creds.update", async () => await saveState());
+    aruga.ev.on("creds.update", async () => await saveState());
   }
 
   /**
@@ -112,21 +145,12 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
    * @param {proto.IMessage} message:proto.IMessage
    * @param {string} filename='random string' | filename
    */
-  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string): Promise<"pathName"> {
+  public async downloadAndSaveMediaMessage<F extends string>(message: proto.IMessage, filename: F): Promise<F> {
     const buffer = await this.downloadMediaMessage(message);
-    const filePath = pathJoin(__dirname, "..", "..", "temp", filename);
+    const filePath = pathJoin(__dirname, "..", "..", "temp", filename) as F;
     await fsWriteFile(filePath, buffer);
-    return filePath as "pathName";
+    return filePath;
   }
-
-  /** Config */
-  public config = config;
-
-  /** Database */
-  public DB = Database;
-
-  /** Translator helper */
-  public i18n = International;
 
   /**
    * @param {string} text:string
@@ -134,7 +158,15 @@ export default class Client extends (EventEmitter as new () => ArugaEventEmitter
    * @returns {void} print logs
    */
   public log(text: string, type: "error" | "warning" | "info" | "success" = "success", date: number = 0): void {
-    console.log(color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`), color.hex("#ff7f00")(`${new Date(!date ? Date.now() : date).toLocaleString("en-US", { timeZone: this.config.timeZone })}`), text);
+    console.log(
+      color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](
+        `[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`,
+      ),
+      color.hex("#ff7f00")(
+        `${new Date(!date ? Date.now() : date).toLocaleString("en-US", { timeZone: config.timeZone })}`,
+      ),
+      text,
+    );
   }
 
   public getOrderDetails!: Aruga["getOrderDetails"];

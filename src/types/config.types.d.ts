@@ -31,6 +31,24 @@ declare type Config = {
    */
   language: string;
 
+  /** Bot config */
+  bot: {
+    /**
+     * Set a default bot name
+     * @type {number}
+     * @example
+     * footer: "@arugaz"
+     */
+    name: string;
+    /**
+     * Set a default footer for messages that require a footer
+     * @type {number}
+     * @example
+     * footer: "@arugaz"
+     */
+    footer: string;
+  };
+
   /** User config */
   user: {
     /**
@@ -41,12 +59,4 @@ declare type Config = {
      */
     limit: number;
   };
-
-  /**
-   * Set a default footer for messages that require a footer
-   * @type {number}
-   * @example
-   * footer: "@arugaz"
-   */
-  footer: string;
 };

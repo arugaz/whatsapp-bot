@@ -1,6 +1,8 @@
 import type { proto } from "@adiwajshing/baileys";
 import type { Command } from "../../types/command.types";
+import config from "../../utils/config.utils";
 import { commands } from "../../utils/command.utils";
+import { upperFormat } from "../../utils/helper.utils";
 
 export default {
   aliases: ["listhelp", "menulist", "helplist", "info"],
@@ -18,7 +20,10 @@ export default {
         `*Description :* ${cmd.desc || "-"}\n` +
         `*Usage :* ${prefix}${name} ${cmd.example || ``}\n` +
         `*Only in group chat :* ${cmd.groupOnly ? "Yes" : "No"}\n` +
-        (message.isGroupMsg ? `*Only for group admins :* ${cmd.adminGroup ? "Yes" : "No"}\n` + `*Only for group owner :* ${cmd.ownerGroup ? "Yes" : "No"}\n` : "") +
+        (message.isGroupMsg
+          ? `*Only for group admins :* ${cmd.adminGroup ? "Yes" : "No"}\n` +
+            `*Only for group owner :* ${cmd.ownerGroup ? "Yes" : "No"}\n`
+          : "") +
         `*Only in private chat :* ${cmd.privateOnly ? "Yes" : "No"}\n` +
         `*Only for premium :* ${cmd.premiumOnly ? "Yes" : "No"}\n` +
         `*Only for bot owner :* ${cmd.ownerOnly ? "Yes" : "No"}\n` +
@@ -29,11 +34,13 @@ export default {
     }
 
     const sections = [] as proto.Message.ListMessage.ISection[];
-    const categories = [...new Set(commands.map((v) => (!isOwner ? v.category !== "owner" && v.category : v.category)).sort())];
+    const categories = [
+      ...new Set(commands.map((v) => (!isOwner ? v.category !== "owner" && v.category : v.category)).sort()),
+    ];
     for (const category of categories) {
       const cmd = commands.map((v) => v.category === category && v).filter((v) => v);
       sections.push({
-        title: category.toUpperCase(),
+        title: upperFormat(category),
         rows: cmd.map((value) => {
           const title = commands.findKey((v) => v === value);
           return {
@@ -45,13 +52,14 @@ export default {
       });
     }
 
-    return await aruga.sendMessage(message.from, {
+    await aruga.sendMessage(message.isGroupMsg ? message.sender : message.from, {
       text: `Hi ${message.pushname}`,
-      footer: aruga.config.footer,
+      footer: config.bot.footer,
       title: "Hi there",
       buttonText: "LIST MENU",
       sections,
       viewOnce: true,
     });
+    return message.isGroupMsg && (await message.reply("Check private chats", true));
   },
 } as Command;

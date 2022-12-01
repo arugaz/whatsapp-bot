@@ -1,3 +1,4 @@
+import type { Group, User } from "@prisma/client";
 import type Client from "../libs/whatsapp.libs";
 import type { Aruga } from "../types/client.types";
 import type { MessageSerialize } from "../types/message.types";
@@ -123,13 +124,12 @@ declare type Command = {
    *  await aruga.sendMessage(message.from, { text: `pong! ${arg}` })
    * }
    */
-  execute?: (obj: CommandObject) => unknown;
+  execute?: (obj: CommandObject) => Promise<proto.WebMessageInfo> | never;
 };
 
 declare type CommandObject = {
   aruga: Client;
   message: MessageSerialize;
-  messageTimestamp: number;
   command: string;
   prefix: string;
   args: string[];
@@ -138,4 +138,6 @@ declare type CommandObject = {
   isGroupAdmin: boolean;
   isBotGroupAdmin: boolean;
   isOwner: boolean;
+  user: User;
+  group: Group;
 };

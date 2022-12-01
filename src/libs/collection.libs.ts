@@ -17,7 +17,7 @@ class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
   }
 
   /** Sorts the items of a collection in place and returns it. */
-  sort(compareFunction = Collection.defaultSort) {
+  sort(compareFunction = Collection.defaultSort): this {
     const entries = [...this.entries()];
     entries.sort((a, b) => compareFunction(a[0], b[0]));
     super.clear();
@@ -35,7 +35,7 @@ class Collection<KEY, VALUE> extends Map<KEY, VALUE> {
   }
 
   /** Default sort compareFunction. */
-  static defaultSort<KEY>(firstKey: KEY, secondKey: KEY) {
+  static defaultSort<KEY>(firstKey: KEY, secondKey: KEY): number {
     return Number(firstKey > secondKey) || Number(firstKey === secondKey) - 1;
   }
 }

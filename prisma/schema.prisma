@@ -24,9 +24,6 @@ model Group {
   // additional
   ban     Boolean @default(false)
   mute    Boolean @default(false)
-  // for premium groups
-  premium Boolean @default(false)
-  expire  Int?
 }
 
 model User {

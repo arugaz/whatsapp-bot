@@ -31,6 +31,12 @@ declare type MessageSerialize = {
   /** Body / content message  */
   body: string;
 
+  /** message expiration, 0 if doesnt exists */
+  expiration: number;
+
+  /** message timestamps */
+  timestamps: number;
+
   /** Mentions user list */
   mentions: string[];
 
@@ -43,16 +49,16 @@ declare type MessageSerialize = {
 
   /**
    * @param {string|null} filename?:string|null
-   * @returns {Promise<'pathName' | Buffer>} if filename is empty return buffers otherwise return filename
+   * @returns {Promise<string | Buffer>} if filename is empty return buffers otherwise return file path
    */
-  download: (filename?: string | null) => Promise<"pathName" | Buffer>;
+  download: (filename?: string | null) => Promise<string | Buffer>;
 
   /** Properties of a Quoted Message. */
   quoted?: MessageSerialize;
 
   /** Nickname for users */
-  pushname?: string;
+  pushname: string;
 
   /** Group Metadata */
-  groupMetadata?: GroupMetadata;
+  groupMetadata: GroupMetadata;
 };

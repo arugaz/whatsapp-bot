@@ -58,7 +58,9 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           await Promise.all(
             ids.map(async (id) => {
               const value = await readData(`${type}-${id}`);
-              type === "app-state-sync-key" && !!value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value);
+              type === "app-state-sync-key" && !!value
+                ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value))
+                : (data[id] = value);
             }),
           );
           return data;

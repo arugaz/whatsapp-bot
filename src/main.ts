@@ -2,8 +2,10 @@ import cfonts from "cfonts";
 import { fork } from "child_process";
 import { join as pathJoin } from "path";
 import { Browsers } from "@adiwajshing/baileys";
-import MessageHandler from "./handlers/message.handler";
+import * as messageHandler from "./handlers/message.handlers";
 import Client from "./libs/whatsapp.libs";
+import Database from "./libs/database.libs";
+import { i18nInit } from "./libs/international.libs";
 import color from "./utils/color.utils";
 
 const aruga = new Client({
@@ -13,19 +15,11 @@ const aruga = new Client({
 });
 
 const start = () => {
-  const messageHandler = new MessageHandler(aruga);
-
   messageHandler.registerCommand();
   aruga.on("message", (msg) =>
     messageHandler
-      .serialize(msg)
-      .then((message) =>
-        messageHandler
-          .execute((msg.messageTimestamp as number) * 1000 || Date.now(), message)
-          // log full error for debugging purposes
-          .catch((err) => console.error(err)),
-      )
-      // log full error for debugging purposes
+      .serialize(aruga, msg)
+      .then((message) => messageHandler.execute(aruga, message).catch((err) => console.error(err)))
       .catch((err) => console.error(err)),
   );
 
@@ -36,8 +30,11 @@ const CronJob = fork(pathJoin(__dirname, "utils", "cron.utils"));
 const clearProcess = () => {
   aruga.log("Clear all process", "info");
   CronJob.send("suicide", (gmau) => {
-    if (gmau) process.kill(CronJob.pid, "SIGINT");
-    aruga.DB.$disconnect()
+    if (gmau)
+      try {
+        process.kill(CronJob.pid, "SIGINT");
+      } catch {}
+    Database.$disconnect()
       .then(() => process.exit(0))
       .catch(() => process.exit(1));
   });
@@ -58,13 +55,13 @@ aruga
       gradient: ["red", color.cfonts("#ee82f8")],
     });
     CronJob.send("Running CronJob");
+    i18nInit();
     start();
   })
   .catch((err) => {
-    // log full error for debugging purposes
     console.error(err);
     clearProcess();
   });
 
-process.on("SIGINT", clearProcess);
-process.on("SIGTERM", clearProcess);
+// pretty sexy :D
+for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, clearProcess);
