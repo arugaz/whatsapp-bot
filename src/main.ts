@@ -9,7 +9,7 @@ import { i18nInit } from "./libs/international.libs";
 import color from "./utils/color.utils";
 
 const aruga = new Client({
-  authType: "multi", // "single" or "multi"
+  // baileys options
   browser: Browsers.appropriate("Desktop"),
   syncFullHistory: true,
 });
@@ -23,22 +23,10 @@ const start = () => {
       .catch((err) => console.error(err)),
   );
 
-  aruga.on("call", (c) => console.log(c));
+  aruga.on("call", (call) => console.log(call));
 };
 
 const CronJob = fork(pathJoin(__dirname, "utils", "cron.utils"));
-const clearProcess = () => {
-  aruga.log("Clear all process", "info");
-  CronJob.send("suicide", (gmau) => {
-    if (gmau)
-      try {
-        process.kill(CronJob.pid, "SIGINT");
-      } catch {}
-    Database.$disconnect()
-      .then(() => process.exit(0))
-      .catch(() => process.exit(1));
-  });
-};
 
 aruga
   .startClient()
@@ -64,4 +52,16 @@ aruga
   });
 
 // pretty sexy :D
+const clearProcess = () => {
+  aruga.log("Clear all process", "info");
+  CronJob.send("suicide", (gmau) => {
+    if (gmau)
+      try {
+        process.kill(CronJob.pid, "SIGINT");
+      } catch {}
+    Database.$disconnect()
+      .then(() => process.exit(0))
+      .catch(() => process.exit(1));
+  });
+};
 for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, clearProcess);

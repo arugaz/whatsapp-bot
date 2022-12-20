@@ -1,30 +1,32 @@
 import type { PrismaClient } from "@prisma/client";
 import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
 import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys";
-import type { ArugaAuth } from "../../types/auth.types";
+import type { ArugaAuth } from "../types/auth.types";
 
-export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
-  const fixFileName = (fileName?: string): string => fileName?.replace(/\//g, "__")?.replace(/:/g, "-");
+const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
+  const fixFileName = (fileName: string): string => fileName.replace(/\//g, "__")?.replace(/:/g, "-");
 
   const writeData = async (data: unknown, fileName: string): Promise<void> => {
-    const sessionId = fixFileName(fileName);
-    const session = JSON.stringify(data, BufferJSON.replacer);
-    await Database.session.upsert({
-      where: {
-        sessionId,
-      },
-      update: {
-        sessionId,
-        session,
-      },
-      create: {
-        sessionId,
-        session,
-      },
-    });
+    try {
+      const sessionId = fixFileName(fileName);
+      const session = JSON.stringify(data, BufferJSON.replacer);
+      await Database.session.upsert({
+        where: {
+          sessionId,
+        },
+        update: {
+          sessionId,
+          session,
+        },
+        create: {
+          sessionId,
+          session,
+        },
+      });
+    } catch {}
   };
 
-  const readData = async (fileName: string): Promise<AuthenticationCreds> => {
+  const readData = async (fileName: string): Promise<AuthenticationCreds | null> => {
     try {
       const sessionId = fixFileName(fileName);
       const data = await Database.session.findFirst({
@@ -32,19 +34,21 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           sessionId,
         },
       });
-      return JSON.parse(data.session, BufferJSON.reviver) as AuthenticationCreds;
+      return JSON.parse(data?.session!, BufferJSON.reviver) as AuthenticationCreds;
     } catch {
       return null;
     }
   };
 
   const removeData = async (fileName: string): Promise<void> => {
-    const sessionId = fixFileName(fileName);
-    await Database.session.delete({
-      where: {
-        sessionId,
-      },
-    });
+    try {
+      const sessionId = fixFileName(fileName);
+      await Database.session.delete({
+        where: {
+          sessionId,
+        },
+      });
+    } catch {}
   };
 
   const creds: AuthenticationCreds = (await readData("creds")) || initAuthCreds();
@@ -58,9 +62,7 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           await Promise.all(
             ids.map(async (id) => {
               const value = await readData(`${type}-${id}`);
-              type === "app-state-sync-key" && !!value
-                ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value))
-                : (data[id] = value);
+              type === "app-state-sync-key" && !!value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value);
             }),
           );
           return data;
@@ -86,3 +88,5 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
     },
   };
 };
+
+export default useMultiAuthState;

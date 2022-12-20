@@ -2,39 +2,37 @@ import os from "os";
 import i18n from "../../libs/international.libs";
 import config from "../../utils/config.utils";
 import { commands } from "../../utils/command.utils";
-import { sizeFormat, timeFormat } from "./../../utils/helper.utils";
+import { sizeFormat, timeFormat } from "../../utils/format.utils";
 import type { Command } from "../../types/command.types";
 
-export default {
+export default <Command>{
   aliases: ["help"],
   category: "general",
   desc: "Landing menu",
   maintenance: false,
   execute: async ({ aruga, message, prefix, user }) => {
-    const text = `┏━━「 𓆩 𝚮ɪᴅᴅᴇɴ 𝐅ɪɴᴅᴇʀ ⁣𓆪 」\n┃\n┃ ${i18n.translate(
-      "commands.general.menu.intro.one",
-      { PUSHNAME: message.pushname },
-      user.language,
-    )}\n┃ ${i18n.translate(
-      "commands.general.menu.intro.two",
-      {},
-      user.language,
-    )}\n┃\n┣━━━━━━━━━━━━━━━━━━\n┃\n┃ ${i18n.translate(
-      "commands.general.menu.detail.one",
-      { SZEE: `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` },
-      user.language,
-    )}\n┃ ${i18n.translate(
-      "commands.general.menu.detail.two",
-      { CMDS: commands.size },
-      user.language,
-    )}\n┃ ${i18n.translate(
-      "commands.general.menu.detail.three",
-      { UPTMS: timeFormat(process.uptime() * 1000) },
-      user.language,
-    )}\n┃ ${i18n.translate("commands.general.menu.detail.four", {}, user.language)}\n┃\n┗━━「 ꗥ${
-      config.bot.name || aruga.user.name
-    }ꗥ 」\n\n`;
-
+    const text =
+      "\n\n" +
+      "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
+      "┃\n" +
+      `┃ ${i18n.translate("commands.general.menu.intro.one", { PUSHNAME: message.pushname }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.intro.two", {}, user.language)}\n` +
+      "┃\n" +
+      "┣━━━━━━━━━━━━━━━━━━\n" +
+      "┃\n" +
+      `┃ ${i18n.translate("commands.general.menu.detail.one", { SZEE: `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.two", { CMDS: commands.size }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.three", { UPTMS: timeFormat(process.uptime() * 1000) }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.four", {}, user.language)}\n` +
+      "┃\n" +
+      "┣━━━━━━━━━━━━━━━━━━\n" +
+      "┃\n" +
+      `┃ ${i18n.translate("commands.general.menu.info.one", {}, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.info.two", {}, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.info.three", {}, user.language)} ${prefix}language\n` +
+      "┃\n" +
+      `┗━━「 ꗥ${config.bot.name}ꗥ 」` +
+      "\n\n";
     return await aruga.sendMessage(message.from, {
       text,
       footer: config.bot.footer,
@@ -66,4 +64,4 @@ export default {
       viewOnce: true,
     });
   },
-} as Command;
+};

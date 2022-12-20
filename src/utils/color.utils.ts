@@ -63,11 +63,11 @@ const color = {
         .replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => `${m ? m : "#"}` + r + r + g + g + b + b)
         .substring(1)
         .match(/.{2}/g)
-        .map((x) => parseInt(x, 16))
+        ?.map((x) => parseInt(x, 16))
         .join(";")}m${text}\x1B[39m`,
 
   /**
-   * @param {any} s:Hex<T> - Hex color
+   * @param {Hex<T>} s:Hex<T> - Hex color
    * @returns {HexColor} Just type converter
    */
   cfonts<T extends string>(s: Hex<T>): HexColor {

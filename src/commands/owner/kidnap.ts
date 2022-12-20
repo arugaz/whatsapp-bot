@@ -10,7 +10,7 @@ import type { Command } from "../../types/command.types";
  * your bot will probably be blocked/banned
  */
 
-export default {
+export default <Command>{
   category: "owner",
   desc: "Kidnap other group members to your group",
   example: "https://chat.whatsapp.com/code, change with target group url",
@@ -38,4 +38,4 @@ export default {
       return await aruga.groupParticipantsUpdate(message.from, participants, "add");
     } else return await message.reply("Invalid url", true);
   },
-} as Command;
+};

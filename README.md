@@ -8,9 +8,6 @@
 <a href="https://github.com/ArugaZ"><img title="Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
 </p>
 <p align="center">
-<a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/md"><img title="Rating" src="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/badge/md"></a>
-</p>
-<p align="center">
 <a href="https://github.com/arugaz/followers"><img title="Followers" src="https://img.shields.io/github/followers/arugaz?color=blue&style=flat-square"></a>
 <a href="https://github.com/arugaz/whatsapp-bot/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/arugaz/whatsapp-bot?color=red&style=flat-square"></a>
 <a href="https://github.com/arugaz/whatsapp-bot/network/members"><img title="Forks" src="https://img.shields.io/github/forks/arugaz/whatsapp-bot?color=red&style=flat-square"></a>
@@ -46,8 +43,22 @@ Clone this project
 Install the dependencies:
 
 ```bash
-> npm install
-> npx prisma db push
+> yarn install
+```
+
+### Setup
+
+Setup prisma and build project
+
+```bash
+> yarn prisma db push
+> yarn build
+```
+
+If you want generate more languages
+
+```bash
+> yarn generateLang
 ```
 
 ### Usage
@@ -55,8 +66,14 @@ Install the dependencies:
 Run the Whatsapp bot
 
 ```bash
-> npm run build
-> npm start
+> yarn start
+```
+
+With pm2
+
+```bash
+> yarn global add pm2
+> yarn pm2
 ```
 
 after running it you need to scan the qr

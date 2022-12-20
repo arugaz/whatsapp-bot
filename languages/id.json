@@ -15,22 +15,30 @@
   "commands": {
     "general": {
       "language": {
-        "changed": "Bahasa telah diubah menjadi {{LANGUAGE}}!"
+        "changed": "Bahasa telah diubah menjadi {{LANGUAGE}}!",
+        "title": "Dukungan bahasa",
+        "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
+        "buttonText": "DAFTAR BAHASA"
       },
       "menu": {
         "intro": {
           "one": "Halo {{PUSHNAME}} 👋️,",
-          "two": "Ada yang bisa saya bantu?"
+          "two": "Ada yang bisa aku bantu?"
         },
         "detail": {
           "one": "RAM server: {{SZEE}}",
-          "two": "Total komando: {{CMDS}}",
+          "two": "Total perintah: {{CMDS}}",
           "three": "Waktu aktif: {{UPTMS}}",
-          "four": "Bahasa Program: JavaScript dengan sintaks untuk tipe."
+          "four": "Bahasa Program: TypeScript"
+        },
+        "info": {
+          "one": "Kamu dapat mengganti bahasa",
+          "two": "di obrolan pribadi",
+          "three": "dengan mengetik {{COMMANDS}}"
         },
         "template": {
           "one": "⭐ Bintangi Bot di GitHub!",
-          "two": "Klik di sini untuk melihat daftar menunya!",
+          "two": "Klik di sini untuk melihat daftar menu!",
           "three": "Klik di sini untuk mengubah bahasa kamu!"
         }
       }

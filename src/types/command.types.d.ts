@@ -18,7 +18,7 @@ declare type Command = {
    * @example
    * category: 'general'
    */
-  category: "general" | "misc" | "owner";
+  category: "convert" | "general" | "misc" | "owner";
 
   /**
    * Set commands cooldown, every user will have their own cooldown

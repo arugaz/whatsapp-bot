@@ -5,7 +5,7 @@
   "main": "./dist/main.js",
   "private": true,
   "scripts": {
-    "build": "rimraf dist && tsc --build",
+    "build": "tsc --build",
     "dev": "rimraf dist && tsc-watch -p ./tsconfig.json --outDir ./dist --onSuccess \"node .\" --noClear",
     "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "generateLang": "node -r ./generateLang ./generateLang.arugaz",
@@ -23,24 +23,27 @@
   "homepage": "https://github.com/ArugaZ/whatsapp-bot",
   "license": "Apache-2.0",
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://gitlab.com/arugaz/Baileys",
+    "@adiwajshing/baileys": "git+https://github.com/arugaz/Baileys",
+    "@arugaz/ai2d": "^1.0.1-z.6",
     "@arugaz/formatter": "^1.0.0-z.1",
     "@arugaz/translator": "^1.0.0-z.4",
-    "@prisma/client": "^4.7.0",
+    "@prisma/client": "^4.7.1",
     "axios": "^0.24.0",
     "cfonts": "^3.1.1",
     "cheerio": "^1.0.0-rc.12",
     "croner": "^5.3.5",
+    "eventemitter3": "^4.0.4",
     "form-data": "^4.0.0",
+    "p-queue": "^6.6.2",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.30.5"
   },
   "devDependencies": {
-    "@types/node": "^18.11.10",
-    "prettier": "^2.8.0",
-    "prisma": "^4.7.0",
+    "@types/node": "^18.11.17",
+    "prettier": "^2.8.1",
+    "prisma": "^4.7.1",
     "rimraf": "^3.0.2",
-    "tsc-watch": "^5.0.3",
-    "typescript": "^4.9.3"
+    "tsc-watch": "^6.0.0",
+    "typescript": "^4.9.4"
   }
 }

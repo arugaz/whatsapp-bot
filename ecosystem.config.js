@@ -3,13 +3,10 @@ module.exports = {
     {
       name: "whatsappbot",
       script: "./dist/main.js",
-      env_production: {
+      env: {
         NODE_ENV: "production",
       },
-      env_development: {
-        NODE_ENV: "development",
-      },
-      // Restart after memory hit 1GB
+      // Restart after memory after hit 1GB
       max_memory_restart: "1000M",
       args: ["--color"],
     },

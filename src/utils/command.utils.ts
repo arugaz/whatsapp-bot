@@ -1,12 +1,22 @@
 import Collection from "../libs/collection.libs";
+import PQueue from "p-queue";
 import type { Command } from "../types/command.types";
 
 /**
- * Commands collection to store in memory storage
+ * Commands collection
+ * to store in memory
  */
 export const commands = new Collection<string, Command>();
 
 /**
- * Cooldown collection to store in memory storage
+ * Cooldown collection
+ * to store in memory
  */
-export const cooldowns = new Collection<string, number>();
+export const cooldowns = new Map<string, number>();
+
+/**
+ * Queue collection
+ * handle with max 15 commands at the same time
+ * with max timeout 30 seconds
+ */
+export const queues = new PQueue({ concurrency: 15, timeout: 30 * 1000, throwOnTimeout: true });

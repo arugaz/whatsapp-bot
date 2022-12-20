@@ -5,35 +5,39 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// For production you should use other provider like 
-// postgreSQL, mariaDB, mySQL, mongoDB or something similar, just read prisma docs
+// u can use other providers like, postgreSQL, mariaDB, mySQL or other, just read prisma docs
 datasource db {
-  provider = "sqlite"
-  url      = "file:../database/database.db?socket_timeout=15&pool_timeout=5"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 // storing session state information
 model Session {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String  @unique
   session   String?
 }
 
 model Group {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
   groupId String  @unique
-  name    String?
-  // additional
+  name    String
   ban     Boolean @default(false)
   mute    Boolean @default(false)
 }
 
 model User {
-  userId   String  @unique
-  name     String?
-  // default user language
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @unique
+  name     String
   language String
-  // user limit
   limit    Int
-  // for premium users
-  premium  Boolean @default(false)
+  role     Role   @default(basic)
   expire   Int?
+}
+
+enum Role {
+  basic
+  premium
+  vip
 }

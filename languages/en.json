@@ -15,7 +15,10 @@
   "commands": {
     "general": {
       "language": {
-        "changed": "Language has been changed to {{LANGUAGE}}!"
+        "changed": "Language has been changed to {{LANGUAGE}}!",
+        "title": "Language support",
+        "text": "You can change your language when interacting with me, here are some supported languages",
+        "buttonText": "LIST LANGUAGES"
       },
       "menu": {
         "intro": {
@@ -25,8 +28,13 @@
         "detail": {
           "one": "Server RAM: {{SZEE}}",
           "two": "Total command: {{CMDS}}",
-          "three": "Active time: {{UPTMS}}",
-          "four": "Programming Language: JavaScript with syntax for types."
+          "three": "Uptime: {{UPTMS}}",
+          "four": "Programming Language: TypeScript"
+        },
+        "info": {
+          "one": "You can change the language",
+          "two": "in private chats",
+          "three": "by typing {{COMMANDS}}"
         },
         "template": {
           "one": "⭐ Star Bots on GitHub!",

@@ -1,11 +1,11 @@
 import type { proto } from "@adiwajshing/baileys";
-import type { Command } from "../../types/command.types";
 import config from "../../utils/config.utils";
 import { commands } from "../../utils/command.utils";
-import { upperFormat } from "../../utils/helper.utils";
+import { upperFormat } from "../../utils/format.utils";
+import type { Command } from "../../types/command.types";
 
-export default {
-  aliases: ["listhelp", "menulist", "helplist", "info"],
+export default <Command>{
+  aliases: ["listhelp", "menulist", "helplist"],
   category: "general",
   desc: "To display the menu by list, and see how to use the menu",
   execute: async ({ aruga, message, prefix, args, isOwner }) => {
@@ -20,10 +20,7 @@ export default {
         `*Description :* ${cmd.desc || "-"}\n` +
         `*Usage :* ${prefix}${name} ${cmd.example || ``}\n` +
         `*Only in group chat :* ${cmd.groupOnly ? "Yes" : "No"}\n` +
-        (message.isGroupMsg
-          ? `*Only for group admins :* ${cmd.adminGroup ? "Yes" : "No"}\n` +
-            `*Only for group owner :* ${cmd.ownerGroup ? "Yes" : "No"}\n`
-          : "") +
+        (message.isGroupMsg ? `*Only for group admins :* ${cmd.adminGroup ? "Yes" : "No"}\n` + `*Only for group owner :* ${cmd.ownerGroup ? "Yes" : "No"}\n` : "") +
         `*Only in private chat :* ${cmd.privateOnly ? "Yes" : "No"}\n` +
         `*Only for premium :* ${cmd.premiumOnly ? "Yes" : "No"}\n` +
         `*Only for bot owner :* ${cmd.ownerOnly ? "Yes" : "No"}\n` +
@@ -35,7 +32,12 @@ export default {
 
     const sections = [] as proto.Message.ListMessage.ISection[];
     const categories = [
-      ...new Set(commands.map((v) => (!isOwner ? v.category !== "owner" && v.category : v.category)).sort()),
+      ...new Set(
+        commands
+          .map((v) => v.category)
+          .filter((v) => (!isOwner ? v !== "owner" : v))
+          .sort(),
+      ),
     ];
     for (const category of categories) {
       const cmd = commands.map((v) => v.category === category && v).filter((v) => v);
@@ -52,7 +54,7 @@ export default {
       });
     }
 
-    await aruga.sendMessage(message.isGroupMsg ? message.sender : message.from, {
+    return await aruga.sendMessage(message.from, {
       text: `Hi ${message.pushname}`,
       footer: config.bot.footer,
       title: "Hi there",
@@ -60,6 +62,6 @@ export default {
       sections,
       viewOnce: true,
     });
-    return message.isGroupMsg && (await message.reply("Check private chats", true));
+    // return message.isGroupMsg && (await message.reply("Check private chats", true));
   },
-} as Command;
+};

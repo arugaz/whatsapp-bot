@@ -1,5 +1,5 @@
 import { Cron } from "croner";
-import config from "./config.utils";
+import config from "../utils/config.utils";
 import Database from "../libs/database.libs";
 
 /**
