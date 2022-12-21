@@ -85,7 +85,8 @@ export const execute = async (aruga: Client, message: MessageSerialize) => {
       );
 
       aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps);
-    } catch {
+    } catch (e) {
+      console.error(e);
       aruga.log(`${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps);
     } finally {
       // after running the command add cooldown even if there is an error exclude general command, for every user except bot owners and premium users
@@ -137,7 +138,7 @@ export const serialize = async (aruga: Client, msg: WAMessage) => {
     ? msg.message.viewOnceMessageV2Extension?.message
     : msg.message;
 
-  const m = {} as MessageSerialize;
+  const m = <MessageSerialize>{};
   m.message = msg.message;
 
   m.key = msg.key;
@@ -172,10 +173,17 @@ export const serialize = async (aruga: Client, msg: WAMessage) => {
   m.expiration = m.message[m.type]?.contextInfo?.expiration || 0;
   m.timestamps = (typeof msg.messageTimestamp === "number" ? msg.messageTimestamp : msg.messageTimestamp.low ? msg.messageTimestamp.low : msg.messageTimestamp.high) * 1000 || Date.now();
   m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
-  m.reply = async (text, quoted = false): Promise<proto.WebMessageInfo> => await aruga.sendMessage(m.from, { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) }, { ...(quoted ? { quoted: { key: m.key, message: m.message } } : {}), ephemeralExpiration: m.expiration });
-  m.download = async (filename?: string): Promise<string | Buffer> => (!!filename ? await aruga.downloadAndSaveMediaMessage(m.message, filename) : await aruga.downloadMediaMessage(m.message));
+  m.reply = async (text, quoted) => await aruga.sendMessage(m.from, { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) }, { ...(quoted ? { quoted: { key: m.key, message: m.message } } : {}), ephemeralExpiration: m.expiration });
 
-  m.quoted = {} as MessageSerialize;
+  function download(): Promise<Buffer>;
+  function download(filepath: string): Promise<string>;
+  function download(filepath?: string): Promise<string | Buffer> {
+    if (filepath) return aruga.downloadAndSaveMediaMessage(m.message, filepath);
+    else return aruga.downloadMediaMessage(m.message);
+  }
+  m.download = download;
+
+  m.quoted = <MessageSerialize>{};
   m.quoted.message = m.message[m.type]?.contextInfo?.quotedMessage
     ? m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage
       ? m.message[m.type].contextInfo.quotedMessage.viewOnceMessage?.message
@@ -227,8 +235,15 @@ export const serialize = async (aruga: Client, msg: WAMessage) => {
         ? m.quoted.message.reactionMessage.text
         : "";
     m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
-    m.quoted.reply = async (text, quoted = false): Promise<proto.WebMessageInfo> => await aruga.sendMessage(m.from, { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) }, { ...(quoted ? { quoted: { key: m.quoted.key, message: m.quoted.message } } : {}), ephemeralExpiration: m.expiration });
-    m.quoted.download = async (filename?: string): Promise<string | Buffer> => (!!filename ? await aruga.downloadAndSaveMediaMessage(m.quoted.message, filename) : await aruga.downloadMediaMessage(m.quoted.message));
+    m.quoted.reply = async (text, quoted) => await aruga.sendMessage(m.from, { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) }, { ...(quoted ? { quoted: { key: m.quoted.key, message: m.quoted.message } } : {}), ephemeralExpiration: m.expiration });
+
+    function download(): Promise<Buffer>;
+    function download(filepath: string): Promise<string>;
+    function download(filepath?: string): Promise<Buffer | string> {
+      if (filepath) return aruga.downloadAndSaveMediaMessage(m.quoted.message, filepath);
+      else return aruga.downloadMediaMessage(m.quoted.message);
+    }
+    m.quoted.download = download;
   } else m.quoted = null;
 
   m.pushname = msg.pushName || "unknown";

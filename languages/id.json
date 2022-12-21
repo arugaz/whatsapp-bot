@@ -20,6 +20,26 @@
         "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
         "buttonText": "DAFTAR BAHASA"
       },
+      "listmenu": {
+        "info": {
+          "zero": "Tidak ada perintah yang ditemukan",
+          "one": "Alias",
+          "two": "Kategori",
+          "three": "Keterangan",
+          "four": "Penggunaan",
+          "five": "Hanya di obrolan grup",
+          "six": "Hanya untuk admin grup",
+          "seven": "Hanya untuk pemilik grup",
+          "eight": "Hanya di obrolan pribadi",
+          "nine": "Hanya untuk premium",
+          "ten": "Hanya untuk pemilik bot",
+          "eleven": "Menggunakan limit",
+          "twelve": "Cooldown",
+          "thirteen": "Pemeliharaan"
+        },
+        "title": "Daftar perintah",
+        "text": "Berikut ini adalah beberapa fitur yang terdapat dalam bot."
+      },
       "menu": {
         "intro": {
           "one": "Halo {{PUSHNAME}} 👋️,",

@@ -20,6 +20,26 @@
         "text": "You can change your language when interacting with me, here are some supported languages",
         "buttonText": "LIST LANGUAGES"
       },
+      "listmenu": {
+        "info": {
+          "zero": "No command found",
+          "one": "Alias",
+          "two": "Category",
+          "three": "Description",
+          "four": "Usage",
+          "five": "Only in group chat",
+          "six": "Only for group admins",
+          "seven": "Only for group owner",
+          "eight": "Only in private chat",
+          "nine": "Only for premium",
+          "ten": "Only for bot owner",
+          "eleven": "Using limit",
+          "twelve": "Cooldown",
+          "thirteen": "Maintenance"
+        },
+        "title": "List command",
+        "text": "The following are some of the features found in the bot."
+      },
       "menu": {
         "intro": {
           "one": "Hello {{PUSHNAME}} 👋️,",

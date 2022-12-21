@@ -3,20 +3,13 @@ import { Command } from "../../types/command.types";
 
 export default <Command>{
   category: "convert",
+  cd: 10,
   desc: "Generate a hyper-realistic photo an anime style!",
   execute: async ({ aruga, message }) => {
-    if (message.type.includes("image")) {
-      const imageBuffer = await message.download();
-      let imageCvBuffer = await AI2D(imageBuffer, {
-        crop: "SINGLE",
-      });
-      return await aruga.sendMessage(message.from, { image: imageCvBuffer });
-    } else if (message.quoted.type.includes("image")) {
-      const imageQBuffer = await message.quoted.download();
-      const imageQCvBuffer = await AI2D(imageQBuffer, {
-        crop: "SINGLE",
-      });
-      return await aruga.sendMessage(message.from, { image: imageQCvBuffer });
-    } else return;
+    if (message.type.includes("image") || message.quoted.type.includes("image")) {
+      const buffer = message.quoted ? await message.quoted.download() : await message.download();
+      const result = await AI2D(buffer, { crop: "SINGLE" });
+      return await aruga.sendMessage(message.from, { image: result });
+    }
   },
 };

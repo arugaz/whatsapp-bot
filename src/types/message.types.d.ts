@@ -1,5 +1,8 @@
 import type { proto, GroupMetadata } from "@adiwajshing/baileys";
 
+function download(): Promise<Buffer>;
+function download(filename: string): Promise<string>;
+
 declare type MessageSerialize = {
   /** Properties of a Message. */
   message: proto.IMessage;
@@ -48,10 +51,11 @@ declare type MessageSerialize = {
   reply: (text: string, quoted?: boolean) => Promise<proto.WebMessageInfo>;
 
   /**
-   * @param {string|null} filename?:string|null
+   * @param {string} filename?:string
    * @returns {Promise<string | Buffer>} if filename is empty return buffers otherwise return file path
    */
-  download: (filename?: string | null) => Promise<string | Buffer>;
+  download(): Promise<Buffer>;
+  download(filepath: string): Promise<string>;
 
   /** Properties of a Quoted Message. */
   quoted?: MessageSerialize;

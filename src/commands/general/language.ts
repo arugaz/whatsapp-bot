@@ -1,8 +1,8 @@
 import { readFile } from "fs/promises";
 import { join as pathJoin } from "path";
-import Database from "../../libs/database.libs";
 import i18n from "../../libs/international.libs";
 import config from "../../utils/config.utils";
+import { updateUser } from "../../utils/user.utils";
 import type { Command } from "../../types/command.types";
 
 export default <Command>{
@@ -18,7 +18,7 @@ export default <Command>{
 
     if (args.length >= 1 && !!listLanguages.find((value) => value.iso === args[0])) {
       const lang = listLanguages.find((value) => value.iso === args[0]);
-      const user = await Database.user.update({ where: { userId: message.sender }, data: { language: lang.iso } });
+      const user = await updateUser(message.sender, { language: lang.iso });
       return await message.reply(`${i18n.translate("commands.general.language.changed", { LANGUAGE: lang.lang }, user.language)}`, true);
     }
 
