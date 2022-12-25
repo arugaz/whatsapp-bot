@@ -29,7 +29,10 @@ ini semua gratis, jangan pelit ⭐️ ya :D
 
 ## Getting Started
 
-This project require NodeJS v14 or greater
+This project require
+
+- NodeJS v14 or greater [Install](https://nodejs.org/dist/)
+- Yarn Classic Stable [Install](https://classic.yarnpkg.com/lang/en/docs/install/#alternatives-stable)
 
 ### Install
 
