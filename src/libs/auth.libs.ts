@@ -3,8 +3,9 @@ import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys";
 import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys";
 import type { ArugaAuth } from "../types/auth.types";
 
-const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
-  const fixFileName = (fileName: string): string => fileName.replace(/\//g, "__")?.replace(/:/g, "-");
+export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
+  const fixFileName = (fileName: string): string =>
+    fileName.replace(/\//g, "__")?.replace(/:/g, "-");
 
   const writeData = async (data: unknown, fileName: string): Promise<void> => {
     try {
@@ -62,7 +63,9 @@ const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => 
           await Promise.all(
             ids.map(async (id) => {
               const value = await readData(`${type}-${id}`);
-              type === "app-state-sync-key" && !!value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value);
+              type === "app-state-sync-key" && !!value
+                ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value))
+                : (data[id] = value);
             }),
           );
           return data;
@@ -89,4 +92,76 @@ const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => 
   };
 };
 
-export default useMultiAuthState;
+export const useSingleAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
+  const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
+    "pre-key": "preKeys",
+    session: "sessions",
+    "sender-key": "senderKeys",
+    "app-state-sync-key": "appStateSyncKeys",
+    "app-state-sync-version": "appStateVersions",
+    "sender-key-memory": "senderKeyMemory",
+  };
+
+  let creds: AuthenticationCreds;
+  let keys: unknown = {};
+
+  const storedCreds = await Database.session.findFirst({
+    where: {
+      sessionId: "creds",
+    },
+  });
+  if (storedCreds && storedCreds.session) {
+    const parsedCreds = JSON.parse(storedCreds.session, BufferJSON.reviver);
+    creds = parsedCreds.creds as AuthenticationCreds;
+    keys = parsedCreds.keys;
+  } else {
+    if (!storedCreds)
+      await Database.session.create({
+        data: {
+          sessionId: "creds",
+        },
+      });
+    creds = initAuthCreds();
+  }
+
+  const saveState = async (): Promise<void> => {
+    const session = JSON.stringify({ creds, keys }, BufferJSON.replacer);
+    await Database.session.update({ where: { sessionId: "creds" }, data: { session } });
+  };
+
+  const clearState = async (): Promise<void> => {
+    await Database.session.delete({
+      where: { sessionId: "creds" },
+    });
+  };
+
+  return {
+    state: {
+      creds,
+      keys: {
+        get: (type, ids) => {
+          const key = KEY_MAP[type];
+          return ids.reduce((dict: unknown, id) => {
+            const value: unknown = keys[key]?.[id];
+            if (value) {
+              if (type === "app-state-sync-key")
+                dict[id] = proto.Message.AppStateSyncKeyData.fromObject(value);
+              dict[id] = value;
+            }
+            return dict;
+          }, {});
+        },
+        set: (data) => {
+          for (const _key in data) {
+            const key = KEY_MAP[_key as keyof SignalDataTypeMap];
+            keys[key] = keys[key] || {};
+            Object.assign(keys[key], data[_key]);
+          }
+          saveState();
+        },
+      },
+    },
+    saveState,
+    clearState,
+  };
+};

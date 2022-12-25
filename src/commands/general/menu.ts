@@ -1,7 +1,7 @@
 import os from "os";
 import i18n from "../../libs/international.libs";
 import config from "../../utils/config.utils";
-import { commands } from "../../utils/command.utils";
+import { command } from "../../utils/whatsapp.utils";
 import { sizeFormat, timeFormat } from "../../utils/format.utils";
 import type { Command } from "../../types/command.types";
 
@@ -15,27 +15,27 @@ export default <Command>{
       "\n\n" +
       "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
       "┃\n" +
-      `┃ ${i18n.translate("commands.general.menu.intro.one", { PUSHNAME: message.pushname }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.intro.one", { "@PUSHNAME": message.pushname }, user.language)}\n` +
       `┃ ${i18n.translate("commands.general.menu.intro.two", {}, user.language)}\n` +
       "┃\n" +
       "┣━━━━━━━━━━━━━━━━━━\n" +
       "┃\n" +
-      `┃ ${i18n.translate("commands.general.menu.detail.one", { SZEE: `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` }, user.language)}\n` +
-      `┃ ${i18n.translate("commands.general.menu.detail.two", { CMDS: commands.size }, user.language)}\n` +
-      `┃ ${i18n.translate("commands.general.menu.detail.three", { UPTMS: timeFormat(process.uptime() * 1000) }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.one", { "@SZEE": `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.two", { "@CMDS": command.commands.size }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.three", { "@UPTMS": timeFormat(process.uptime() * 1000) }, user.language)}\n` +
       `┃ ${i18n.translate("commands.general.menu.detail.four", {}, user.language)}\n` +
       "┃\n" +
       "┣━━━━━━━━━━━━━━━━━━\n" +
       "┃\n" +
       `┃ ${i18n.translate("commands.general.menu.info.one", {}, user.language)}\n` +
       `┃ ${i18n.translate("commands.general.menu.info.two", {}, user.language)}\n` +
-      `┃ ${i18n.translate("commands.general.menu.info.three", {}, user.language)} ${prefix}language\n` +
+      `┃ ${i18n.translate("commands.general.menu.info.three", { "@COMMANDS": `${prefix}language` }, user.language)}\n` +
       "┃\n" +
-      `┗━━「 ꗥ${config.bot.name}ꗥ 」` +
+      `┗━━「 ꗥ${config.name}ꗥ 」` +
       "\n\n";
     return await aruga.sendMessage(message.from, {
       text,
-      footer: config.bot.footer,
+      footer: config.footer,
       templateButtons: [
         {
           index: 1,

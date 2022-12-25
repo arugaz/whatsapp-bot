@@ -14,7 +14,7 @@ const job1 = Cron(
     await Database.user.updateMany({
       where: {
         userId: {
-          contains: "@s.whatsapp.net",
+          contains: "s.whatsapp.net",
         },
       },
       data: {

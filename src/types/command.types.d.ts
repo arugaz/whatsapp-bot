@@ -1,7 +1,7 @@
 import type { Group, User } from "@prisma/client";
 import type Client from "../libs/whatsapp.libs";
 import type { Aruga } from "../types/client.types";
-import type { MessageSerialize } from "../types/message.types";
+import type { MessageSerialize } from "./serialize.types";
 
 declare type Command = {
   /**
@@ -21,8 +21,8 @@ declare type Command = {
   category: "convert" | "general" | "misc" | "owner";
 
   /**
-   * Set commands cooldown, every user will have their own cooldown
-   * @type {boolean}
+   * Set commands cooldown, every user will have their own cooldown, every command also have their own cooldown
+   * @type {number}
    * @example
    * cd: 10 // default 3 seconds for every command, pls add cd atleast 1 sec for avoid spam message
    */

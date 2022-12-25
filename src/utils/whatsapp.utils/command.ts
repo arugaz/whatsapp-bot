@@ -1,6 +1,6 @@
-import PQueue from "p-queue";
-import Collection from "../libs/collection.libs";
-import type { Command } from "../types/command.types";
+import Queue from "@arugaz/queue";
+import Collection from "@arugaz/collection";
+import type { Command } from "../../types/command.types";
 
 /**
  * Commands collection
@@ -17,5 +17,6 @@ export const cooldowns = new Map<string, number>();
 /**
  * Queue collection
  * handle with max 15 commands at the same time
+ * with max timeout 30 seconds
  */
-export const queues = new PQueue({ concurrency: 15 });
+export const queues = new Queue({ concurrency: 15, timeout: 30 * 1000, throwOnTimeout: true });

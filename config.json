@@ -1,13 +1,18 @@
 {
-  "ownerNumber": ["62895324834879", "558188263143"],
-  "prefix": "!@#$%^&*().",
   "timeZone": "Asia/Jakarta",
   "language": "en",
-  "bot": {
-    "name": "𝐻ɪᴛᴏʀɪ 𝐺ᴏᴛᴏᴜ",
-    "footer": "arugaz/whatsapp-bot"
+  "ownerNumber": ["6285163651710", "558188263143"],
+  "readStatus": false,
+  "readMessage": false,
+  "antiCall": {
+    "reject": false,
+    "block": false,
+    "ban": false
   },
   "user": {
     "limit": 30
-  }
+  },
+  "prefix": "!#.",
+  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
+  "footer": "arugaz/whatsapp-bot"
 }

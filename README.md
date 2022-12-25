@@ -29,7 +29,7 @@ ini semua gratis, jangan pelit ⭐️ ya :D
 
 ## Getting Started
 
-This project require NodeJS
+This project require NodeJS v14 or greater
 
 ### Install
 
@@ -48,14 +48,25 @@ Install the dependencies:
 
 ### Setup
 
-Setup prisma and build project
+`Setup prisma`
+
+Create .env file based on .env.example, create mongo atlas account and copy the database link into .env file
 
 ```bash
 > yarn prisma db push
+```
+
+`Build a project`
+
+Why build into javascript? because when you use typescript transpile it will slow down the app.
+
+```bash
 > yarn build
 ```
 
-If you want generate more languages
+`If you want generate more languages`
+
+It will generate languages based on list [database/languages.json](database/languages.json). You can remove the languages you don't want to use (it will store the object into memory), except ([English (en)](languages/en.json) and [Indonesian (id)](languages/id.json)) because its already generate by default.
 
 ```bash
 > yarn generateLang
@@ -63,17 +74,22 @@ If you want generate more languages
 
 ### Usage
 
-Run the Whatsapp bot
+`Run the Whatsapp bot`
 
 ```bash
-> yarn start
+> yarn start # node .
 ```
 
-With pm2
+`With pm2`
+
+If you haven't installed pm2
 
 ```bash
-> yarn global add pm2
-> yarn pm2
+> yarn global add pm2 # install pm2 globally
+```
+
+```bash
+> yarn pm2 # pm2 start ecosystem.config.js
 ```
 
 after running it you need to scan the qr

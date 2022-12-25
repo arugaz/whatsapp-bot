@@ -1,8 +1,0 @@
-{
-  "bracketSameLine": true,
-  "endOfLine": "auto",
-  "printWidth": 333,
-  "semi": true,
-  "tabWidth": 2,
-  "trailingComma": "all"
-}

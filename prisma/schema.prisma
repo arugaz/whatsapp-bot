@@ -11,29 +11,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// storing session state information
+// Storing sessions information
 model Session {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String  @unique
   session   String?
 }
 
+// Storing group information
 model Group {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  groupId String  @unique
-  name    String
-  ban     Boolean @default(false)
-  mute    Boolean @default(false)
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  groupId      String      @unique // whatsapp group Jid
+  name         String // group name
+  notify       Boolean     @default(false) // notify group events
+  welcome      Boolean     @default(false) // notify welcome 
+  leave        Boolean     @default(false) // notify leave
+  ban          Boolean     @default(false) // is group ban
+  mute         Boolean     @default(false) // is group mute
+  antilink     Boolean     @default(false) // anti whatsapp group link
+  antibot      Boolean     @default(false) // anti other bot
+  antiviewonce Boolean     @default(false) // anti viewOnce message
+  anticountry  AntiCountry
 }
 
+type AntiCountry {
+  number String[] @default([]) // ["51", "60"] will kick member that has number that start from "51, 60"
+  active Boolean  @default(false)
+}
+
+model GroupMetadata {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  groupId      String         @unique // whatsapp group Jid
+  subject      String // group name
+  creation     Int // group creation date
+  owner        String // group owner Jid
+  desc         String // group name
+  restrict     Boolean        @default(false) // is group restricted
+  announce     Boolean        @default(false) // is group announce
+  participants Participants[] // group participant list
+}
+
+type Participants {
+  id    String
+  admin GroupAdmin?
+}
+
+enum GroupAdmin {
+  admin
+  superadmin
+}
+
+// Storing users session
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String @unique
-  name     String
-  language String
-  limit    Int
-  role     Role   @default(basic)
-  expire   Int?
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String  @unique
+  name     String // user name
+  language String // user languages
+  limit    Int // user limit
+  ban      Boolean @default(false)
+  role     Role    @default(basic)
+  expire   Int? // user expired if has role (premium, vip)
 }
 
 enum Role {

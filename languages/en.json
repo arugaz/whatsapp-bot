@@ -1,7 +1,12 @@
 {
   "handlers": {
+    "call": {
+      "reject": "Sorry, I can't take calls!",
+      "block": "Sorry, I will block you!",
+      "ban": "Sorry, I will ban you!"
+    },
     "message": {
-      "cooldown": "Command is on cooldown, please wait for {{SKNDS}}",
+      "cooldown": "Command is on cooldown, please wait for {{@SKNDS}}",
       "maintenance": "The command is under maintenance, you can't use it at the moment",
       "ownerOnly": "Commands can only be used by the bot owner, you cannot use them",
       "premiumOnly": "Commands can only be used by premium users, you cannot use them",
@@ -15,7 +20,7 @@
   "commands": {
     "general": {
       "language": {
-        "changed": "Language has been changed to {{LANGUAGE}}!",
+        "changed": "Language has been changed to {{@LANGUAGE}}!",
         "title": "Language support",
         "text": "You can change your language when interacting with me, here are some supported languages",
         "buttonText": "LIST LANGUAGES"
@@ -42,19 +47,19 @@
       },
       "menu": {
         "intro": {
-          "one": "Hello {{PUSHNAME}} 👋️,",
+          "one": "Hello {{@PUSHNAME}} 👋️,",
           "two": "How can I help you?"
         },
         "detail": {
-          "one": "Server RAM: {{SZEE}}",
-          "two": "Total command: {{CMDS}}",
-          "three": "Uptime: {{UPTMS}}",
+          "one": "Server RAM: {{@SZEE}}",
+          "two": "Total command: {{@CMDS}}",
+          "three": "Uptime: {{@UPTMS}}",
           "four": "Programming Language: TypeScript"
         },
         "info": {
           "one": "You can change the language",
           "two": "in private chats",
-          "three": "by typing {{COMMANDS}}"
+          "three": "by typing {{@COMMANDS}}"
         },
         "template": {
           "one": "⭐ Star Bots on GitHub!",

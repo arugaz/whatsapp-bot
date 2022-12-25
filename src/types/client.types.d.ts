@@ -6,6 +6,8 @@ declare type ArugaConfig = Partial<SocketConfig>;
 
 declare type ArugaEvents = {
   call: (call: WACallEvent) => void;
+  group: (message: WAMessage) => void;
+  "group.participant": (message: WAMessage) => void;
   message: (message: WAMessage) => void;
 };
 

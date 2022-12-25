@@ -1,7 +1,12 @@
 {
   "handlers": {
+    "call": {
+      "reject": "Maaf, aku tidak bisa menerima telepon!",
+      "block": "Maaf, aku akan memblokir kamu!",
+      "ban": "Maaf, aku akan ban kamu!"
+    },
     "message": {
-      "cooldown": "Perintah sedang cooldown, silahkan tunggu selama {{SKNDS}}",
+      "cooldown": "Perintah sedang cooldown, silahkan tunggu selama {{@SKNDS}}",
       "maintenance": "Perintah sedang dalam pemeliharaan, kamu tidak dapat menggunakannya saat ini",
       "ownerOnly": "Perintah hanya dapat digunakan oleh pemilik bot, kamu tidak dapat menggunakannya",
       "premiumOnly": "Perintah hanya dapat digunakan oleh pengguna premium, kamu tidak dapat menggunakannya",
@@ -15,7 +20,7 @@
   "commands": {
     "general": {
       "language": {
-        "changed": "Bahasa telah diubah menjadi {{LANGUAGE}}!",
+        "changed": "Bahasa telah diubah menjadi {{@LANGUAGE}}!",
         "title": "Dukungan bahasa",
         "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
         "buttonText": "DAFTAR BAHASA"
@@ -42,19 +47,19 @@
       },
       "menu": {
         "intro": {
-          "one": "Halo {{PUSHNAME}} 👋️,",
+          "one": "Halo {{@PUSHNAME}} 👋️,",
           "two": "Ada yang bisa aku bantu?"
         },
         "detail": {
-          "one": "RAM server: {{SZEE}}",
-          "two": "Total perintah: {{CMDS}}",
-          "three": "Waktu aktif: {{UPTMS}}",
+          "one": "RAM server: {{@SZEE}}",
+          "two": "Total perintah: {{@CMDS}}",
+          "three": "Waktu aktif: {{@UPTMS}}",
           "four": "Bahasa Program: TypeScript"
         },
         "info": {
           "one": "Kamu dapat mengganti bahasa",
           "two": "di obrolan pribadi",
-          "three": "dengan mengetik {{COMMANDS}}"
+          "three": "dengan mengetik {{@COMMANDS}}"
         },
         "template": {
           "one": "⭐ Bintangi Bot di GitHub!",

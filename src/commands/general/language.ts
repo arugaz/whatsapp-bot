@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { join as pathJoin } from "path";
 import i18n from "../../libs/international.libs";
 import config from "../../utils/config.utils";
-import { updateUser } from "../../utils/user.utils";
+import { database } from "../../utils/whatsapp.utils";
 import type { Command } from "../../types/command.types";
 
 export default <Command>{
@@ -18,14 +18,14 @@ export default <Command>{
 
     if (args.length >= 1 && !!listLanguages.find((value) => value.iso === args[0])) {
       const lang = listLanguages.find((value) => value.iso === args[0]);
-      const user = await updateUser(message.sender, { language: lang.iso });
-      return await message.reply(`${i18n.translate("commands.general.language.changed", { LANGUAGE: lang.lang }, user.language)}`, true);
+      const user = await database.updateUser(message.sender, { language: lang.iso });
+      return await message.reply(`${i18n.translate("commands.general.language.changed", { "@LANGUAGE": lang.lang }, user.language)}`, true);
     }
 
     return await aruga.sendMessage(message.from, {
       title: `*${i18n.translate("commands.general.language.title", {}, user.language)}*`,
       text: i18n.translate("commands.general.language.text", {}, user.language),
-      footer: config.bot.footer,
+      footer: config.footer,
       buttonText: i18n.translate("commands.general.language.buttonText", {}, user.language),
       sections: [
         {

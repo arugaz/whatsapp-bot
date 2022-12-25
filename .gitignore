@@ -11,8 +11,8 @@ yarn-error.log*
 .DS_Store
 *.pem
 *.tsbuildinfo
-test.js
-test.ts
+test*.js
+test*.ts
 .env
 
 # ignore some languages
@@ -25,5 +25,4 @@ temp/*
 !temp/.gitkeep
 
 #my private files
-toanime2.ts
 werewolf*.ts

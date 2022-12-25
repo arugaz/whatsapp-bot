@@ -12,7 +12,7 @@ export const i18nInit = (): void => {
   for (const file of files) {
     const filePath = pathJoin(__dirname, "..", "..", "languages", file);
     const isDirectory = lstatSync(filePath).isDirectory();
-    if (isDirectory || !filePath.endsWith(".json")) continue;
+    if (isDirectory || !file.endsWith(".json")) continue;
     i18n.set(file.split(".")[0], JSON.parse(readFileSync(filePath, "utf-8")));
   }
 };
