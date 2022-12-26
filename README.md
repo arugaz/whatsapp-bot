@@ -12,8 +12,8 @@
     <img title="Whatsapp-Bot-Multi-Device-Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
 </div>
 <div align="center">
-  <a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/md">
-    <img title="Whatsapp-Bot-Multi-Device-CodeFactor" src="https://img.shields.io/codefactor/grade/github/ArugaZ/whatsapp-bot/md?color=blue&label=CodeFactor&style=flat-square">
+  <a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/master">
+    <img title="Whatsapp-Bot-Multi-Device-CodeFactor" src="https://img.shields.io/codefactor/grade/github/ArugaZ/whatsapp-bot/master?color=blue&label=CodeFactor&style=flat-square">
   </a>
   <a href="https://github.com/arugaz/whatsapp-bot/issues">
     <img title="Whatsapp-Bot-Multi-Device-Issues" src="https://img.shields.io/bitbucket/issues-raw/arugaz/whatsapp-bot?label=Issues&color=%23ff9aa2&style=flat-square" />
@@ -42,19 +42,20 @@
 <div align="center">
   <details>
     <summary>🥟 Help me!</summary>
-    <a href="https://trakteer.id/arugaz">Trakteer</a>
+    <p><a href="https://ko-fi.com/arugaz">Ko-Fi</a></p>
+    <p><a href="https://trakteer.id/arugaz/tip">Trakteer</a></p>
   </details>
 
   <p>Don't forget to click ⭐️ and fork this repository</p>
 
-  <p>Chat me on <a href="//wa.me/6285163651710" target="_blank">Whatsapp</a></p>
+  <p>Need help? chat me on <a href="//wa.me/6285163651710" target="_blank">Whatsapp</a></p>
 </div>
 
 ## Getting Started
 
 This project require
 
-- NodeJS v14 or greater [Install](https://nodejs.org/dist/)
+- NodeJS v12 or greater [Install](https://nodejs.org/dist/)
 - Yarn Classic Stable [Install](https://classic.yarnpkg.com/lang/en/docs/install/#alternatives-stable)
 
 ## Install
@@ -76,7 +77,7 @@ yarn install
 
 `Setup prisma`
 
-Create .env file based on .env.example, create mongo atlas account and copy the database link into .env file
+Create .env file based on .env.example, copy the mongo database URL into .env file
 
 ```bash
 yarn prisma db push
@@ -125,6 +126,6 @@ after running it you need to scan the qr
 Join the community to build Whatsapp-Bot together!
 </h2>
 <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
-  <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=ArugaZ/whatsapp-bot" />
+  <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1" />
 </a>
 </div>
