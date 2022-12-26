@@ -62,7 +62,7 @@ This project require
 ### Clone this project
 
 ```bash
-git clone -b md https://github.com/ArugaZ/whatsapp-bot.git
+git clone https://github.com/ArugaZ/whatsapp-bot.git
 cd whatsapp-bot
 ```
 
