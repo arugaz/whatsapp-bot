@@ -1,6 +1,5 @@
 import type { Group, User } from "@prisma/client";
 import type Client from "../libs/whatsapp.libs";
-import type { Aruga } from "../types/client.types";
 import type { MessageSerialize } from "./serialize.types";
 
 declare type Command = {

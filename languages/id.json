@@ -22,7 +22,11 @@
       "language": {
         "changed": "Bahasa telah diubah menjadi {{@LANGUAGE}}!",
         "title": "Dukungan bahasa",
-        "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
+        "text": {
+          "one": "Kamu dapat mengubah bahasa",
+          "two": "saat berinteraksi dengan aku",
+          "three": "berikut beberapa bahasa yang didukung"
+        },
         "buttonText": "DAFTAR BAHASA"
       },
       "listmenu": {

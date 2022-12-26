@@ -22,6 +22,25 @@ declare type CallSerialize = {
   reply: (text: string) => Promise<proto.WebMessageInfo>;
 };
 
+declare type GroupSerialize = {
+  /** Group Jid */
+  from: string;
+
+  /** Message sender  */
+  sender: string;
+
+  /** Message */
+  body: string;
+
+  /** Message type  */
+  type: number;
+
+  /** Message Timestamps */
+  timestamps: number;
+};
+
+declare type GroupParticipantSerialize = GroupSerialize;
+
 declare type MessageSerialize = {
   /** Properties of a Message. */
   message: proto.IMessage;
@@ -87,13 +106,13 @@ declare type MessageSerialize = {
 
   // additional properties
   /** Message timestamps */
-  timestamps: number | undefined;
+  timestamps?: number;
   /** Chat expiration for ephemeral message */
-  expiration: number | undefined;
+  expiration?: number;
   /** Nickname for users */
-  pushname: string | undefined;
+  pushname?: string;
   /** Group Metadata */
-  groupMetadata: GroupMetadata | undefined;
+  groupMetadata?: GroupMetadata;
 
   /** Properties of a Quoted Message. */
   quoted?: MessageSerialize;

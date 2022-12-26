@@ -39,14 +39,14 @@ This project require
 Clone this project
 
 ```bash
-> git clone -b md https://github.com/ArugaZ/whatsapp-bot.git
-> cd whatsapp-bot
+git clone -b md https://github.com/ArugaZ/whatsapp-bot.git
+cd whatsapp-bot
 ```
 
 Install the dependencies:
 
 ```bash
-> yarn install
+yarn install
 ```
 
 ### Setup
@@ -56,15 +56,15 @@ Install the dependencies:
 Create .env file based on .env.example, create mongo atlas account and copy the database link into .env file
 
 ```bash
-> yarn prisma db push
+yarn prisma db push
 ```
 
 `Build a project`
 
-Why build into javascript? because when you use typescript transpile it will slow down the app.
+[Why build into javascript?](https://pm2.io/docs/runtime/integration/transpilers/)
 
 ```bash
-> yarn build
+yarn build
 ```
 
 `If you want generate more languages`
@@ -72,7 +72,7 @@ Why build into javascript? because when you use typescript transpile it will slo
 It will generate languages based on list [database/languages.json](database/languages.json). You can remove the languages you don't want to use (it will store the object into memory), except ([English (en)](languages/en.json) and [Indonesian (id)](languages/id.json)) because its already generate by default.
 
 ```bash
-> yarn generateLang
+yarn generateLang
 ```
 
 ### Usage
@@ -80,7 +80,7 @@ It will generate languages based on list [database/languages.json](database/lang
 `Run the Whatsapp bot`
 
 ```bash
-> yarn start # node .
+yarn start
 ```
 
 `With pm2`
@@ -88,11 +88,11 @@ It will generate languages based on list [database/languages.json](database/lang
 If you haven't installed pm2
 
 ```bash
-> yarn global add pm2 # install pm2 globally
+yarn global add pm2
 ```
 
 ```bash
-> yarn pm2 # pm2 start ecosystem.config.js
+yarn pm2
 ```
 
 after running it you need to scan the qr

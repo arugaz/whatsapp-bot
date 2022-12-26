@@ -4,8 +4,7 @@ import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/bailey
 import type { ArugaAuth } from "../types/auth.types";
 
 export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
-  const fixFileName = (fileName: string): string =>
-    fileName.replace(/\//g, "__")?.replace(/:/g, "-");
+  const fixFileName = (fileName: string): string => fileName.replace(/\//g, "__")?.replace(/:/g, "-");
 
   const writeData = async (data: unknown, fileName: string): Promise<void> => {
     try {
@@ -35,7 +34,7 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           sessionId,
         },
       });
-      return JSON.parse(data?.session!, BufferJSON.reviver) as AuthenticationCreds;
+      return JSON.parse(data?.session, BufferJSON.reviver) as AuthenticationCreds;
     } catch {
       return null;
     }
@@ -63,9 +62,7 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           await Promise.all(
             ids.map(async (id) => {
               const value = await readData(`${type}-${id}`);
-              type === "app-state-sync-key" && !!value
-                ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value))
-                : (data[id] = value);
+              type === "app-state-sync-key" && !!value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value);
             }),
           );
           return data;
@@ -144,8 +141,7 @@ export const useSingleAuthState = async (Database: PrismaClient): Promise<ArugaA
           return ids.reduce((dict: unknown, id) => {
             const value: unknown = keys[key]?.[id];
             if (value) {
-              if (type === "app-state-sync-key")
-                dict[id] = proto.Message.AppStateSyncKeyData.fromObject(value);
+              if (type === "app-state-sync-key") dict[id] = proto.Message.AppStateSyncKeyData.fromObject(value);
               dict[id] = value;
             }
             return dict;

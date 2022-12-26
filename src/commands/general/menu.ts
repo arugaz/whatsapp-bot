@@ -22,7 +22,7 @@ export default <Command>{
       "┃\n" +
       `┃ ${i18n.translate("commands.general.menu.detail.one", { "@SZEE": `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` }, user.language)}\n` +
       `┃ ${i18n.translate("commands.general.menu.detail.two", { "@CMDS": command.commands.size }, user.language)}\n` +
-      `┃ ${i18n.translate("commands.general.menu.detail.three", { "@UPTMS": timeFormat(process.uptime() * 1000) }, user.language)}\n` +
+      `┃ ${i18n.translate("commands.general.menu.detail.three", { "@UPTMS": timeFormat(os.uptime() * 1000) }, user.language)}\n` +
       `┃ ${i18n.translate("commands.general.menu.detail.four", {}, user.language)}\n` +
       "┃\n" +
       "┣━━━━━━━━━━━━━━━━━━\n" +

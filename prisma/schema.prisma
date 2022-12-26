@@ -11,7 +11,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Storing sessions information
+/// Storing sessions information
 model Session {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String  @unique
@@ -21,38 +21,61 @@ model Session {
 // Storing group information
 model Group {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  groupId      String      @unique // whatsapp group Jid
-  name         String // group name
-  notify       Boolean     @default(false) // notify group events
-  welcome      Boolean     @default(false) // notify welcome 
-  leave        Boolean     @default(false) // notify leave
-  ban          Boolean     @default(false) // is group ban
-  mute         Boolean     @default(false) // is group mute
-  antilink     Boolean     @default(false) // anti whatsapp group link
-  antibot      Boolean     @default(false) // anti other bot
-  antiviewonce Boolean     @default(false) // anti viewOnce message
+  /// Whatsapp group Jid
+  groupId      String      @unique
+  /// Group Name
+  name         String
+  /// Opts for notify all group events
+  notify       Boolean     @default(false)
+  /// Opts for notify welcome message
+  welcome      Boolean     @default(false)
+  /// Opts for notify leave message
+  leave        Boolean     @default(false)
+  /// Is Group got ban?
+  ban          Boolean     @default(false)
+  /// Is Group got mute?
+  mute         Boolean     @default(false)
+  /// Opts for anti whatsapp group link
+  antilink     Boolean     @default(false)
+  /// Opts for anti other whatsapp bot
+  antibot      Boolean     @default(false)
+  // Opts for anti viewonce message
+  antiviewonce Boolean     @default(false)
+  // Opts for anti other country, by country number code
   anticountry  AntiCountry
 }
 
 type AntiCountry {
-  number String[] @default([]) // ["51", "60"] will kick member that has number that start from "51, 60"
-  active Boolean  @default(false)
+  /// ["51", "60"] will kick member that has number that start from "51, 60" (List country number code)
+  number String[]
+  /// Its active?
+  active Boolean
 }
 
 model GroupMetadata {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  groupId      String         @unique // whatsapp group Jid
-  subject      String // group name
-  creation     Int // group creation date
-  owner        String // group owner Jid
-  desc         String // group name
-  restrict     Boolean        @default(false) // is group restricted
-  announce     Boolean        @default(false) // is group announce
-  participants Participants[] // group participant list
+  /// Whatsapp group Jid
+  groupId      String         @unique
+  /// Whatsapp group Name
+  subject      String
+  /// Whatsapp group creation date
+  creation     Int
+  /// Whatsapp group owner
+  owner        String
+  /// Whatsapp group description
+  desc         String
+  /// Whatsapp group restrict, only admin allow to edit group
+  restrict     Boolean        @default(false)
+  /// Whatsapp group restrict, only admin allow to send message 
+  announce     Boolean        @default(false)
+  /// Whatsapp group participant list
+  participants Participants[]
 }
 
 type Participants {
+  /// Participant Jid
   id    String
+  /// Is participant an admin?
   admin GroupAdmin?
 }
 
@@ -64,13 +87,20 @@ enum GroupAdmin {
 // Storing users session
 model User {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  /// Whatsapp user Jid
   userId   String  @unique
-  name     String // user name
-  language String // user languages
-  limit    Int // user limit
+  /// Whatsapp user Name
+  name     String
+  /// Whatsapp user language
+  language String
+  /// Whatsapp user limit
+  limit    Int
+  /// Is user got ban?
   ban      Boolean @default(false)
+  /// User role
   role     Role    @default(basic)
-  expire   Int? // user expired if has role (premium, vip)
+  /// User role expired if has role (premium, vip)
+  expire   Int     @default(0)
 }
 
 enum Role {

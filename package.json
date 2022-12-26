@@ -7,9 +7,10 @@
   "scripts": {
     "build": "tsc --build",
     "dev": "rimraf dist && tsc-watch --build ./tsconfig.json --onSuccess \"node --inspect ./dist/main.js\" --noClear",
-    "format": "prettier --write \"src/**/*.+(ts|json)\"",
     "generateLang": "node -r ./generateLang ./generateLang.arugaz",
+    "lint": "eslint . --ext .ts && prettier --write \"src/**/*.+(ts|json)\"",
     "pm2": "pm2 start ecosystem.config.js && pm2 logs whatsappbot --raw",
+    "postinstall": "yarn autoclean --force",
     "start": "node ./dist/main.js"
   },
   "author": "arugaz",
@@ -32,6 +33,7 @@
     "@arugaz/collection": "^1.0.0-z.1",
     "@arugaz/eventemitter": "^1.0.0-z.2",
     "@arugaz/formatter": "^1.0.0-z.1",
+    "@arugaz/node-cache": "^1.0.0-z.1",
     "@arugaz/queue": "^1.0.0-z.4",
     "@arugaz/translator": "^1.0.0-z.4",
     "@prisma/client": "^4.8.0",
@@ -40,11 +42,17 @@
     "cheerio": "^1.0.0-rc.12",
     "croner": "^5.3.5",
     "form-data": "^4.0.0",
-    "qrcode-terminal": "^0.12.0",
-    "sharp": "^0.30.5"
+    "qrcode-terminal": "^0.12.0"
   },
   "devDependencies": {
     "@types/node": "^14.18.35",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.47.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^24.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
     "prettier": "^2.8.1",
     "prisma": "^4.8.0",
     "rimraf": "^3.0.2",

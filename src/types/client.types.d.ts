@@ -2,7 +2,12 @@ import type { SocketConfig, WACallEvent, WAMessage, WASocket } from "@adiwajshin
 
 declare type Aruga = Partial<WASocket>;
 
-declare type ArugaConfig = Partial<SocketConfig>;
+declare type ArugaConfig = Partial<
+  Omit<
+    SocketConfig,
+    "auth" | "browser" | "patchMessageBeforeSending" | "printQRInTerminal" | "version"
+  >
+>;
 
 declare type ArugaEvents = {
   call: (call: WACallEvent) => void;

@@ -3,19 +3,7 @@ import { Boom } from "@hapi/boom";
 import { join as pathJoin } from "path";
 import EventEmitter from "@arugaz/eventemitter";
 import { writeFile as fsWriteFile } from "fs/promises";
-import makeWASocket, {
-  BaileysEventMap,
-  DisconnectReason,
-  downloadContentFromMessage,
-  fetchLatestBaileysVersion,
-  generateForwardMessageContent,
-  generateWAMessageFromContent,
-  jidDecode,
-  MessageGenerationOptionsFromContent,
-  proto,
-  toBuffer,
-  WAMessageStubType,
-} from "@adiwajshing/baileys";
+import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMessageStubType } from "@adiwajshing/baileys";
 
 // if you want to use single auth, import useSingleAuthState
 import { useMultiAuthState } from "../libs/auth.libs";
@@ -26,10 +14,7 @@ import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.type
 import type { MessageSerialize } from "../types/serialize.types";
 
 let first = !0;
-export default class Client
-  extends (EventEmitter as new () => ArugaEventEmitter)
-  implements Aruga
-{
+export default class Client extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
   #cfg: ArugaConfig;
   constructor(cfg: ArugaConfig) {
     super();
@@ -45,7 +30,14 @@ export default class Client
 
     const aruga = makeWASocket({
       ...this.#cfg,
-      auth: state,
+      auth: {
+        creds: state.creds,
+        keys: makeCacheableSignalKeyStore(state.keys, logger, {
+          stdTTL: 60 * 10, // 10 mins
+          useClones: false,
+        }),
+      },
+      browser: ["whatsapp-bot", "Safari", "3.0.0"],
       logger,
       patchMessageBeforeSending: (message) => {
         const requiresPatch = !!(message.buttonsMessage || message.listMessage);
@@ -68,20 +60,14 @@ export default class Client
       version,
     });
 
-    for (const method of Object.keys(aruga).filter((v) => v !== "ws" && v !== "ev"))
-      (this[method as keyof Client] = aruga[method as keyof Aruga]), delete aruga[method];
+    for (const method of Object.keys(aruga).filter((v) => v !== "ws" && v !== "ev")) (this[method as keyof Client] = aruga[method as keyof Aruga]), delete aruga[method];
 
     // connection
     aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
         this.log("Disconnected!", "error");
-        if (
-          reason === DisconnectReason.loggedOut ||
-          reason === DisconnectReason.multideviceMismatch ||
-          reason === DisconnectReason.badSession ||
-          reason === DisconnectReason.serviceUnavailable
-        ) {
+        if (reason === DisconnectReason.loggedOut || reason === DisconnectReason.multideviceMismatch || reason === DisconnectReason.badSession || reason === DisconnectReason.serviceUnavailable) {
           if (clearState) {
             this.log("Deleting session...", "error");
             await clearState();
@@ -122,40 +108,31 @@ export default class Client
     // call events
     aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]));
     // message event
-    aruga.ev.on(
-      "messages.upsert",
-      (msg) =>
-        msg.type === "notify" &&
-        msg.messages.length >= 1 &&
-        msg.messages[0].message &&
-        this.emit("message", msg.messages[0]),
-    );
+    aruga.ev.on("messages.upsert", (msg) => msg.messages.length >= 1 && !msg.messages[0]?.messageStubType && msg.messages[0]?.message && this.emit("message", msg.messages[0]));
     // group event
     aruga.ev.on(
       "messages.upsert",
       (msg) =>
-        msg.type === "append" &&
         msg.messages.length >= 1 &&
-        (msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_SUBJECT ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_ICON ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_INVITE_LINK ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_RESTRICT ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_ANNOUNCE ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_CHANGE_DESCRIPTION) &&
+        (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_SUBJECT ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_ICON ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_INVITE_LINK ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_DESCRIPTION ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_RESTRICT ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_ANNOUNCE) &&
         this.emit("group", msg.messages[0]),
     );
     // group participant event
     aruga.ev.on(
       "messages.upsert",
       (msg) =>
-        msg.type === "append" &&
         msg.messages.length >= 1 &&
-        (msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE ||
-          msg.messages[0].messageStubType === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) &&
+        (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE ||
+          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) &&
         this.emit("group.participant", msg.messages[0]),
     );
 
@@ -183,13 +160,7 @@ export default class Client
       "messaging-history.set",
       "presence.update",
     ]) {
-      if (
-        events !== "call" &&
-        events !== "connection.update" &&
-        events !== "creds.update" &&
-        events !== "messages.upsert"
-      )
-        aruga.ev.removeAllListeners(events as keyof BaileysEventMap);
+      if (events !== "call" && events !== "connection.update" && events !== "creds.update" && events !== "messages.upsert") aruga.ev.removeAllListeners(events as keyof BaileysEventMap);
     }
   }
 
@@ -225,65 +196,43 @@ export default class Client
    * @param {proto.IMessage} message:proto.IMessage
    * @param {string} filename=filename
    */
-  public async downloadAndSaveMediaMessage(
-    message: proto.IMessage,
-    filename: string,
-  ): Promise<string> {
+  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string): Promise<string> {
     const buffer = await this.downloadMediaMessage(message);
     const filePath = pathJoin(__dirname, "..", "..", "temp", filename);
     await fsWriteFile(filePath, buffer);
     return filePath;
   }
 
-  public async resendMessage(
-    jid: string,
-    message: MessageSerialize,
-    opts: Omit<MessageGenerationOptionsFromContent, "userJid">,
-  ) {
-    message.message = message.message?.viewOnceMessage
-      ? message.message.viewOnceMessage?.message
-      : message.message?.viewOnceMessageV2
-      ? message.message.viewOnceMessage?.message
-      : message.message?.viewOnceMessageV2Extension
-      ? message.message.viewOnceMessageV2Extension?.message
-      : message.message || message.message;
-    delete message.message[message.type].viewOnce;
+  public async resendMessage(jid: string, message: Partial<MessageSerialize>, opts: Omit<MessageGenerationOptionsFromContent, "userJid">) {
+    message.message = message.message?.viewOnceMessage ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2 ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2Extension ? message.message.viewOnceMessageV2Extension?.message : message.message;
+    delete message.message[message.type].viewOnce as unknown;
     const content = generateForwardMessageContent(proto.WebMessageInfo.fromObject(message), false);
 
     if (content.listMessage) content.listMessage.listType = 1;
-    const contentType = Object.keys(content).find(
-      (x) =>
-        x !== "senderKeyDistributionMessage" &&
-        x !== "messageContextInfo" &&
-        x !== "inviteLinkGroupTypeV2",
-    );
+    const contentType = Object.keys(content).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2");
     delete content[contentType].contextInfo.forwardingScore as unknown;
     delete content[contentType].contextInfo.isForwarded as unknown;
+    content[contentType].contextInfo = {
+      ...(message.message[message.type]?.contextInfo ? message.message[message.type].contextInfo : {}),
+      ...content[contentType].contextInfo,
+    };
 
     const waMessage = generateWAMessageFromContent(jid, content, {
       userJid: this.decodeJid(this.user.id),
       ...opts,
     });
 
-    if (waMessage?.message?.buttonsMessage?.contentText)
-      waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.EMPTY;
-    if (waMessage?.message?.buttonsMessage?.imageMessage)
-      waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.IMAGE;
-    if (waMessage?.message?.buttonsMessage?.videoMessage)
-      waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.VIDEO;
-    if (waMessage?.message?.buttonsMessage?.documentMessage)
-      waMessage.message.buttonsMessage.headerType =
-        proto.Message.ButtonsMessage.HeaderType.DOCUMENT;
-    if (waMessage?.message?.buttonsMessage?.locationMessage)
-      waMessage.message.buttonsMessage.headerType =
-        proto.Message.ButtonsMessage.HeaderType.LOCATION;
+    if (waMessage?.message?.buttonsMessage?.contentText) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.EMPTY;
+    if (waMessage?.message?.buttonsMessage?.imageMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.IMAGE;
+    if (waMessage?.message?.buttonsMessage?.videoMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.VIDEO;
+    if (waMessage?.message?.buttonsMessage?.documentMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.DOCUMENT;
+    if (waMessage?.message?.buttonsMessage?.locationMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.LOCATION;
 
+    process.nextTick(() => this.upsertMessage(waMessage, "append"));
     await this.relayMessage(jid, waMessage.message, {
       messageId: waMessage.key.id,
-      cachedGroupMetadata: async (jid) =>
-        await Database.groupMetadata.findUnique({ where: { groupId: jid } }),
+      cachedGroupMetadata: async (jid) => await Database.groupMetadata.findUnique({ where: { groupId: jid } }),
     });
-    process.nextTick(() => this.upsertMessage(waMessage, "append"));
     return waMessage;
   }
 
@@ -293,21 +242,9 @@ export default class Client
    * @param {Number} date?:Date.now()
    * @returns {void} print logs
    */
-  public log(
-    text: string,
-    type: "error" | "warning" | "info" | "success" = "success",
-    date?: number,
-  ): void {
+  public log(text: string, type: "error" | "warning" | "info" | "success" = "success", date?: number): void {
     console.log(
-      color[
-        type === "error"
-          ? "red"
-          : type === "warning"
-          ? "yellow"
-          : type === "info"
-          ? "blue"
-          : "green"
-      ](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`),
+      color[type === "error" ? "red" : type === "warning" ? "yellow" : type === "info" ? "blue" : "green"](`[ ${type === "error" ? "X" : type === "warning" ? "!" : "V"} ]`),
       color.hex("#ff7f00" as HexColor)(
         `${new Date(!date ? Date.now() : date).toLocaleString("en-US", {
           timeZone: config.timeZone,
@@ -317,6 +254,7 @@ export default class Client
     );
   }
 
+  /** I will comment out the functions I dont use */
   public getOrderDetails: Aruga["getOrderDetails"];
   public getCatalog: Aruga["getCatalog"];
   public getCollections: Aruga["getCollections"];
@@ -368,6 +306,8 @@ export default class Client
   public resyncAppState: Aruga["resyncAppState"];
   public chatModify: Aruga["chatModify"];
   public type: Aruga["type"];
+  // public ws: Aruga["ws"];
+  // public ev: Aruga["ev"];
   public authState: Aruga["authState"];
   public user: Aruga["user"];
   public generateMessageTag: Aruga["generateMessageTag"];

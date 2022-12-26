@@ -42,18 +42,18 @@ export const execute = async (aruga: Client, message: MessageSerialize): Promise
   // ignore group that got banned by bot owner
   if (message.isGroupMsg && group.ban && !isOwner) return;
 
+  // parse group members
+  const groupAdmins: Participants[] = message.isGroupMsg && message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []);
+  const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender);
+  const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender);
+  const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === aruga.decodeJid(aruga.user.id));
+
   if (command) {
     // avoid spam messages
     if (cooldowns.has(message.sender + cmd)) {
       aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "warning", message.timestamps);
       return await message.reply(i18n.translate("handlers.message.cooldown", { "@SKNDS": timeFormat((command.cd || 3) - (Date.now() - cooldowns.get(message.sender + cmd))) }, user.language), true);
     }
-
-    // parse group members
-    const groupAdmins: Participants[] = message.isGroupMsg && message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, []);
-    const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender);
-    const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender);
-    const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === aruga.decodeJid(aruga.user.id));
 
     // ignore group that got muted by group admin, and only allow group admin to use command for adminGroup
     if (message.isGroupMsg && group.mute && !isOwner && !command.adminGroup && !isGroupAdmin) return;
@@ -122,7 +122,7 @@ export const execute = async (aruga: Client, message: MessageSerialize): Promise
    * >> return 123 // bot will reply 123
    */
   if (message.body.startsWith(">>") && isOwner) {
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       try {
         resolve(eval("(async() => {" + arg + "})()"));
       } catch (err: unknown) {
@@ -135,14 +135,18 @@ export const execute = async (aruga: Client, message: MessageSerialize): Promise
   }
 };
 
-export const registerCommand = async (pathname: string = "commands") => {
+export const registerCommand = async (pathname = "commands") => {
   const files = fs.readdirSync(path.join(__dirname, "..", pathname));
   for (const file of files) {
     const filePath = path.join(__dirname, "..", pathname, file);
     const isDirectory = fs.lstatSync(filePath).isDirectory();
     if (isDirectory) await registerCommand(pathname + path.sep + file);
     const baseFilename = path.basename(file, file.includes(".ts") ? ".ts" : ".js").toLowerCase();
-    if (!isDirectory && !commands.has(baseFilename)) commands.set(baseFilename, (await import(filePath)).default || (await import(filePath)));
+    if (!isDirectory && !commands.has(baseFilename)) {
+      const importFile = await import(filePath);
+      commands.set(baseFilename, importFile?.default || importFile);
+    }
   }
   commands.sort();
+  return commands.size;
 };

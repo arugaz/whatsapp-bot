@@ -1,36 +1,21 @@
 import type { Group } from "@prisma/client";
+import NodeCache from "@arugaz/node-cache";
 import Database from "../../../libs/database.libs";
 
-const group = new Map<string, { metadata: Group; timeout: NodeJS.Timeout }>();
-
-// Group
-const getGroupFromCache = (groupId: string) => {
-  const groupData = group.get(groupId);
-  return groupData.metadata;
-};
-
-const addGroupToCache = (groupId: string, groupData: Group) => {
-  group.set(groupId, {
-    metadata: groupData,
-    timeout: setTimeout(() => group.delete(groupId), 1 * 60 * 60 * 1000), // 1 hours
-  });
-};
-
-const deleteGroupFromCache = (groupId: string) => {
-  const groupData = group.get(groupId);
-  clearTimeout(groupData.timeout);
-  group.delete(groupId);
-};
+const group = new NodeCache({
+  stdTTL: 60 * 10, // 10 mins
+  useClones: false,
+});
 
 export const getGroup = async (groupId: string) => {
   try {
-    if (group.has(groupId)) return getGroupFromCache(groupId);
+    if (group.has(groupId)) return group.get(groupId) as Group;
 
     const groupData = await Database.group.findUnique({
       where: { groupId },
     });
 
-    if (groupData) addGroupToCache(groupId, groupData);
+    if (groupData) group.set(groupId, groupData);
 
     return groupData;
   } catch {
@@ -38,18 +23,20 @@ export const getGroup = async (groupId: string) => {
   }
 };
 
-export const createGroup = async (
-  groupId: string,
-  metadata: Partial<Omit<Group, "id" | "groupId">>,
-) => {
+export const createGroup = async (groupId: string, metadata: Partial<Omit<Group, "id" | "groupId">>) => {
   try {
-    if (group.has(groupId)) return getGroupFromCache(groupId);
+    if (group.has(groupId)) return group.get(groupId) as Group;
 
     const groupData = await Database.group.create({
-      data: { groupId, name: metadata.name ?? "", anticountry: { number: [], active: false } },
+      data: {
+        groupId,
+        ...metadata,
+        name: metadata.name ?? "",
+        anticountry: { number: [], active: false },
+      },
     });
 
-    if (groupData) addGroupToCache(groupId, groupData);
+    if (groupData) group.set(groupId, groupData);
 
     return groupData;
   } catch {
@@ -57,19 +44,14 @@ export const createGroup = async (
   }
 };
 
-export const updateGroup = async (
-  groupId: string,
-  metadata: Partial<Omit<Group, "id" | "groupId">>,
-) => {
+export const updateGroup = async (groupId: string, metadata: Partial<Omit<Group, "id" | "groupId">>) => {
   try {
-    if (group.has(groupId)) deleteGroupFromCache(groupId);
-
     const groupData = await Database.group.update({
       where: { groupId },
       data: { ...metadata },
     });
 
-    if (groupData) addGroupToCache(groupId, groupData);
+    if (groupData) group.set(groupId, groupData);
 
     return groupData;
   } catch {

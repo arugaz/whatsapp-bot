@@ -1,15 +1,15 @@
 {
   "bracketSameLine": true,
   "endOfLine": "auto",
-  "printWidth": 99,
+  "printWidth": 333,
   "semi": true,
   "tabWidth": 2,
   "trailingComma": "all",
   "overrides": [
     {
-      "files": ["src/commands/**/*.ts", "src/handlers/**/*.ts"],
+      "files": ["src/types/**/*.ts", "src/commands/**/*.ts"],
       "options": {
-        "printWidth": 333
+        "printWidth": 99
       }
     }
   ]

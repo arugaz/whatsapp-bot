@@ -1,36 +1,22 @@
 import type { User } from "@prisma/client";
+import NodeCache from "@arugaz/node-cache";
 import Database from "../../../libs/database.libs";
 import config from "../../config.utils";
 
-const user = new Map<string, { metadata: User; timeout: NodeJS.Timeout }>();
-
-const getUserFromCache = (userId: string) => {
-  const userData = user.get(userId);
-  return userData.metadata;
-};
-
-const addUserToCache = (userId: string, userData: User) => {
-  user.set(userId, {
-    metadata: userData,
-    timeout: setTimeout(() => user.delete(userId), 1 * 60 * 60 * 1000), // 1 hours
-  });
-};
-
-const deleteUserFromCache = (userId: string) => {
-  const userData = user.get(userId);
-  clearTimeout(userData.timeout);
-  user.delete(userId);
-};
+const user = new NodeCache({
+  stdTTL: 60 * 10, // 10 mins
+  useClones: false,
+});
 
 export const getUser = async (userId: string) => {
   try {
-    if (user.has(userId)) return getUserFromCache(userId);
+    if (user.has(userId)) return user.get(userId) as User;
 
     const userData = await Database.user.findUnique({
       where: { userId },
     });
 
-    if (userData) addUserToCache(userId, userData);
+    if (userData) user.set(userId, userData);
 
     return userData;
   } catch {
@@ -38,12 +24,9 @@ export const getUser = async (userId: string) => {
   }
 };
 
-export const createUser = async (
-  userId: string,
-  metadata: Partial<Omit<User, "id" | "userId">>,
-) => {
+export const createUser = async (userId: string, metadata: Partial<Omit<User, "id" | "userId">>) => {
   try {
-    if (user.has(userId)) return getUserFromCache(userId);
+    if (user.has(userId)) return user.get(userId) as User;
 
     const userData = await Database.user.create({
       data: {
@@ -55,7 +38,7 @@ export const createUser = async (
       },
     });
 
-    if (userData) addUserToCache(userId, userData);
+    if (userData) user.set(userId, userData);
 
     return userData;
   } catch {
@@ -63,19 +46,14 @@ export const createUser = async (
   }
 };
 
-export const updateUser = async (
-  userId: string,
-  userInput: Partial<Omit<User, "id" | "userId">>,
-) => {
+export const updateUser = async (userId: string, userInput: Partial<Omit<User, "id" | "userId">>) => {
   try {
-    if (user.has(userId)) deleteUserFromCache(userId);
-
     const userData = await Database.user.update({
       where: { userId },
       data: { ...userInput },
     });
 
-    if (userData) addUserToCache(userId, userData);
+    if (userData) user.set(userId, userData);
 
     return userData;
   } catch {

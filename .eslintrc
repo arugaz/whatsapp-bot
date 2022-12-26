@@ -1,0 +1,18 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "project": ["./tsconfig.json"]
+  },
+  "rules": {
+    "no-empty": [2, { "allowEmptyCatch": true }],
+    "no-inner-declarations": [0, "both"],
+    "@typescript-eslint/no-unused-vars": 2,
+    "@typescript-eslint/consistent-type-definitions": [2, "type"]
+  },
+  "env": {
+    "node": true
+  }
+}

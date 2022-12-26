@@ -3,9 +3,7 @@ import Client from "../../../libs/whatsapp.libs";
 import { MessageSerialize } from "../../../types/serialize.types";
 import { getGroupMetadata, createGroupMetadata } from "../../whatsapp.utils/database";
 
-/** Message Serialize */
-export const message = async (aruga: Client, msg: WAMessage) => {
-  // message
+export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSerialize> => {
   const m = <MessageSerialize>{};
   m.message = msg.message?.viewOnceMessage
     ? msg.message.viewOnceMessage?.message
@@ -23,27 +21,13 @@ export const message = async (aruga: Client, msg: WAMessage) => {
   if (m.message) {
     m.key = msg.key;
     m.id = m.key.id;
-    m.isBotMsg =
-      (m.id.startsWith("ARUGAZ") && m.id.length === 18) ||
-      (m.id.startsWith("BAE5") && m.id.length === 16);
+    m.isBotMsg = (m.id.startsWith("ARUGAZ") && m.id.length === 18) || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12);
     m.isGroupMsg = m.key.remoteJid.endsWith("g.us");
     m.from = aruga.decodeJid(m.key.remoteJid);
     m.fromMe = m.key.fromMe;
-    m.type = Object.keys(m.message).find(
-      (x) =>
-        x !== "senderKeyDistributionMessage" &&
-        x !== "messageContextInfo" &&
-        x !== "inviteLinkGroupTypeV2",
-    );
-    m.sender = aruga.decodeJid(
-      m.fromMe
-        ? aruga.user.id
-        : m.isGroupMsg || m.from === "status@broadcast"
-        ? m.key.participant || msg.participant
-        : m.from,
-    );
-    m.key.participant =
-      !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant;
+    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2");
+    m.sender = aruga.decodeJid(m.fromMe ? aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from);
+    m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant;
     m.body =
       m.message.conversation && m.type === "conversation"
         ? m.message.conversation
@@ -65,12 +49,9 @@ export const message = async (aruga: Client, msg: WAMessage) => {
         ? m.message.reactionMessage.text
         : "";
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || [];
-    m.viewOnce =
-      !!msg.message?.viewOnceMessage ||
-      !!msg.message?.viewOnceMessageV2 ||
-      !!msg.message?.viewOnceMessageV2Extension;
-    m.reply = async (text, quoted) =>
-      await aruga.sendMessage(
+    m.viewOnce = !!msg.message?.viewOnceMessage || !!msg.message?.viewOnceMessageV2 || !!msg.message?.viewOnceMessageV2Extension;
+    function reply(text: string, quoted = false) {
+      return aruga.sendMessage(
         m.from,
         { text, ...(m.isGroupMsg ? { mentions: [m.sender] } : {}) },
         {
@@ -78,8 +59,12 @@ export const message = async (aruga: Client, msg: WAMessage) => {
           ephemeralExpiration: m.expiration,
         },
       );
-    m.resend = async (jid = m.from, opts) => await aruga.resendMessage(jid, m, opts);
-
+    }
+    m.reply = reply;
+    function resend(jid = m.from, opts: unknown) {
+      return aruga.resendMessage(jid, m, opts);
+    }
+    m.resend = resend;
     function download(): Promise<Buffer>;
     function download(filepath: string): Promise<string>;
     function download(filepath?: string): Promise<string | Buffer> {
@@ -89,22 +74,11 @@ export const message = async (aruga: Client, msg: WAMessage) => {
     m.download = download;
   }
 
-  // additional
-  m.timestamps =
-    (typeof msg.messageTimestamp === "number"
-      ? msg.messageTimestamp
-      : msg.messageTimestamp.low
-      ? msg.messageTimestamp.low
-      : msg.messageTimestamp.high) * 1000 || Date.now();
+  m.timestamps = (typeof msg.messageTimestamp === "number" ? msg.messageTimestamp : msg.messageTimestamp.low ? msg.messageTimestamp.low : msg.messageTimestamp.high) * 1000 || Date.now();
   m.expiration = m.message[m.type]?.contextInfo?.expiration || 0;
   m.pushname = msg.pushName || "unknown";
-  m.groupMetadata =
-    m.type !== "stickerMessage" &&
-    m.isGroupMsg &&
-    ((await getGroupMetadata(m.from)) ??
-      (await createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)));
+  m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && ((await getGroupMetadata(m.from)) ?? (await createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)));
 
-  // quoted message
   m.quoted = <MessageSerialize>{};
   m.quoted.message = m.message[m.type]?.contextInfo?.quotedMessage
     ? m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage
@@ -125,24 +99,15 @@ export const message = async (aruga: Client, msg: WAMessage) => {
     m.quoted.key = {
       participant: aruga.decodeJid(m.message[m.type]?.contextInfo?.participant),
       remoteJid: m?.message[m.type]?.contextInfo?.remoteJid || m.from || m.sender,
-      fromMe:
-        aruga.decodeJid(m.message[m.type].contextInfo.participant) ===
-        aruga.decodeJid(aruga.user.id),
+      fromMe: aruga.decodeJid(m.message[m.type].contextInfo.participant) === aruga.decodeJid(aruga.user.id),
       id: m.message[m.type].contextInfo.stanzaId,
     };
     m.quoted.id = m.quoted.key.id;
-    m.quoted.isBotMsg =
-      (m.quoted.id.startsWith("ARUGAZ") && m.quoted.id.length === 18) ||
-      (m.quoted.id.startsWith("BAE5") && m.quoted.id.length === 16);
+    m.quoted.isBotMsg = (m.quoted.id.startsWith("ARUGAZ") && m.quoted.id.length === 18) || (m.quoted.id.startsWith("BAE5") && m.quoted.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12);
     m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith("g.us");
     m.quoted.from = aruga.decodeJid(m.quoted.key.remoteJid);
     m.quoted.fromMe = m.quoted.key.fromMe;
-    m.quoted.type = Object.keys(m.quoted.message).find(
-      (x) =>
-        x !== "senderKeyDistributionMessage" &&
-        x !== "messageContextInfo" &&
-        x !== "inviteLinkGroupTypeV2",
-    );
+    m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2");
     m.quoted.sender = m.quoted.key.participant;
     m.quoted.body =
       m.quoted.message.conversation && m.quoted.type === "conversation"
@@ -159,19 +124,15 @@ export const message = async (aruga: Client, msg: WAMessage) => {
         ? m.quoted.message.buttonsResponseMessage.selectedButtonId
         : m.quoted.message.listResponseMessage && m.quoted.type === "listResponseMessage"
         ? m.quoted.message.listResponseMessage.singleSelectReply.selectedRowId
-        : m.quoted.message.templateButtonReplyMessage &&
-          m.quoted.type === "templateButtonReplyMessage"
+        : m.quoted.message.templateButtonReplyMessage && m.quoted.type === "templateButtonReplyMessage"
         ? m.quoted.message.templateButtonReplyMessage.selectedId
         : m.quoted.message.reactionMessage && m.quoted.type === "reactionMessage"
         ? m.quoted.message.reactionMessage.text
         : "";
     m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || [];
-    m.quoted.viewOnce =
-      !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage ||
-      !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2 ||
-      !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2Extension;
-    m.quoted.reply = async (text, quoted) =>
-      await aruga.sendMessage(
+    m.quoted.viewOnce = !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage || !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2 || !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2Extension;
+    function reply(text: string, quoted = false) {
+      return aruga.sendMessage(
         m.from,
         { text, ...(m.quoted.isGroupMsg ? { mentions: [m.quoted.sender] } : {}) },
         {
@@ -179,8 +140,12 @@ export const message = async (aruga: Client, msg: WAMessage) => {
           ephemeralExpiration: m.expiration,
         },
       );
-    m.quoted.resend = async (jid = m.from, opts) => await aruga.resendMessage(jid, m.quoted, opts);
-
+    }
+    m.quoted.reply = reply;
+    function resend(jid = m.from, opts: unknown) {
+      return aruga.resendMessage(jid, m.quoted, opts);
+    }
+    m.quoted.resend = resend;
     function download(): Promise<Buffer>;
     function download(filepath: string): Promise<string>;
     function download(filepath?: string): Promise<Buffer | string> {

@@ -1,8 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 
-export const generateTEMP = () =>
-  path.join(__dirname, "..", "..", "temp", (Math.random() * 36 * Date.now()).toString(36));
+export const generateTEMP = () => path.join(__dirname, "..", "..", "temp", (Math.random() * 36 * Date.now()).toString(36));
 
 /**
  *  Temporary directory
