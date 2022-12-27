@@ -1,6 +1,8 @@
-import { readFileSync } from "fs";
-import { join } from "path";
+import fs from "fs"
+import { join } from "path"
 
-const config: Config = JSON.parse(readFileSync(join(__dirname, "..", "..", "config.json"), "utf-8"));
+const configPath = join(__dirname, "..", "..", "config.json")
 
-export default config;
+const config: Config = JSON.parse(fs.readFileSync(configPath, "utf-8"))
+
+export default config

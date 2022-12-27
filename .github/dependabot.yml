@@ -1,15 +1,15 @@
 version: 2
 updates:
-- package-ecosystem: "npm"
-  directory: "/"
-  schedule:
-    interval: "daily"
-    time: "22:00"
-  allow:
-    - dependency-type: "production"
-  ignore:
-    - dependency-name: "axios"
-      versions: ["0.x", "1.x"]
-    - dependency-name: "jimp"
-      versions: ["0.x", "1.x"]
-  open-pull-requests-limit: 10
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "22:00"
+    allow:
+      - dependency-type: "production"
+    ignore:
+      - dependency-name: "axios"
+        versions: ["0.x", "1.x"]
+      - dependency-name: "jimp"
+        versions: ["0.x", "1.x"]
+    open-pull-requests-limit: 10

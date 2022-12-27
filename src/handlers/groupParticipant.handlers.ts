@@ -1,37 +1,37 @@
-import { WAMessageStubType } from "@adiwajshing/baileys";
-import Client from "../libs/whatsapp.libs";
-import Database from "../libs/database.libs";
-import { GroupParticipantSerialize } from "../types/serialize.types";
-import color from "../utils/color.utils";
+import { WAMessageStubType } from "@adiwajshing/baileys"
+import WAClient from "../libs/whatsapp.libs"
+import color from "../utils/color.utils"
+import { database } from "../utils/whatsapp.utils"
+import type { GroupParticipantSerialize } from "../types/serialize.types"
 
-export const execute = async (aruga: Client, message: GroupParticipantSerialize): Promise<unknown> => {
-  const group = await Database.group.findUnique({ where: { groupId: message.from } });
-  const botNumber = aruga.decodeJid(aruga.user.id);
-  const isBot = message.body === botNumber || message.sender === botNumber;
+export const execute = async (aruga: WAClient, message: GroupParticipantSerialize): Promise<unknown> => {
+  const group = await database.getGroup(message.from)
+  const botNumber = aruga.decodeJid(aruga.user.id)
+  const isBot = message.body === botNumber || message.sender === botNumber
 
   try {
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
-      console.log(isBot);
+      console.log(isBot)
     }
 
     return aruga.log(
@@ -50,11 +50,11 @@ export const execute = async (aruga: Client, message: GroupParticipantSerialize)
             : message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
             ? "memberLeave"
             : ""
-        } [${message.type}]`,
+        } [${message.type}]`
       )} from ${color.blue(message.sender.replace(/\D+/g, "") ?? "unknown")} in ${color.blue(group.name || "unknown")}`.trim(),
       "success",
-      message.timestamps,
-    );
+      message.timestamps
+    )
   } catch {
     return aruga.log(
       `${color.red("[EVNT]")} ${color.cyan(
@@ -72,10 +72,10 @@ export const execute = async (aruga: Client, message: GroupParticipantSerialize)
             : message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
             ? "memberLeave"
             : ""
-        } [${message.type}]`,
+        } [${message.type}]`
       )} from ${color.blue(message.sender.replace(/\D+/g, "") ?? "unknown")} in ${color.blue(group.name || "unknown")}`.trim(),
       "error",
-      message.timestamps,
-    );
+      message.timestamps
+    )
   }
-};
+}

@@ -21,15 +21,14 @@ declare type HexDigit =
   | "C"
   | "D"
   | "E"
-  | "F";
+  | "F"
 
-declare type Hex<T extends string> =
-  T extends `#${HexDigit}${HexDigit}${HexDigit}${infer ColorHex}`
-    ? ColorHex extends ``
-      ? T
-      : ColorHex extends `${HexDigit}${HexDigit}${HexDigit}`
-      ? T
-      : never
-    : never;
+declare type Hex<T extends string> = T extends `#${HexDigit}${HexDigit}${HexDigit}${infer ColorHex}`
+  ? ColorHex extends ``
+    ? T
+    : ColorHex extends `${HexDigit}${HexDigit}${HexDigit}`
+    ? T
+    : never
+  : never
 
-declare type HexColor = string & { __type: "Hex" };
+declare type HexColor = string & { __type: "Hex" }

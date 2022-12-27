@@ -5,15 +5,15 @@ declare type Config = {
    * @example
    * timeZone: "America/Los_Angeles"
    */
-  timeZone: string;
+  timeZone: string
 
   /**
    * Set a default bot language
    * @type {string}
    * @example
-   * language: "en" | "id" | "pt" | "in" or other..
+   * language: "pt"
    */
-  language: string;
+  language: string
 
   /**
    * List of bot owners! set your phone number here for manage bot
@@ -21,21 +21,21 @@ declare type Config = {
    * @example
    * ownerNumber: ['628xxxxxxxxxx', '918xxxxxxxxxx']
    */
-  ownerNumber: string[];
+  ownerNumber: string[]
   /**
    * Read the status of users that you have saved in contacts
    * @type {boolean}
    * @example
    * readStatus: true
    */
-  readStatus: boolean;
+  readStatus: boolean
   /**
    * Read messages from chats
    * @type {boolean}
    * @example
    * readStatus: true
    */
-  readMessage: boolean;
+  readMessage: boolean
 
   /** Anti call from users */
   antiCall: {
@@ -45,22 +45,22 @@ declare type Config = {
      * @example
      * readStatus: true
      */
-    reject: boolean;
+    reject: boolean
     /**
      * Block user that call bot
      * @type {boolean}
      * @example
      * readStatus: true
      */
-    block: boolean;
+    block: boolean
     /**
      * Ban user that call bot
      * @type {boolean}
      * @example
      * readStatus: true
      */
-    ban: boolean;
-  };
+    ban: boolean
+  }
   /** User config */
   user: {
     /**
@@ -69,27 +69,27 @@ declare type Config = {
      * @example
      * limit: 30
      */
-    limit: number;
-  };
+    limit: number
+  }
   /**
    * Set a default prefix of bot! u can fill '#@' for double prefix or as much as you want '!@#$%^&/.'
    * @type {string}
    * @example
    * prefix: "/" || "/#" || "!@#$%^."
    */
-  prefix: string;
+  prefix: string
   /**
    * Set a default bot name
    * @type {number}
    * @example
    * name: "Kobeni"
    */
-  name: string;
+  name: string
   /**
    * Set a default footer for messages that require a footer
    * @type {number}
    * @example
    * footer: "@arugaz"
    */
-  footer: string;
-};
+  footer: string
+}

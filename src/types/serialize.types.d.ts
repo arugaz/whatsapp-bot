@@ -1,119 +1,134 @@
-import type {
-  proto,
-  WACallUpdateType,
-  MessageGenerationOptionsFromContent,
-} from "@adiwajshing/baileys";
-import type { GroupMetadata } from "@prisma/client";
+import type { proto, WACallUpdateType, MessageGenerationOptionsFromContent } from "@adiwajshing/baileys"
+import type { GroupMetadata } from "@prisma/client"
 
+/**
+ * Call serialize
+ */
 declare type CallSerialize = {
   /** Call Id */
-  callId: string;
+  callId: string
 
   /** Call remoteJid */
-  callFrom: string;
+  callFrom: string
 
   /** Call status */
-  status: WACallUpdateType;
+  status: WACallUpdateType
 
   /**
    * @param {string} text: Message text
    * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
    */
-  reply: (text: string) => Promise<proto.WebMessageInfo>;
-};
+  reply: (text: string) => Promise<proto.WebMessageInfo>
+}
 
+/**
+ * Group serialize
+ */
 declare type GroupSerialize = {
   /** Group Jid */
-  from: string;
+  from: string
 
   /** Message sender  */
-  sender: string;
+  sender: string
 
   /** Message */
-  body: string;
+  body: string
 
   /** Message type  */
-  type: number;
+  type: number
 
   /** Message Timestamps */
-  timestamps: number;
-};
+  timestamps: number
+}
 
-declare type GroupParticipantSerialize = GroupSerialize;
+/**
+ * Group Participant serialize
+ */
+declare type GroupParticipantSerialize = GroupSerialize
 
+/**
+ * Message serialize
+ */
 declare type MessageSerialize = {
   /** Properties of a Message. */
-  message: proto.IMessage;
+  message: proto.IMessage
 
   /** Properties of a MessageKey. */
-  key: proto.IMessageKey;
+  key: proto.IMessageKey
 
   /** Message Id */
-  id: string;
+  id: string
 
   /** Is message from Bot? */
-  isBotMsg: boolean;
+  isBotMsg: boolean
 
   /** Is message from group chats? */
-  isGroupMsg: boolean;
+  isGroupMsg: boolean
 
   /** Message remoteJid */
-  from: string;
+  from: string
 
   /** is message fromMe? | bot message ? */
-  fromMe: boolean;
+  fromMe: boolean
 
   /** Type of a message */
-  type: string;
+  type: string
 
   /** Message sender */
-  sender: string;
+  sender: string
 
   /** Body / content message  */
-  body: string;
+  body: string
 
   /** Mentions user list */
-  mentions: string[];
+  mentions: string[]
 
   /** Is message viewonce? */
-  viewOnce: boolean;
+  viewOnce: boolean
 
   /**
+   * Reply a message
    * @param {string} text: Message text
    * @param {boolean} quoted?: Wanna reply to client?
    * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
    */
-  reply: (text: string, quoted?: boolean) => Promise<proto.WebMessageInfo>;
+  reply: (text: string, quoted?: boolean) => Promise<proto.WebMessageInfo>
 
   /**
+   * Resends a message
    * @param {string} jid: Chat Jid
    * @param {boolean} quoted?: Wanna reply to client?
    * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
    */
-  resend: (
-    jid?: string,
-    opts?: Omit<MessageGenerationOptionsFromContent, "userJid">,
-  ) => Promise<proto.WebMessageInfo>;
+  resend: (jid?: string, opts?: Omit<MessageGenerationOptionsFromContent, "userJid">) => Promise<proto.WebMessageInfo>
 
   /**
+   * Download message content
    * @param {string} filename?: Filepath to save the message content
    * @returns {Promise<string | Buffer>} if filename is empty return buffers otherwise return file path
    */
   download: {
-    (): Promise<Buffer>;
-    (filepath: string): Promise<string>;
-  };
+    /**
+     * @returns {Promise<Buffer>} Returns media buffer
+     */
+    (): Promise<Buffer>
+    /**
+     * @param {string} filepath File path where you want to save buffer
+     * @returns {Promise<Buffer>} Returns media buffer
+     */
+    (filepath: string): Promise<string>
+  }
 
   // additional properties
   /** Message timestamps */
-  timestamps?: number;
+  timestamps?: number
   /** Chat expiration for ephemeral message */
-  expiration?: number;
+  expiration?: number
   /** Nickname for users */
-  pushname?: string;
+  pushname?: string
   /** Group Metadata */
-  groupMetadata?: GroupMetadata;
+  groupMetadata?: GroupMetadata
 
   /** Properties of a Quoted Message. */
-  quoted?: MessageSerialize;
-};
+  quoted?: MessageSerialize
+}

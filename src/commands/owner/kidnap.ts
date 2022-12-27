@@ -1,4 +1,4 @@
-import type { Command } from "../../types/command.types";
+import type { Command } from "../../types/command.types"
 
 /**
  * Kidnap other group members to your group
@@ -16,26 +16,26 @@ export default <Command>{
   example: "https://chat.whatsapp.com/code, change with target group url",
   ownerOnly: true,
   execute: async ({ aruga, message, prefix, command, arg }) => {
-    if (!arg) return await message.reply(`${prefix}info ${command}`);
-    const url = arg.match(/chat.whatsapp.com\/([\w\d]*)/g);
+    if (!arg) return await message.reply(`${prefix}info ${command}`)
+    const url = arg.match(/chat.whatsapp.com\/([\w\d]*)/g)
     if (url && url.length >= 1) {
-      const code = url[0].replace("chat.whatsapp.com/", "");
-      const result = await aruga.groupGetInviteInfo(code);
+      const code = url[0].replace("chat.whatsapp.com/", "")
+      const result = await aruga.groupGetInviteInfo(code)
       if (!result)
         return await aruga.sendMessage(message.from, {
-          text: "Invalid url or it was revoked",
-        });
-      await aruga.groupAcceptInvite(code);
-      const fetchGroups = await aruga.groupFetchAllParticipating();
+          text: "Invalid url or it was revoked"
+        })
+      await aruga.groupAcceptInvite(code)
+      const fetchGroups = await aruga.groupFetchAllParticipating()
       const getGroups = Object.entries(fetchGroups)
         .slice(0)
-        .map((entry) => entry[1]);
+        .map(entry => entry[1])
       const participants = getGroups
-        .filter((v) => v.id === result.id)
-        .map((x) => x.participants)[0]
-        .map((v) => v.id);
+        .filter(v => v.id === result.id)
+        .map(x => x.participants)[0]
+        .map(v => v.id)
 
-      return await aruga.groupParticipantsUpdate(message.from, participants, "add");
-    } else return await message.reply("Invalid url", true);
-  },
-};
+      return await aruga.groupParticipantsUpdate(message.from, participants, "add")
+    } else return await message.reply("Invalid url", true)
+  }
+}

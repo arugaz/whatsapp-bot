@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 const Database = new PrismaClient({
-  errorFormat: "pretty",
-});
+  errorFormat: "minimal"
+})
 
-export default Database;
+export default Database

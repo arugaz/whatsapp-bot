@@ -22,11 +22,7 @@
       "language": {
         "changed": "Language has been changed to {{@LANGUAGE}}!",
         "title": "Language support",
-        "text": {
-          "one": "You can change your language",
-          "two": "when interacting with me",
-          "three": "here are some supported languages"
-        },
+        "text": "You can change your language when interacting with me, here are some supported languages",
         "buttonText": "LIST LANGUAGES"
       },
       "listmenu": {

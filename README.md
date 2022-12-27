@@ -42,8 +42,8 @@
 <div align="center">
   <details>
     <summary>🥟 Help me!</summary>
-    <p><a href="https://ko-fi.com/arugaz">Ko-Fi</a></p>
-    <p><a href="https://trakteer.id/arugaz/tip">Trakteer</a></p>
+    <p><a href="//ko-fi.com/arugaz">Ko-Fi</a></p>
+    <p><a href="//trakteer.id/arugaz/tip">Trakteer</a></p>
   </details>
 
   <p>Don't forget to click ⭐️ and fork this repository</p>
@@ -122,10 +122,10 @@ yarn pm2
 after running it you need to scan the qr
 
 <div align="center">
-<h2>
-Join the community to build Whatsapp-Bot together!
-</h2>
-<a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
-  <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1" />
-</a>
+  <h2>
+    Join the community to build Whatsapp-Bot together!
+  </h2>
+  <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
+    <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
+  </a>
 </div>

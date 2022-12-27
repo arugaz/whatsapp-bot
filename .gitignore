@@ -1,6 +1,5 @@
 # we dont need them
 dist
-generator
 node_modules
 .pnp
 .pnp.js
@@ -11,9 +10,12 @@ yarn-error.log*
 .DS_Store
 *.pem
 *.tsbuildinfo
-test*.js
-test*.ts
 .env
+
+# database ignore
+prisma/generated
+database/*
+!database/*.json
 
 # ignore some languages
 languages/*
@@ -26,3 +28,5 @@ temp/*
 
 #my private files
 werewolf*.ts
+test*.js
+test*.ts

@@ -1,6 +1,6 @@
-import type { Group, User } from "@prisma/client";
-import type Client from "../libs/whatsapp.libs";
-import type { MessageSerialize } from "./serialize.types";
+import type { Group, User } from "@prisma/client"
+import type Client from "../libs/whatsapp.libs"
+import type { MessageSerialize } from "./serialize.types"
 
 declare type Command = {
   /**
@@ -9,7 +9,7 @@ declare type Command = {
    * @example
    * aliases: ['help'] // default match message by filename /menu === menu.ts
    */
-  aliases?: string[];
+  aliases?: string[]
 
   /**
    * Set commands category
@@ -17,7 +17,7 @@ declare type Command = {
    * @example
    * category: 'general'
    */
-  category: "convert" | "general" | "misc" | "owner";
+  category: "convert" | "general" | "misc" | "owner"
 
   /**
    * Set commands cooldown, every user will have their own cooldown, every command also have their own cooldown
@@ -25,7 +25,7 @@ declare type Command = {
    * @example
    * cd: 10 // default 3 seconds for every command, pls add cd atleast 1 sec for avoid spam message
    */
-  cd?: number;
+  cd?: number
 
   /**
    * Set commands description
@@ -33,7 +33,7 @@ declare type Command = {
    * @example
    * desc: "Ping bot!"
    */
-  desc?: string;
+  desc?: string
 
   /**
    * Set commands that only can be used in group chats
@@ -41,7 +41,7 @@ declare type Command = {
    * @example
    * groupOnly: true // default false
    */
-  groupOnly?: boolean;
+  groupOnly?: boolean
 
   /**
    * Set commands that only can be used in private chats
@@ -49,7 +49,7 @@ declare type Command = {
    * @example
    * privateOnly: true // default false
    */
-  privateOnly?: boolean;
+  privateOnly?: boolean
 
   /**
    * Set commands that only premium users can use
@@ -57,7 +57,7 @@ declare type Command = {
    * @example
    * premiumOnly: true // default false
    */
-  premiumOnly?: boolean;
+  premiumOnly?: boolean
 
   /**
    * Set commands that only group admins can use
@@ -65,7 +65,7 @@ declare type Command = {
    * @example
    * adminGroup: true // default false
    */
-  adminGroup?: boolean;
+  adminGroup?: boolean
 
   /**
    * Set commands that only group owner can use
@@ -73,7 +73,7 @@ declare type Command = {
    * @example
    * ownerGroup: true // default false
    */
-  ownerGroup?: boolean;
+  ownerGroup?: boolean
 
   /**
    * Set commands that can only be used when the bot is a group admin
@@ -81,7 +81,7 @@ declare type Command = {
    * @example
    * maintenance: true // default false
    */
-  botGroupAdmin?: boolean;
+  botGroupAdmin?: boolean
 
   /**
    * Set commands to maintenance mode that only owner can use
@@ -89,7 +89,7 @@ declare type Command = {
    * @example
    * maintenance: true // default false
    */
-  maintenance?: boolean;
+  maintenance?: boolean
 
   /**
    * Set commands that only bot owners can use
@@ -97,7 +97,7 @@ declare type Command = {
    * @example
    * ownerOnly: true // default false
    */
-  ownerOnly?: boolean;
+  ownerOnly?: boolean
 
   /**
    * To reduce the limit when the command is success
@@ -105,7 +105,7 @@ declare type Command = {
    * @example
    * limit: 3 // default 0
    */
-  limit?: number;
+  limit?: number
 
   /**
    * To write how to use the command
@@ -113,7 +113,7 @@ declare type Command = {
    * @example
    * example: "/ping 69"
    */
-  example?: string;
+  example?: string
 
   /**
    * Fill with the features you want
@@ -123,20 +123,20 @@ declare type Command = {
    *  await aruga.sendMessage(message.from, { text: `pong! ${arg}` })
    * }
    */
-  execute?: (obj: CommandObject) => Promise<proto.WebMessageInfo> | never;
-};
+  execute?: (obj: CommandObject) => Promise<proto.WebMessageInfo> | never
+}
 
 declare type CommandObject = {
-  aruga: Client;
-  message: MessageSerialize;
-  command: string;
-  prefix: string;
-  args: string[];
-  arg: string;
-  isGroupOwner: boolean;
-  isGroupAdmin: boolean;
-  isBotGroupAdmin: boolean;
-  isOwner: boolean;
-  user: User;
-  group: Group;
-};
+  aruga: Client
+  message: MessageSerialize
+  command: string
+  prefix: string
+  args: string[]
+  arg: string
+  isGroupOwner: boolean
+  isGroupAdmin: boolean
+  isBotGroupAdmin: boolean
+  isOwner: boolean
+  user: User
+  group: Group
+}
