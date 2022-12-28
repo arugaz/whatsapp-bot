@@ -42,10 +42,10 @@
   resolved "https://registry.yarnpkg.com/@arugaz/formatter/-/formatter-1.0.0-z.1.tgz#7e05884277332c97972d1635d164d764864a9378"
   integrity sha512-/9Ham5UaHUa9ZF6DAaw+3zBdFeEYvfD8LZcoRu1pjfPEYYKrAAhNyFpfamxX1UU3I23cdnsYJhPxd/0F2EHMWA==
 
-"@arugaz/queue@^1.0.0-z.4":
-  version "1.0.0-z.4"
-  resolved "https://registry.yarnpkg.com/@arugaz/queue/-/queue-1.0.0-z.4.tgz#346691b325710f7ee0eaa269b1eb3c39e4950c5d"
-  integrity sha512-3Yt52McCyhbpLgh+Qm/po/sGf0lz9GzU6KfUjY1tPeaiw3zIrGFrYjoCyJaQqNtfuTuSxPexc48vi7vtzzjNTQ==
+"@arugaz/queue@^1.0.1-z.1":
+  version "1.0.1-z.1"
+  resolved "https://registry.yarnpkg.com/@arugaz/queue/-/queue-1.0.1-z.1.tgz#36c5743a6d4f4a6454d189d038b38b930433368f"
+  integrity sha512-jqgdxbw9K7b+wras1fAdbioynfBFdk6Pf06lNHRXugNLVoBHN0bjb96zR1bPbSjDu2O+biiNW3RcQVogj3Bl+g==
   dependencies:
     "@arugaz/eventemitter" "^1.0.0-z.1"
 
@@ -54,10 +54,10 @@
   resolved "https://registry.yarnpkg.com/@arugaz/translator/-/translator-1.0.0-z.4.tgz#dc9a43b4ef8bcaac5ede59fee361696eac710922"
   integrity sha512-+Iz7M918xQXisoZpqA/YPmXq76F65XxH14JPXieUz3jDGKdIszZ/sDVxuqHHFbc3h3ncqI05XWTI0rh4OswEJA==
 
-"@arugaz/wasticker@^1.0.0-z.3":
-  version "1.0.0-z.3"
-  resolved "https://registry.yarnpkg.com/@arugaz/wasticker/-/wasticker-1.0.0-z.3.tgz#4e6a8fe7e1b954c859ed2e794efc0edeeda1ddef"
-  integrity sha512-mKVxFcek8EEzB/FX93cpUyZI3C/u9QKGvDGS633Q1+OAzniNTg3gPnOQ+OEZNIvsiicwYewS5sBoH7cqzlHucA==
+"@arugaz/wasticker@^1.0.1-z.2":
+  version "1.0.1-z.2"
+  resolved "https://registry.yarnpkg.com/@arugaz/wasticker/-/wasticker-1.0.1-z.2.tgz#ec0bb1a638f1e61f263a98e2aa25eda4688807d8"
+  integrity sha512-xcTnHXAh41EnQXMS6x+KgUvd0ZQY8UMQm9j9HIa3a6GugrydVOvDSw5b44dQLWshl8sjqBYJcaXHp5qcQQercw==
   dependencies:
     axios "^0.24.0"
     node-webpmux "^3.1.3"

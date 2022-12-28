@@ -3,7 +3,7 @@ import { Command } from "../../types/command.types"
 
 export default <Command>{
   category: "convert",
-  cd: 10,
+  cd: 20,
   desc: "Generate a hyper-realistic photo an anime style!",
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || message.quoted.type.includes("image")) {

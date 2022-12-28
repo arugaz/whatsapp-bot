@@ -2,6 +2,7 @@ import fs from "fs"
 import path from "path"
 import { inspect } from "util"
 import type { Participants } from "@prisma/client"
+import { TimeoutError } from "@arugaz/queue"
 
 import International from "../libs/international.libs"
 import type WAClient from "../libs/whatsapp.libs"
@@ -113,7 +114,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
       return aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps)
     } catch (e: unknown) {
-      await message.reply(typeof e === "string" ? e : e instanceof Error ? e.message : "Timeout error occurred")
+      await message.reply(typeof e === "string" ? e : e instanceof TimeoutError ? "Timeout error occurred" : e instanceof Error ? e.message : "Unknown error occurred")
       return aruga.log(`${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps)
     }
   }
