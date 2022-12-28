@@ -1,5 +1,5 @@
 import { spawn } from "child_process"
-import { removeTEMP, saveTEMP } from "./../utils/helper.utils"
+import { removeTEMP, saveTEMP } from "../utils/filesystem.utils"
 
 const ffmpeg = (bufferData: Buffer, options: string[]) =>
   new Promise<Buffer>((resolve, reject) => {
