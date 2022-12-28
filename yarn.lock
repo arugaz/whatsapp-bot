@@ -54,14 +54,6 @@
   resolved "https://registry.yarnpkg.com/@arugaz/translator/-/translator-1.0.0-z.4.tgz#dc9a43b4ef8bcaac5ede59fee361696eac710922"
   integrity sha512-+Iz7M918xQXisoZpqA/YPmXq76F65XxH14JPXieUz3jDGKdIszZ/sDVxuqHHFbc3h3ncqI05XWTI0rh4OswEJA==
 
-"@arugaz/wasticker@^1.0.1-z.2":
-  version "1.0.1-z.2"
-  resolved "https://registry.yarnpkg.com/@arugaz/wasticker/-/wasticker-1.0.1-z.2.tgz#ec0bb1a638f1e61f263a98e2aa25eda4688807d8"
-  integrity sha512-xcTnHXAh41EnQXMS6x+KgUvd0ZQY8UMQm9j9HIa3a6GugrydVOvDSw5b44dQLWshl8sjqBYJcaXHp5qcQQercw==
-  dependencies:
-    axios "^0.24.0"
-    node-webpmux "^3.1.3"
-
 "@babel/runtime@^7.7.2":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"

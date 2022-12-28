@@ -1,8 +1,8 @@
-import WASticker from "@arugaz/wasticker"
+import { NewSticker } from "../../utils/convert.utils"
 import { Command } from "../../types/command.types"
 import config from "../../utils/config.utils"
 
-const wasticker = WASticker({
+const wasticker = NewSticker({
   pack: config.name,
   author: config.footer,
   categories: ["👋"],

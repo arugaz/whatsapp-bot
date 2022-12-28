@@ -42,13 +42,13 @@
 <div align="center">
   <details>
     <summary>🥟 Help me!</summary>
-    <p><a href="//ko-fi.com/arugaz">Ko-Fi</a></p>
-    <p><a href="//trakteer.id/arugaz/tip">Trakteer</a></p>
+    <p><a href="https://ko-fi.com/arugaz">Ko-Fi</a></p>
+    <p><a href="https://trakteer.id/arugaz/tip">Trakteer</a></p>
   </details>
 
   <p>Don't forget to click ⭐️ and fork this repository</p>
 
-  <p>Need help? chat me on <a href="//wa.me/6285163651710" target="_blank">Whatsapp</a></p>
+  <p>Need help? please create <a href="/arugaz/whatsapp-bot/issues">issue</a> or chat me on <a href="//wa.me/6285163651710" target="_blank">whatsapp</a></p>
 </div>
 
 ## Getting Started

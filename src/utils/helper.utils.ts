@@ -1,22 +1,29 @@
 import path from "path"
+import os from "os"
 import fs from "fs/promises"
 
-export const generateTEMP = () => path.join(__dirname, "..", "..", "temp", (Math.random() * 36 * Date.now()).toString(36))
+/**
+ * Generates random temp filename
+ * @returns temp filename
+ */
+export const generateTEMP = () => path.join(os.tmpdir(), (Math.random() * 36 * Date.now()).toString(36).replace(/\./g, ``))
 
 /**
- *  Temporary directory
+ * i just lazy to write force and recursive
+ * @param filename filepath
+ * @returns
+ */
+export const removeTEMP = async (filename: string) => fs.rm(filename, { force: true, recursive: true })
+
+/**
+ * Saves buffer to temporary file
+ * @param data Buffer data
+ * @param ext File ext?
+ * @returns temp filename
  */
 export const saveTEMP = async (data: Buffer, ext?: string) => {
-  const random = generateTEMP() + (ext ? "." + ext : "")
+  const random = generateTEMP() + (ext ? `.${ext}` : ``)
 
   await fs.writeFile(random, data)
   return random
-}
-
-export const removeTEMP = async (filename: string) => {
-  return await fs.rm(filename, { force: true, recursive: true })
-}
-
-export const readTEMP = async (filename: string) => {
-  return await fs.readFile(filename)
 }
