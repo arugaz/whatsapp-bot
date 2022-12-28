@@ -1,5 +1,4 @@
 import fs from "fs"
-import axios from "axios"
 import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
 import { randomBytes } from "crypto"
@@ -20,22 +19,12 @@ const defaultOptions: StickerOptions = {
 class WASticker {
   #opts: StickerOptions
   #exif: Buffer | null
-  #dataSticker: string | Buffer | null
+  #dataSticker: Buffer | null
 
   constructor(opts?: StickerOptions) {
     this.#opts = Object.assign(defaultOptions, opts || {})
     this.#dataSticker = null
     this.#exif = null
-  }
-
-  #$_parse() {
-    return this.#dataSticker
-      ? Buffer.isBuffer(this.#dataSticker)
-        ? Promise.resolve(this.#dataSticker)
-        : fs.existsSync(this.#dataSticker)
-        ? fs.promises.readFile(this.#dataSticker)
-        : new Promise<Buffer>(resolve => axios.get(this.#dataSticker as string, { responseType: "arraybuffer" }).then(({ data }) => resolve(data)))
-      : Promise.resolve(null)
   }
 
   #$_createExif() {
@@ -87,7 +76,7 @@ class WASticker {
    * @param data can be URL, path, or Buffer. Doesn't support base64 you have to convert to buffer first
    * @param opts extends default Options
    */
-  public Load(data: string | Buffer, opts?: StickerOptions): this {
+  public Load(data: Buffer, opts?: StickerOptions): this {
     this.#dataSticker = data
     this.#opts = Object.assign(this.#opts, opts || {})
     if (opts) this.#exif = this.#$_createExif()
@@ -138,10 +127,9 @@ class WASticker {
    * Get sticker Buffer
    */
   async ToBuffer(): Promise<Buffer> {
-    const buffer = await this.#$_parse()
-    if (!buffer) throw new Error("Invalid media sticker")
+    const result = await this.#$_convert(this.#dataSticker)
     this.#dataSticker = null
-    return this.#$_convert(buffer)
+    return result
   }
 
   /**
