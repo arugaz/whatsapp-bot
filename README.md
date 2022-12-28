@@ -48,7 +48,7 @@
 
   <p>Don't forget to click ⭐️ and fork this repository</p>
 
-  <p>Need help? please create <a href="/arugaz/whatsapp-bot/issues">issue</a> or chat me on <a href="//wa.me/6285163651710" target="_blank">whatsapp</a></p>
+  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a> or chat me on <a href="//wa.me/6285163651710" target="_blank">whatsapp</a></p>
 </div>
 
 ## Getting Started
