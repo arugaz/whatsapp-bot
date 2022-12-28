@@ -113,7 +113,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
       return aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps)
     } catch (e: unknown) {
-      await message.reply(typeof e === "string" ? e : (e as Error)?.message || "")
+      await message.reply(typeof e === "string" ? e : e instanceof Error ? e.message : "Timeout error occurred")
       return aruga.log(`${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps)
     }
   }

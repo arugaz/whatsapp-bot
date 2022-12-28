@@ -8,7 +8,9 @@ export default <Command>{
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || message.quoted.type.includes("image")) {
       const buffer = message.quoted ? await message.quoted.download() : await message.download()
-      const result = await AI2D(buffer, { crop: "SINGLE" })
+      const result = await AI2D(buffer, {
+        crop: "SINGLE"
+      })
       return await aruga.sendMessage(message.from, { image: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
   }
