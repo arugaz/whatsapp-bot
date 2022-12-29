@@ -48,17 +48,19 @@
 
   <p>Don't forget to click ⭐️ and fork this repository</p>
 
-  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a> or chat me on <a href="//wa.me/6285163651710" target="_blank">whatsapp</a></p>
+  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a> or chat me on <a href="https://wa.me/6285163651710" target="_blank">whatsapp</a></p>
 </div>
 
 ## Getting Started
 
 This project require
 
-- NodeJS v12 or greater [Install](https://nodejs.org/dist/)
+- NodeJS v14 or greater [Install](https://nodejs.org/dist/)
 - Yarn Classic Stable [Install](https://classic.yarnpkg.com/lang/en/docs/install/#alternatives-stable)
 
 ## Install
+
+<section>
 
 ### Clone this project
 
@@ -70,7 +72,7 @@ cd whatsapp-bot
 ### Install the dependencies:
 
 ```bash
-yarn install
+yarn install --frozen-lockfile
 ```
 
 ### Setup
@@ -99,7 +101,11 @@ It will generate languages based on list [database/languages.json](database/lang
 yarn generateLang
 ```
 
-### Usage
+</section>
+
+## Usage
+
+<section>
 
 `Run the Whatsapp bot`
 
@@ -116,10 +122,12 @@ yarn global add pm2
 ```
 
 ```bash
-yarn pm2
+yarn start:pm2
 ```
 
 after running it you need to scan the qr
+
+</section>
 
 <div align="center">
   <h2>
@@ -129,3 +137,7 @@ after running it you need to scan the qr
     <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
   </a>
 </div>
+
+## License
+
+[Apache-2.0](LICENSE)

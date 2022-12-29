@@ -24,7 +24,6 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
   public async startClient(): Promise<void> {
     const logger = this.#cfg.logger || P({ level: "silent" }).child({ level: "silent" })
 
-    // if you want to use single auth, use useSingleAuthState function
     const { saveState, clearState, state } = (this.#cfg.authType === "single" && (await auth.useSingleAuthState(Database))) || (this.#cfg.authType === "multi" && (await auth.useMultiAuthState(Database)))
     const { version, isLatest } = await fetchLatestBaileysVersion()
 
@@ -56,14 +55,23 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
         }
         return message
       },
-      printQRInTerminal: true,
+      printQRInTerminal: false,
       version
     })
 
-    for (const method of Object.keys(aruga).filter((v) => v !== "ws" && v !== "ev")) (this[method as keyof WAClient] = aruga[method as keyof Aruga]), delete aruga[method]
+    for (const method of Object.keys(aruga)) {
+      if (method !== "ws" && method !== "ev") {
+        this[method as keyof WAClient] = aruga[method as keyof Aruga]
+        delete aruga[method]
+      }
+    }
 
     // connection
-    aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+    aruga.ev.on("connection.update", async ({ qr, connection, lastDisconnect }) => {
+      if (qr) {
+        this.emit("qr", qr)
+      }
+
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode
         this.log("Disconnected!", "error")
@@ -72,15 +80,14 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
             this.log("Deleting session...", "error")
             await clearState()
             this.log("Session deleted!", "error")
-            this.log("You have to re-scan QR Code! code: " + reason, "error")
           }
           if (reason === DisconnectReason.serviceUnavailable) {
             throw new Error("Your WhatsApp account has been banned!")
           }
-          await this.logout()
+          await this.logout("You have to re-scan QR Code! code: " + reason)
         } else {
           this.log("Reconnecting...", "warning")
-          await new Promise<void>((resolve) => setTimeout(() => resolve(this.startClient().catch(console.error)), 1500))
+          setTimeout(() => this.startClient(), 1500)
         }
       }
 

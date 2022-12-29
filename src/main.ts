@@ -1,5 +1,5 @@
 import cfonts from "cfonts"
-import { Cron } from "croner"
+import qrcode from "qrcode"
 import NodeCache from "node-cache"
 
 import * as callHandler from "./handlers/call"
@@ -11,11 +11,13 @@ import WAClient from "./libs/whatsapp"
 import Database from "./libs/database"
 import { serialize } from "./libs/whatsapp"
 import { i18nInit } from "./libs/international"
-import config from "./utils/config"
+
+import { resetUserLimit, resetUserRole } from "./utils/cron"
 
 /** Initial Client */
 const aruga = new WAClient({
-  authType: "multi", // "single" or "multi"
+  // auth type "single" or "multi"
+  authType: "single",
   // baileys options
   generateHighQualityLinkPreview: true,
   mediaCache: new NodeCache({
@@ -29,9 +31,9 @@ const aruga = new WAClient({
   })
 })
 
-/** Handler Events */
+/** Handler Event */
 setTimeout(() => {
-  // handle call events
+  // handle call event
   aruga.on("call", (call) =>
     serialize
       .call(aruga, call)
@@ -39,7 +41,7 @@ setTimeout(() => {
       .catch(() => void 0)
   )
 
-  // handle group events
+  // handle group event
   aruga.on("group", (message) =>
     serialize
       .group(aruga, message)
@@ -47,7 +49,7 @@ setTimeout(() => {
       .catch(() => void 0)
   )
 
-  // handle group participants events
+  // handle group participants event
   aruga.on("group.participant", (message) =>
     serialize
       .groupParticipant(aruga, message)
@@ -55,71 +57,28 @@ setTimeout(() => {
       .catch(() => void 0)
   )
 
-  // handle message events
+  // handle message event
   aruga.on("message", (message) =>
     serialize
       .message(aruga, message)
       .then((message) => messageHandler.execute(aruga, message).catch(() => void 0))
       .catch(() => void 0)
   )
-}, 0)
 
-/** Cron Job */
-// Run CronJob every midnight for reset user limit!
-const job1 = new Cron(
-  "0 0 0 * * *",
-  {
-    timezone: config.timeZone
-  },
-  async () => {
-    await Database.user.updateMany({
-      where: {
-        userId: {
-          contains: "s.whatsapp.net"
-        }
-      },
-      data: {
-        limit: config.user.limit
-      }
-    })
-  }
-)
-// Run CronJob every 15mins for reset user prem
-const job2 = new Cron(
-  "0 */15 * * * *",
-  {
-    timezone: config.timeZone
-  },
-  async () => {
-    await Database.user.updateMany({
-      where: {
-        AND: [
-          {
-            userId: {
-              contains: "s.whatsapp.net"
-            },
-            role: {
-              in: ["premium", "vip"]
-            },
-            expire: {
-              lte: Date.now()
-            }
-          }
-        ]
-      },
-      data: {
-        role: "basic",
-        expire: 0
-      }
-    })
-  }
-)
+  // handle qr code event
+  aruga.on("qr", (qrCode) =>
+    qrcode
+      .toString(qrCode, { type: "terminal", small: true })
+      .then((qrResult) => console.log(qrResult))
+      .catch(() => void 0)
+  )
+}, 0)
 
 /** Pretty Sexy :D */
 const clearProcess = () => {
   aruga.log("Clear all process", "info")
-  job1.stop()
-  job2.stop()
+  resetUserLimit.stop()
+  resetUserRole.stop()
   Database.$disconnect()
     .then(() => process.exit(0))
     .catch(() => process.exit(1))

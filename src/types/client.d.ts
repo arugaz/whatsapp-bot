@@ -11,6 +11,7 @@ declare type ArugaEvents = {
   group: (message: WAMessage) => void
   "group.participant": (message: WAMessage) => void
   message: (message: WAMessage) => void
+  qr: (qr: string) => void
 }
 
 declare type ArugaEventEmitter = {

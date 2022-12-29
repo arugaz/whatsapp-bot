@@ -76,15 +76,21 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
               tasks.push(value ? writeData(value, file) : removeData(file))
             }
           }
-          await Promise.all(tasks)
+          try {
+            await Promise.all(tasks)
+          } catch {}
         }
       }
     },
     saveState: async (): Promise<void> => {
-      await writeData(creds, "creds")
+      try {
+        await writeData(creds, "creds")
+      } catch {}
     },
     clearState: async (): Promise<void> => {
-      await Database.session.deleteMany()
+      try {
+        await Database.session.deleteMany({})
+      } catch {}
     }
   }
 }
@@ -122,14 +128,18 @@ export const useSingleAuthState = async (Database: PrismaClient): Promise<ArugaA
   }
 
   const saveState = async (): Promise<void> => {
-    const session = JSON.stringify({ creds, keys }, BufferJSON.replacer)
-    await Database.session.update({ where: { sessionId: "creds" }, data: { session } })
+    try {
+      const session = JSON.stringify({ creds, keys }, BufferJSON.replacer)
+      await Database.session.update({ where: { sessionId: "creds" }, data: { session } })
+    } catch {}
   }
 
   const clearState = async (): Promise<void> => {
-    await Database.session.delete({
-      where: { sessionId: "creds" }
-    })
+    try {
+      await Database.session.delete({
+        where: { sessionId: "creds" }
+      })
+    } catch {}
   }
 
   return {
