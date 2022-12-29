@@ -115,11 +115,7 @@ yarn start
 
 `With pm2`
 
-If you haven't installed pm2
-
-```bash
-yarn global add pm2
-```
+If you haven't installed pm2, I suggest using npm to [install](https://pm2.keymetrics.io/docs/usage/quick-start/#installation) it.
 
 ```bash
 yarn start:pm2
