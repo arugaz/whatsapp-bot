@@ -38,17 +38,9 @@ class WASticker {
       "android-app-store-link": `https://play.google.com/store/apps/details?id=com.supercell.clashofclans`, //idk what is this for
       "ios-app-store-link": `https://apps.apple.com/id/app/clash-of-clans/id529479190` //idk what is this for
     })
-    const exif = Buffer.concat([Buffer.from([73, 73, 42, 0, 8, 0, 0, 0, 1, 0, 65, 87, 7, 0, 0, 0, 0, 0, 22, 0, 0, 0]), Buffer.from(data, "utf-8")])
+    const exif = Buffer.concat([Buffer.from([73, 73, 42, 0, 8, 0, 0, 0, 1, 0, 65, 87, 7, 0, 0, 0, 0, 0, 22, 0, 0, 0]), Buffer.from(data)])
     exif.writeUIntLE(new TextEncoder().encode(data).length, 14, 4)
     return exif
-  }
-
-  async #$_setExit(bufferData: Buffer) {
-    this.#exif = this.#exif ? this.#exif : this.#$_createExif()
-    const image = new webpmux.Image()
-    await image.load(bufferData)
-    image.exif = this.#exif
-    return image.save(null)
   }
 
   #$_convert(bufferData: Buffer) {
@@ -67,17 +59,17 @@ class WASticker {
         "-f",
         "webp"
       ])
-        .then((bufferResult) => resolve(this.#$_setExit(bufferResult)))
+        .then((bufferResult) => resolve(this.setExit(bufferResult)))
         .catch(reject)
     )
   }
   /**
    * Load image data!
-   * @param data can be URL, path, or Buffer. Doesn't support base64 you have to convert to buffer first
+   * @param bufferData Buffer input
    * @param opts extends default Options
    */
-  public Load(data: Buffer, opts?: StickerOptions): this {
-    this.#dataSticker = data
+  public Load(bufferData: Buffer, opts?: StickerOptions): this {
+    this.#dataSticker = bufferData
     this.#opts = Object.assign(this.#opts, opts || {})
     if (opts) this.#exif = this.#$_createExif()
     return this
@@ -130,6 +122,19 @@ class WASticker {
     const result = await this.#$_convert(this.#dataSticker)
     this.#dataSticker = null
     return result
+  }
+
+  /**
+   * Set exif to buffer
+   * @param bufferData WEBP Buffer
+   * @returns
+   */
+  async setExit(bufferData: Buffer) {
+    this.#exif = this.#exif ? this.#exif : this.#$_createExif()
+    const image = new webpmux.Image()
+    await image.load(bufferData)
+    image.exif = this.#exif
+    return image.save(null)
   }
 
   /**

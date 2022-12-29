@@ -6,11 +6,7 @@ const wasticker = NewSticker({
   pack: config.name,
   author: config.footer,
   categories: ["👋"],
-  width: 320,
-  fps: 15,
-  loop: true,
-  lossless: true,
-  compress: 0
+  width: 320
 })
 
 export default <Command>{
