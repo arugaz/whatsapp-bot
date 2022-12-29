@@ -6,8 +6,10 @@ export default <Command>{
   cd: 20,
   desc: "Generate a hyper-realistic photo an anime style!",
   execute: async ({ aruga, message }) => {
-    if (message.type.includes("image") || message.quoted.type.includes("image")) {
+    if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await message.quoted.download() : await message.download()
+      // It works in my country (Indonesia), if it doesnt work in your country/server you may need a proxy
+      // refer to https://www.npmjs.com/package/@arugaz/ai2d#tldr
       const result = await AI2D(buffer, {
         crop: "SINGLE"
       })
