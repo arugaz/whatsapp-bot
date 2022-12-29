@@ -1,6 +1,6 @@
 import type { Group } from "@prisma/client"
 import NodeCache from "node-cache"
-import Database from "../../../libs/database.libs"
+import Database from "../../../libs/database"
 
 const group = new NodeCache({
   stdTTL: 60 * 10, // 10 mins

@@ -1,9 +1,9 @@
-import type WAClient from "../libs/whatsapp.libs"
-import type { CallSerialize } from "../types/serialize.types"
-import i18n from "../libs/international.libs"
-import color from "../utils/color.utils"
-import config from "../utils/config.utils"
-import { database } from "../utils/whatsapp.utils"
+import type WAClient from "../libs/whatsapp"
+import type { CallSerialize } from "../types/serialize"
+import i18n from "../libs/international"
+import color from "../utils/color"
+import config from "../utils/config"
+import { database } from "../libs/whatsapp"
 
 export const execute = async (aruga: WAClient, call: CallSerialize): Promise<unknown> => {
   if (!call.callFrom.endsWith("g.us") && call.status === "offer" && !config.ownerNumber.includes(call.callFrom.replace(/\D+/g, ""))) {

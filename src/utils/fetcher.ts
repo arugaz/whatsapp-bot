@@ -43,7 +43,7 @@ export const fetcherBuffer = (url: string, opts?: AxiosRequestConfig) =>
   new Promise<[string, Buffer]>((resolve, reject) =>
     axios
       .get(url, Object.assign(fetchDefaultOptions, { ...opts, responseType: "arraybuffer" }))
-      .then(res => {
+      .then((res) => {
         resolve([res.headers["content-type"], res.data as Buffer])
       })
       .catch(reject)
@@ -52,7 +52,7 @@ export const fetcherBuffer = (url: string, opts?: AxiosRequestConfig) =>
 /**
  * Upload media to telegraph server
  * @param buffData Buffer you want to upload
- * @param ext Buffer extension, like mp4, m3u8 jpeg etc..
+ * @param ext Buffer extension, like mp4, m3u8, jpeg etc..
  * @returns telegraph media url
  */
 export const uploadMedia = (buffData: Buffer, ext: string) =>
@@ -65,6 +65,6 @@ export const uploadMedia = (buffData: Buffer, ext: string) =>
         ...form.getHeaders()
       }
     })
-      .then(data => resolve("https://telegra.ph" + data[0].src))
+      .then((data) => resolve("https://telegra.ph" + data[0].src))
       .catch(reject)
   })

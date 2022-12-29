@@ -4,13 +4,13 @@ import { inspect } from "util"
 import type { Participants } from "@prisma/client"
 import { TimeoutError } from "@arugaz/queue"
 
-import International from "../libs/international.libs"
-import type WAClient from "../libs/whatsapp.libs"
-import type { MessageSerialize } from "../types/serialize.types"
-import utilColor from "../utils/color.utils"
-import utilConfig from "../utils/config.utils"
-import { timeFormat as utilTimeFormat } from "../utils/format.utils"
-import { command, database } from "../utils/whatsapp.utils"
+import International from "../libs/international"
+import type WAClient from "../libs/whatsapp"
+import type { MessageSerialize } from "../types/serialize"
+import utilColor from "../utils/color"
+import utilConfig from "../utils/config"
+import { timeFormat as utilTimeFormat } from "../utils/format"
+import { command, database } from "../libs/whatsapp"
 
 // binding import to const so tsc won't change the declaration name <3
 const i18n = International
@@ -27,11 +27,11 @@ const createGroup = database.createGroup
 
 export const execute = async (aruga: WAClient, message: MessageSerialize): Promise<unknown> => {
   // parse
-  const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find(p => p[1])[0] || [""])[0]
+  const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0]
   const cmd = message.body && !!prefix && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
   const args = message.body.trim().split(/ +/).slice(1) || []
   const arg = message.body.indexOf(" ") !== -1 ? message.body.trim().substring(message.body.indexOf(" ") + 1) : ""
-  const command = commands.get(cmd) ?? commands.find(v => v.aliases && v.aliases.includes(cmd))
+  const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd))
   const isOwner = message.sender && config.ownerNumber.includes(message.sender.replace(/\D+/g, ""))
 
   const group = message.isGroupMsg && ((await getGroup(message.from)) ?? (await createGroup(message.from, { name: message.groupMetadata.subject })))
@@ -45,9 +45,9 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
   // parse group members
   const groupAdmins: Participants[] = message.isGroupMsg && message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, [])
-  const isGroupOwner = message.isGroupMsg && !!groupAdmins.find(member => member.admin === "superadmin" && member.id === message.sender)
-  const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find(member => member.id === message.sender)
-  const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find(member => member.id === aruga.decodeJid(aruga.user.id))
+  const isGroupOwner = message.isGroupMsg && !!groupAdmins.find((member) => member.admin === "superadmin" && member.id === message.sender)
+  const isGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === message.sender)
+  const isBotGroupAdmin = message.isGroupMsg && !!groupAdmins.find((member) => member.id === aruga.decodeJid(aruga.user.id))
 
   if (command) {
     // avoid spam messages

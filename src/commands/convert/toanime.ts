@@ -1,5 +1,5 @@
 import AI2D from "@arugaz/ai2d"
-import { Command } from "../../types/command.types"
+import type { Command } from "../../types/command"
 
 export default <Command>{
   category: "convert",

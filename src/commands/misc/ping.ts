@@ -1,4 +1,4 @@
-import type { Command } from "../../types/command.types"
+import type { Command } from "../../types/command"
 
 export default <Command>{
   category: "misc",

@@ -2,8 +2,8 @@ import fs from "fs"
 import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
 import { randomBytes } from "crypto"
-import ffmpeg from "../../libs/ffmpeg.libs"
-import { StickerOptions, StickerCategories } from "../../types/sticker.types"
+import ffmpeg from "../../utils/ffmpeg"
+import { StickerOptions, StickerCategories } from "../../types/sticker"
 
 const defaultOptions: StickerOptions = {
   author: "arugaz",
@@ -67,7 +67,7 @@ class WASticker {
         "-f",
         "webp"
       ])
-        .then(bufferResult => resolve(this.#$_setExit(bufferResult)))
+        .then((bufferResult) => resolve(this.#$_setExit(bufferResult)))
         .catch(reject)
     )
   }

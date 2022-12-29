@@ -1,6 +1,6 @@
 import type { Group, User } from "@prisma/client"
-import type Client from "../libs/whatsapp.libs"
-import type { MessageSerialize } from "./serialize.types"
+import type Client from "../libs/whatsapp"
+import type { MessageSerialize } from "./serialize"
 
 declare type Command = {
   /**

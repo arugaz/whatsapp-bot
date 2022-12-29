@@ -1,9 +1,9 @@
 import os from "os"
-import i18n from "../../libs/international.libs"
-import config from "../../utils/config.utils"
-import { command } from "../../utils/whatsapp.utils"
-import { sizeFormat, timeFormat } from "../../utils/format.utils"
-import type { Command } from "../../types/command.types"
+import i18n from "../../libs/international"
+import config from "../../utils/config"
+import { command } from "../../libs/whatsapp"
+import { sizeFormat, timeFormat } from "../../utils/format"
+import type { Command } from "../../types/command"
 
 export default <Command>{
   aliases: ["help"],

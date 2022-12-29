@@ -1,6 +1,6 @@
 import { WAMessage } from "@adiwajshing/baileys"
-import Client from "../../../libs/whatsapp.libs"
-import { GroupParticipantSerialize } from "../../../types/serialize.types"
+import Client from "../../../libs/whatsapp"
+import { GroupParticipantSerialize } from "../../../types/serialize"
 
 export const groupParticipant = async (aruga: Client, msg: WAMessage): Promise<GroupParticipantSerialize> => {
   const m = <GroupParticipantSerialize>{}

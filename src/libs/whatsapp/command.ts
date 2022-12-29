@@ -1,6 +1,6 @@
 import { Queue } from "@arugaz/queue"
 import Collection from "@arugaz/collection"
-import type { Command } from "../../types/command.types"
+import type { Command } from "../../types/command"
 
 /**
  * Commands collection

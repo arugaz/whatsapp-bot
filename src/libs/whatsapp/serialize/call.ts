@@ -1,6 +1,6 @@
 import { WACallEvent, WA_DEFAULT_EPHEMERAL } from "@adiwajshing/baileys"
-import Client from "../../../libs/whatsapp.libs"
-import { CallSerialize } from "../../../types/serialize.types"
+import Client from "../../../libs/whatsapp"
+import { CallSerialize } from "../../../types/serialize"
 
 /** Call Serialize */
 export const call = async (aruga: Client, call: WACallEvent): Promise<CallSerialize> => {

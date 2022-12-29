@@ -5,13 +5,12 @@ import EventEmitter from "@arugaz/eventemitter"
 import { writeFile as fsWriteFile } from "fs/promises"
 import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMessageStubType } from "@adiwajshing/baileys"
 
-// if you want to use single auth, import useSingleAuthState
-import { useMultiAuthState } from "../libs/auth.libs"
-import Database from "../libs/database.libs"
-import color from "../utils/color.utils"
-import config from "../utils/config.utils"
-import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../types/client.types"
-import type { MessageSerialize } from "../types/serialize.types"
+import { auth } from "../whatsapp"
+import Database from "../database"
+import color from "../../utils/color"
+import config from "../../utils/config"
+import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../../types/client"
+import type { MessageSerialize } from "../../types/serialize"
 
 let first = !0
 export default class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
@@ -25,7 +24,8 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
   public async startClient(): Promise<void> {
     const logger = this.#cfg.logger || P({ level: "silent" }).child({ level: "silent" })
 
-    const { saveState, clearState, state } = await useMultiAuthState(Database)
+    // if you want to use single auth, use useSingleAuthState function
+    const { saveState, clearState, state } = (this.#cfg.authType === "single" && (await auth.useSingleAuthState(Database))) || (this.#cfg.authType === "multi" && (await auth.useMultiAuthState(Database)))
     const { version, isLatest } = await fetchLatestBaileysVersion()
 
     const aruga = makeWASocket({
@@ -39,7 +39,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       },
       browser: ["whatsapp-bot", "Safari", "3.0.0"],
       logger,
-      patchMessageBeforeSending: message => {
+      patchMessageBeforeSending: (message) => {
         const requiresPatch = !!(message.buttonsMessage || message.listMessage)
         if (requiresPatch) {
           message = {
@@ -60,7 +60,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       version
     })
 
-    for (const method of Object.keys(aruga).filter(v => v !== "ws" && v !== "ev")) (this[method as keyof WAClient] = aruga[method as keyof Aruga]), delete aruga[method]
+    for (const method of Object.keys(aruga).filter((v) => v !== "ws" && v !== "ev")) (this[method as keyof WAClient] = aruga[method as keyof Aruga]), delete aruga[method]
 
     // connection
     aruga.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
@@ -80,7 +80,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
           await this.logout()
         } else {
           this.log("Reconnecting...", "warning")
-          await new Promise<void>(resolve => setTimeout(() => resolve(this.startClient().catch(console.error)), 1500))
+          await new Promise<void>((resolve) => setTimeout(() => resolve(this.startClient().catch(console.error)), 1500))
         }
       }
 
@@ -107,13 +107,13 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
 
     /** forwarded to the main event */
     // call events
-    aruga.ev.on("call", call => call.length >= 1 && this.emit("call", call[0]))
+    aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]))
     // message event
-    aruga.ev.on("messages.upsert", msg => msg.messages.length >= 1 && !msg.messages[0]?.messageStubType && msg.messages[0]?.message && this.emit("message", msg.messages[0]))
+    aruga.ev.on("messages.upsert", (msg) => msg.messages.length >= 1 && !msg.messages[0]?.messageStubType && msg.messages[0]?.message && this.emit("message", msg.messages[0]))
     // group event
     aruga.ev.on(
       "messages.upsert",
-      msg =>
+      (msg) =>
         msg.messages.length >= 1 &&
         (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_SUBJECT ||
           msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_ICON ||
@@ -126,7 +126,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     // group participant event
     aruga.ev.on(
       "messages.upsert",
-      msg =>
+      (msg) =>
         msg.messages.length >= 1 &&
         (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD ||
           msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
@@ -210,7 +210,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     const content = generateForwardMessageContent(proto.WebMessageInfo.fromObject(message), false)
 
     if (content.listMessage) content.listMessage.listType = 1
-    const contentType = Object.keys(content).find(x => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    const contentType = Object.keys(content).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
     delete content[contentType].contextInfo.forwardingScore as unknown
     delete content[contentType].contextInfo.isForwarded as unknown
     content[contentType].contextInfo = {
@@ -232,7 +232,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     process.nextTick(() => this.upsertMessage(waMessage, "append"))
     await this.relayMessage(jid, waMessage.message, {
       messageId: waMessage.key.id,
-      cachedGroupMetadata: async jid => await Database.groupMetadata.findUnique({ where: { groupId: jid } })
+      cachedGroupMetadata: async (jid) => await Database.groupMetadata.findUnique({ where: { groupId: jid } })
     })
     return waMessage
   }

@@ -1,6 +1,6 @@
-import { NewSticker } from "../../utils/convert.utils"
-import { Command } from "../../types/command.types"
-import config from "../../utils/config.utils"
+import { NewSticker } from "../../libs/convert"
+import config from "../../utils/config"
+import type { Command } from "../../types/command"
 
 const wasticker = NewSticker({
   pack: config.name,

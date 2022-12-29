@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client"
 import NodeCache from "node-cache"
-import Database from "../../../libs/database.libs"
-import config from "../../config.utils"
+import Database from "../../../libs/database"
+import config from "../../../utils/config"
 
 const user = new NodeCache({
   stdTTL: 60 * 10, // 10 mins

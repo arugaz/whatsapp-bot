@@ -1,7 +1,7 @@
 import Translate from "@arugaz/translator"
 import { join as pathJoin } from "path"
 import { lstatSync, readdirSync, readFileSync } from "fs"
-import config from "../utils/config.utils"
+import config from "../utils/config"
 const i18n = Translate()
 
 // set default language!

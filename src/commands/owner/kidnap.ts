@@ -1,4 +1,4 @@
-import type { Command } from "../../types/command.types"
+import type { Command } from "../../types/command"
 
 /**
  * Kidnap other group members to your group
@@ -29,11 +29,11 @@ export default <Command>{
       const fetchGroups = await aruga.groupFetchAllParticipating()
       const getGroups = Object.entries(fetchGroups)
         .slice(0)
-        .map(entry => entry[1])
+        .map((entry) => entry[1])
       const participants = getGroups
-        .filter(v => v.id === result.id)
-        .map(x => x.participants)[0]
-        .map(v => v.id)
+        .filter((v) => v.id === result.id)
+        .map((x) => x.participants)[0]
+        .map((v) => v.id)
 
       return await aruga.groupParticipantsUpdate(message.from, participants, "add")
     } else return await message.reply("Invalid url", true)

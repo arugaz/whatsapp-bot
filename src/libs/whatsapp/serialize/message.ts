@@ -1,7 +1,7 @@
 import { WAMessage } from "@adiwajshing/baileys"
-import Client from "../../../libs/whatsapp.libs"
-import { MessageSerialize } from "../../../types/serialize.types"
-import { getGroupMetadata, createGroupMetadata } from "../../whatsapp.utils/database"
+import Client from "../../../libs/whatsapp"
+import { MessageSerialize } from "../../../types/serialize"
+import { database } from "../../whatsapp"
 
 export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSerialize> => {
   const m = <MessageSerialize>{}
@@ -25,7 +25,7 @@ export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSer
     m.isGroupMsg = m.key.remoteJid.endsWith("g.us")
     m.from = aruga.decodeJid(m.key.remoteJid)
     m.fromMe = m.key.fromMe
-    m.type = Object.keys(m.message).find(x => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
     m.sender = aruga.decodeJid(m.fromMe ? aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from)
     m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant
     m.body =
@@ -77,7 +77,7 @@ export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSer
   m.timestamps = (typeof msg.messageTimestamp === "number" ? msg.messageTimestamp : msg.messageTimestamp.low ? msg.messageTimestamp.low : msg.messageTimestamp.high) * 1000 || Date.now()
   m.expiration = m.message[m.type]?.contextInfo?.expiration || 0
   m.pushname = msg.pushName || "unknown"
-  m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && ((await getGroupMetadata(m.from)) ?? (await createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)))
+  m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && ((await database.getGroupMetadata(m.from)) ?? (await database.createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)))
 
   m.quoted = <MessageSerialize>{}
   m.quoted.message = m.message[m.type]?.contextInfo?.quotedMessage
@@ -107,7 +107,7 @@ export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSer
     m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith("g.us")
     m.quoted.from = aruga.decodeJid(m.quoted.key.remoteJid)
     m.quoted.fromMe = m.quoted.key.fromMe
-    m.quoted.type = Object.keys(m.quoted.message).find(x => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
     m.quoted.sender = m.quoted.key.participant
     m.quoted.body =
       m.quoted.message.conversation && m.quoted.type === "conversation"

@@ -1,8 +1,8 @@
 import { WAMessageStubType } from "@adiwajshing/baileys"
-import WAClient from "../libs/whatsapp.libs"
-import color from "../utils/color.utils"
-import { database } from "../utils/whatsapp.utils"
-import type { GroupParticipantSerialize } from "../types/serialize.types"
+import WAClient from "../libs/whatsapp"
+import color from "../utils/color"
+import { database } from "../libs/whatsapp"
+import type { GroupParticipantSerialize } from "../types/serialize"
 
 export const execute = async (aruga: WAClient, message: GroupParticipantSerialize): Promise<unknown> => {
   const group = await database.getGroup(message.from)

@@ -1,9 +1,9 @@
 import type { proto } from "@adiwajshing/baileys"
-import i18n from "../../libs/international.libs"
-import config from "../../utils/config.utils"
-import { command } from "../../utils/whatsapp.utils"
-import { upperFormat } from "../../utils/format.utils"
-import type { Command } from "../../types/command.types"
+import i18n from "../../libs/international"
+import config from "../../utils/config"
+import { command } from "../../libs/whatsapp"
+import { upperFormat } from "../../utils/format"
+import type { Command } from "../../types/command"
 
 export default <Command>{
   aliases: ["listhelp", "menulist", "helplist"],
@@ -12,7 +12,7 @@ export default <Command>{
   execute: async ({ aruga, message, prefix, args, isOwner, user }) => {
     if (args.length === 1) {
       const name = args[0].toLowerCase()
-      const cmd = command.commands.get(name) ?? command.commands.find(cmd => cmd.aliases && cmd.aliases.includes(name))
+      const cmd = command.commands.get(name) ?? command.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name))
       if ((!cmd || cmd.category === "owner") && !isOwner)
         return await message.reply(i18n.translate("commands.general.listmenu.info.zero", {}, user.language), true)
       const text =
@@ -46,16 +46,16 @@ export default <Command>{
     for (const category of [
       ...new Set(
         command.commands
-          .map(v => v.category)
-          .filter(v => (!isOwner && v === "owner" ? null : v))
+          .map((v) => v.category)
+          .filter((v) => (!isOwner && v === "owner" ? null : v))
           .sort()
       )
     ]) {
-      const cmd = command.commands.map(v => v.category === category && v).filter(v => (!isOwner && v.ownerOnly ? null : v))
+      const cmd = command.commands.map((v) => v.category === category && v).filter((v) => (!isOwner && v.ownerOnly ? null : v))
       sections.push({
         title: upperFormat(category),
-        rows: cmd.map(value => {
-          const title = command.commands.findKey(v => v === value)
+        rows: cmd.map((value) => {
+          const title = command.commands.findKey((v) => v === value)
           return {
             title,
             rowId: `${prefix}listmenu ${title}`,
