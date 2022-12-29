@@ -16,7 +16,7 @@
     <img title="Whatsapp-Bot-Multi-Device-CodeFactor" src="https://img.shields.io/codefactor/grade/github/ArugaZ/whatsapp-bot/master?color=blue&label=CodeFactor&style=flat-square">
   </a>
   <a href="https://github.com/arugaz/whatsapp-bot/issues">
-    <img title="Whatsapp-Bot-Multi-Device-Issues" src="https://img.shields.io/bitbucket/issues-raw/arugaz/whatsapp-bot?label=Issues&color=%23ff9aa2&style=flat-square" />
+    <img title="Whatsapp-Bot-Multi-Device-Issues" src="https://img.shields.io/github/issues-raw/arugaz/whatsapp-bot?label=Issues&color=%23ff9aa2&style=flat-square" />
   </a>
 </div>
 <div align="center">
