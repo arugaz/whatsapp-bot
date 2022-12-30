@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc --build",
     "dev": "rimraf dist && tsc-watch --build ./tsconfig.json --onSuccess \"node --inspect ./dist/main.js\" --noClear",
-    "generateLang": "node -r ./generateLang ./generateLang.arugaz",
+    "generateLang": "node -r ./bin/generateLang ./bin/generateLang.arugaz",
+    "generateLangV2": "node ./bin/generateLangV2",
     "lint": "eslint . --ext .ts && prettier --write \"src/**/*.+(ts|json)\"",
     "postinstall": "yarn autoclean --force",
     "start": "node ./dist/main.js",

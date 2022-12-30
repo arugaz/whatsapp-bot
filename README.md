@@ -99,7 +99,10 @@ yarn build
 It will generate languages based on list [database/languages.json](database/languages.json). You can remove the languages you don't want to use (it will store the object into memory), except ([English (en)](languages/en.json) and [Indonesian (id)](languages/id.json)) because its already generate by default.
 
 ```bash
+# try this:
 yarn generateLang
+# if get incompatible error, try run:
+yarn generateLangV2
 ```
 
 </section>

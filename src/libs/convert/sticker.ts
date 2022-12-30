@@ -1,4 +1,3 @@
-import fs from "fs"
 import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
 import { randomBytes } from "crypto"
@@ -9,21 +8,18 @@ const defaultOptions: StickerOptions = {
   author: "arugaz",
   pack: "whatsapp-bot",
   id: "github.com/arugaz/whatsapp-bot " + randomBytes(4).toString("hex"),
-  width: 256,
+  width: 512,
   fps: 25,
   loop: true,
-  lossless: true,
   compress: 0
 }
 
-class WASticker {
+export class WASticker {
   #opts: StickerOptions
   #exif: Buffer | null
-  #dataSticker: Buffer | null
 
   constructor(opts?: StickerOptions) {
     this.#opts = Object.assign(defaultOptions, opts || {})
-    this.#dataSticker = null
     this.#exif = null
   }
 
@@ -44,35 +40,28 @@ class WASticker {
   }
 
   #$_convert(bufferData: Buffer) {
+    const bufferSize = bufferData.byteLength
     return new Promise<Buffer>((resolve, reject) =>
       ffmpeg(bufferData, [
         "-vf",
-        `scale='min(${this.#opts.width},iw)':min'(${this.#opts.width},ih)':force_original_aspect_ratio=decrease,fps=${this.#opts.fps}, pad=${this.#opts.width}:${this.#opts.width}:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+        `scale='min(${this.#opts.width},iw)':min'(${this.#opts.width},ih)':force_original_aspect_ratio=decrease,fps=fps=${this.#opts.fps}, pad=${this.#opts.width}:${this.#opts.width}:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
         "-loop",
         this.#opts.loop ? "0" : "1",
-        "-lossless",
-        this.#opts.lossless ? "1" : "0",
         "-compression_level",
         `${this.#opts.compress}`,
-        "-qscale",
-        "20",
+        "-quality",
+        `${bufferSize < 300000 ? 20 : bufferSize < 400000 ? 15 : 10}`,
+        "-preset",
+        "default",
+        "-an",
+        "-vsync",
+        "0",
         "-f",
         "webp"
       ])
-        .then((bufferResult) => resolve(this.setExit(bufferResult)))
+        .then((bufferResult) => resolve(this.ConvertExif(bufferResult)))
         .catch(reject)
     )
-  }
-  /**
-   * Load image data!
-   * @param bufferData Buffer input
-   * @param opts extends default Options
-   */
-  public Load(bufferData: Buffer, opts?: StickerOptions): this {
-    this.#dataSticker = bufferData
-    this.#opts = Object.assign(this.#opts, opts || {})
-    if (opts) this.#exif = this.#$_createExif()
-    return this
   }
 
   /**
@@ -89,7 +78,7 @@ class WASticker {
    * Extends options author
    * @param author Author name
    */
-  setAuthor(author: string): this {
+  public setAuthor(author: string): this {
     this.#opts.author = author
     this.#exif = this.#$_createExif()
     return this
@@ -99,7 +88,7 @@ class WASticker {
    * Extends options ID
    * @param id Sticker ID
    */
-  setID(id: string): this {
+  public setID(id: string): this {
     this.#opts.id = id
     this.#exif = this.#$_createExif()
     return this
@@ -109,18 +98,20 @@ class WASticker {
    * Extends options Categories
    * @param categories Sticker Categories
    */
-  setCategories(categories: StickerCategories[]): this {
+  public setCategories(categories: StickerCategories[]): this {
     this.#opts.categories = categories
     this.#exif = this.#$_createExif()
     return this
   }
 
   /**
-   * Get sticker Buffer
+   * Convert media to buffer
+   * @param bufferData Media Buffer
+   * @returns Webp Buffer
    */
-  async ToBuffer(): Promise<Buffer> {
-    const result = await this.#$_convert(this.#dataSticker)
-    this.#dataSticker = null
+  public async ConvertMedia(bufferData: Buffer): Promise<Buffer> {
+    this.#exif = this.#exif ? this.#exif : this.#$_createExif()
+    const result = await this.#$_convert(bufferData)
     return result
   }
 
@@ -129,22 +120,11 @@ class WASticker {
    * @param bufferData WEBP Buffer
    * @returns
    */
-  async setExit(bufferData: Buffer) {
+  public async ConvertExif(bufferData: Buffer) {
     this.#exif = this.#exif ? this.#exif : this.#$_createExif()
     const image = new webpmux.Image()
     await image.load(bufferData)
     image.exif = this.#exif
     return image.save(null)
   }
-
-  /**
-   * Save to path
-   * @param filename where you want to save file?
-   */
-  async ToFile(filename: string): Promise<void> {
-    const buffer = await this.ToBuffer()
-    return fs.promises.writeFile(filename, buffer)
-  }
 }
-
-export const NewSticker = (opts?: StickerOptions) => new WASticker(opts)

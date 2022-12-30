@@ -32,11 +32,6 @@ export type StickerOptions = {
    */
   loop?: boolean
   /**
-   * Losless the result ?
-   * @default true
-   */
-  lossless?: boolean
-  /**
    * Compress the result ? number 0 - 6
    * @default 0
    */

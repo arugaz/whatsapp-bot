@@ -1,12 +1,11 @@
-import { NewSticker } from "../../libs/convert"
+import { WASticker } from "../../libs/convert"
 import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
-const wasticker = NewSticker({
+const wasticker = new WASticker({
   pack: config.name,
   author: config.footer,
-  categories: ["👋"],
-  width: 320
+  categories: ["👋"]
 })
 
 export default <Command>{
@@ -16,7 +15,7 @@ export default <Command>{
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await message.quoted.download() : await message.download()
-      const result = await wasticker.Load(buffer).ToBuffer()
+      const result = await wasticker.ConvertMedia(buffer)
 
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
@@ -28,7 +27,7 @@ export default <Command>{
       if (duration && !isNaN(duration) && duration > 10) throw "Video duration is too long! Maximum duration of 10 seconds"
 
       const buffer = message.quoted ? await message.quoted.download() : await message.download()
-      const result = await wasticker.Load(buffer).ToBuffer()
+      const result = await wasticker.ConvertMedia(buffer)
 
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
