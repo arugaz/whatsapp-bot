@@ -1,29 +1,22 @@
-name: NodeJS CI
+name: Check PR health
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [pull_request]
 
 jobs:
   check-lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node: ["lts/gallium", "lts/hydrogen"]
+    timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v3
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16.x
 
       - name: Install packages
-        run: yarn install
+        run: yarn
 
       - name: Check linting
         run: yarn lint
