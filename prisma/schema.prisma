@@ -18,7 +18,7 @@ model Session {
   session   String?
 }
 
-// Storing group information
+/// Storing group information
 model Group {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   /// Whatsapp group Jid
@@ -84,7 +84,7 @@ enum GroupAdmin {
   superadmin
 }
 
-// Storing users session
+/// Storing users session
 model User {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   /// Whatsapp user Jid
