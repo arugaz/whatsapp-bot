@@ -1,0 +1,23 @@
+name: "💡 Feature Request"
+description: Create a new ticket for a new feature request
+title: "[REQ] <title>"
+labels: ["enhancement"]
+assignees:
+  - arugaz
+  - tobyg74
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before adding this issue, make sure you do the following to make sure this is not a duplicate:**
+        1. Search through the repo's previous issues
+        2. Read through the readme at least once
+        3. Search the docs for the feature you're looking for
+  - type: textarea
+    id: features
+    attributes:
+      label: "Just describe the feature"
+      description: Provide a brief explanation of the feature
+      placeholder: A few specific words about your feature request.
+    validations:
+      required: true

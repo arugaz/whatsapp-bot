@@ -1,0 +1,66 @@
+name: "🐛 Bug Report"
+description: Create a report to help improve the repository
+title: "[BUG] <title>"
+labels: ["bug"]
+assignees:
+  - arugaz
+  - tobyg74
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please enter an explicit description of your issue
+      placeholder: A clear and concise description of what the bug is....
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Reproduction steps"
+      description: Please enter an explicit description of your issue
+      value: |
+        1. Clone the repository & run the app
+        2. Closed & used saved credentials to log back in
+        3. Etc.
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "Screenshots"
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Logs"
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: bash
+    validations:
+      required: false
+  - type: input
+    id: whatsapp
+    attributes:
+      label: "Whatsapp Version"
+      description: What version of whatsapp are you using?
+      placeholder: ex. v2.22.13.77
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: "OS"
+      description: What environment are you having the problem on?
+      multiple: false
+      options:
+        - Windows
+        - Linux
+        - Mac
+        - Android (termux)
+        - Replit
+    validations:
+      required: true
