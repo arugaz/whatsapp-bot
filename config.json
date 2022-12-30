@@ -5,7 +5,7 @@
   "readStatus": false,
   "readMessage": false,
   "antiCall": {
-    "reject": false,
+    "reject": true,
     "block": false,
     "ban": false
   },

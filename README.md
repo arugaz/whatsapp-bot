@@ -56,7 +56,6 @@
 This project require
 
 - NodeJS v16 or greater [Install](https://nodejs.org/dist/)
-- Yarn Classic Stable [Install](https://classic.yarnpkg.com/lang/en/docs/install/#alternatives-stable)
 - FFMPEG [Install](https://ffmpeg.org/download.html)
 
 ## Install
@@ -73,7 +72,7 @@ cd whatsapp-bot
 ### Install the dependencies:
 
 ```bash
-yarn install
+npm install
 ```
 
 ### Setup
@@ -83,7 +82,7 @@ yarn install
 Create .env file based on .env.example, copy the mongo database URL into .env file
 
 ```bash
-yarn prisma db push
+npx prisma db push
 ```
 
 `Build a project`
@@ -91,7 +90,7 @@ yarn prisma db push
 [Why build into javascript?](https://pm2.io/docs/runtime/integration/transpilers/)
 
 ```bash
-yarn build
+npm run build
 ```
 
 `If you want generate more languages`
@@ -100,9 +99,9 @@ It will generate languages based on list [database/languages.json](database/lang
 
 ```bash
 # try this:
-yarn generateLang
+npm run generateLang
 # if get incompatible error, try run:
-yarn generateLangV2
+npm run generateLangV2
 ```
 
 </section>
@@ -114,15 +113,36 @@ yarn generateLangV2
 `Run the Whatsapp bot`
 
 ```bash
-yarn start
+npm start
 ```
 
 `With pm2`
 
-If you haven't installed pm2, I suggest using npm to [install](https://pm2.keymetrics.io/docs/usage/quick-start/#installation) it.
+If you haven't installed pm2.
 
 ```bash
-yarn start:pm2
+npm install -g pm2
+```
+
+Run with pm2
+
+```bash
+npm run start:pm2
+```
+
+Other tips with pm2:
+
+> This will start your application when the server is restarted or rebooted.
+
+```bash
+# if you are on a unix
+pm2 startup #create a startup script
+pm2 save #save the current app
+
+# if you are on windows
+npm install pm2-windows-startup -g #install helper dependency
+pm2-startup install #create a startup script
+pm2 save #save the current app
 ```
 
 after running it you need to scan the qr

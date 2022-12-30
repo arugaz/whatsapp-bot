@@ -11,7 +11,7 @@
     "generateLangV2": "node ./bin/generateLangV2",
     "lint": "eslint . --ext .ts && prettier --write \"src/**/*.+(ts|json)\"",
     "start": "node ./dist/main.js",
-    "start:pm2": "pm2 start ecosystem.config.js && pm2 logs whatsappbot --raw"
+    "start:pm2": "pm2 start ecosystem.config.js && pm2 save && pm2 logs whatsappbot --raw"
   },
   "author": "arugaz",
   "repository": {
