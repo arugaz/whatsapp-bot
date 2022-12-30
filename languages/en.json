@@ -25,8 +25,8 @@
         "text": "You can change your language when interacting with me, here are some supported languages",
         "buttonText": "LIST LANGUAGES"
       },
-      "listmenu": {
-        "info": {
+      "menu": {
+        "cmd": {
           "zero": "No command found",
           "one": "Alias",
           "two": "Category",
@@ -42,10 +42,6 @@
           "twelve": "Cooldown",
           "thirteen": "Maintenance"
         },
-        "title": "List command",
-        "text": "The following are some of the features found in the bot."
-      },
-      "menu": {
         "intro": {
           "one": "Hello {{@PUSHNAME}} 👋️,",
           "two": "How can I help you?"
@@ -61,11 +57,8 @@
           "two": "in private chats",
           "three": "by typing {{@COMMANDS}}"
         },
-        "template": {
-          "one": "⭐ Star Bots on GitHub!",
-          "two": "Click here to see the menu list!",
-          "three": "Click here to change your language!"
-        }
+        "bottom": "The following are some of the features found in the bot.",
+        "buttonText": "LIST MENU"
       }
     }
   }

@@ -10,7 +10,6 @@
     "generateLang": "node -r ./bin/generateLang ./bin/generateLang.arugaz",
     "generateLangV2": "node ./bin/generateLangV2",
     "lint": "eslint . --ext .ts && prettier --write \"src/**/*.+(ts|json)\"",
-    "postinstall": "yarn autoclean --force",
     "start": "node ./dist/main.js",
     "start:pm2": "pm2 start ecosystem.config.js && pm2 logs whatsappbot --raw"
   },
@@ -25,8 +24,7 @@
   "homepage": "https://github.com/ArugaZ/whatsapp-bot",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=14.0.0",
-    "npm": "please-use-yarn"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@adiwajshing/baileys": "git+https://github.com/arugaz/Baileys",

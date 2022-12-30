@@ -25,8 +25,8 @@
         "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
         "buttonText": "DAFTAR BAHASA"
       },
-      "listmenu": {
-        "info": {
+      "menu": {
+        "cmd": {
           "zero": "Tidak ada perintah yang ditemukan",
           "one": "Alias",
           "two": "Kategori",
@@ -42,10 +42,6 @@
           "twelve": "Cooldown",
           "thirteen": "Pemeliharaan"
         },
-        "title": "Daftar perintah",
-        "text": "Berikut ini adalah beberapa fitur yang terdapat dalam bot."
-      },
-      "menu": {
         "intro": {
           "one": "Halo {{@PUSHNAME}} 👋️,",
           "two": "Ada yang bisa aku bantu?"
@@ -61,11 +57,8 @@
           "two": "di obrolan pribadi",
           "three": "dengan mengetik {{@COMMANDS}}"
         },
-        "template": {
-          "one": "⭐ Bintangi Bot di GitHub!",
-          "two": "Klik di sini untuk melihat daftar menu!",
-          "three": "Klik di sini untuk mengubah bahasa kamu!"
-        }
+        "bottom": "Berikut ini adalah beberapa fitur yang terdapat dalam bot.",
+        "buttonText": "DAFTAR MENU"
       }
     }
   }
