@@ -57,6 +57,7 @@ This project require
 
 - NodeJS v14 or greater [Install](https://nodejs.org/dist/)
 - Yarn Classic Stable [Install](https://classic.yarnpkg.com/lang/en/docs/install/#alternatives-stable)
+- FFMPEG [Install](https://ffmpeg.org/download.html)
 
 ## Install
 
