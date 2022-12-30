@@ -9,10 +9,10 @@ on:
 jobs:
   check-lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: ["lts/fermium", "lts/gallium", "lts/hydrogen"]
 
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install packages
-        run: yarn
+        run: yarn install --frozen-lockfile
 
       - name: Check linting
         run: yarn lint
