@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ["lts/fermium", "lts/gallium", "lts/hydrogen"]
+        node: ["lts/gallium", "lts/hydrogen"]
 
     steps:
       - uses: actions/checkout@v3
