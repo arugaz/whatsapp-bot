@@ -10,6 +10,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 *.tsbuildinfo
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
 .env
 
 # database ignore

@@ -73,7 +73,7 @@ cd whatsapp-bot
 ### Install the dependencies:
 
 ```bash
-yarn install --frozen-lockfile
+yarn install
 ```
 
 ### Setup

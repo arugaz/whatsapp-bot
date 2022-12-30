@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Check linting
         run: yarn lint
