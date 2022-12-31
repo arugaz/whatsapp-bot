@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Clean packages
+        run: npm cache clean --force
+
       - name: Install packages
         run: npm install
 
