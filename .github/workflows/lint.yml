@@ -25,11 +25,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Clean packages
-        run: npm cache clean --force
-
       - name: Install packages
-        run: npm install
+        run: yarn install
 
       - name: Check linting
-        run: npm run lint
+        run: yarn lint
