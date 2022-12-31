@@ -11,10 +11,10 @@ on:
 
 jobs:
   check-lint:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        node: ["lts/erbium", "lts/fermium", lts/gallium, lts/hydrogen]
+        node: ["lts/gallium", "lts/hydrogen"]
 
     name: Node ${{ matrix.node }}
     steps:
