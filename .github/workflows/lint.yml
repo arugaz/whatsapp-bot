@@ -26,7 +26,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install packages
-        run: yarn install
+        run: npm install
 
       - name: Check linting
-        run: yarn lint
+        run: npm run lint
