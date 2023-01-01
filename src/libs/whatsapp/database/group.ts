@@ -1,6 +1,7 @@
 import type { Group } from "@prisma/client"
 import NodeCache from "node-cache"
 import Database from "../../../libs/database"
+import config from "../../../utils/config"
 
 const group = new NodeCache({
   stdTTL: 60 * 10, // 10 mins
@@ -32,6 +33,7 @@ export const createGroup = async (groupId: string, metadata: Partial<Omit<Group,
         groupId,
         ...metadata,
         name: metadata.name ?? "",
+        language: config.language,
         anticountry: { number: [], active: false }
       }
     })
