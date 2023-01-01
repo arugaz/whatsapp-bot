@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2020", "ESNext.Array"],
+    "lib": ["ES2020", "ESNext.Array", "DOM"],
     "module": "CommonJS",
     "moduleResolution": "node",
     "noImplicitThis": true,
