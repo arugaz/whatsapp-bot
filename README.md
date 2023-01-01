@@ -1,11 +1,13 @@
 <div align="center">
-  <img title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png?size=192"/>
+  <img width="192" title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png"/>
 </div>
 
 <div align="center">
-  <a href="#">
-    <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-  </a>
+  <h2>
+    <a>
+      <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
+    </a>
+  </h2>
 </div>
 <div align="center">  
   <a href="https://github.com/ArugaZ">
@@ -150,9 +152,7 @@ after running it you need to scan the qr
 </section>
 
 <div align="center">
-  <h2>
-    Join the community to build Whatsapp-Bot together!
-  </h2>
+  <h2>Join the community to build Whatsapp-Bot together!</h2>
   <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
     <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
   </a>
