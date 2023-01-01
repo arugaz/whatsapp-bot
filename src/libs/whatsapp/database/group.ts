@@ -58,3 +58,13 @@ export const updateGroup = async (groupId: string, metadata: Partial<Omit<Group,
     return null
   }
 }
+
+export const deleteGroup = async (groupId: string) => {
+  try {
+    if (group.has(groupId)) group.del(groupId)
+
+    return await Database.group.delete({ where: { groupId } })
+  } catch {
+    return null
+  }
+}

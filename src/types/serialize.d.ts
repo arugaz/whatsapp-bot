@@ -15,8 +15,9 @@ declare type CallSerialize = {
   status: WACallUpdateType
 
   /**
+   * Reply a message
    * @param {string} text: Message text
-   * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
+   * @returns {Promise<proto.WebMessageInfo>} send messages
    */
   reply: (text: string) => Promise<proto.WebMessageInfo>
 }
@@ -39,6 +40,13 @@ declare type GroupSerialize = {
 
   /** Message Timestamps */
   timestamps: number
+
+  /**
+   * Reply a message
+   * @param {string} text: Message text
+   * @returns {Promise<proto.WebMessageInfo>} send messages
+   */
+  reply: (text: string) => Promise<proto.WebMessageInfo>
 }
 
 /**

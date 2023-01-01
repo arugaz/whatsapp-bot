@@ -1,6 +1,6 @@
 import type { GroupMetadata } from "@prisma/client"
 import NodeCache from "node-cache"
-import Database from "../../../libs/database"
+import Database from "../../database"
 
 const groupMetadata = new NodeCache({
   stdTTL: 60 * 10, // 10 mins
@@ -58,6 +58,16 @@ export const updateGroupMetadata = async (groupId: string, metadata: Partial<Omi
     if (groupMetadataData) groupMetadata.set(groupId, groupMetadataData)
 
     return groupMetadataData
+  } catch {
+    return null
+  }
+}
+
+export const deleteGroupMetadata = async (groupId: string) => {
+  try {
+    if (groupMetadata.has(groupId)) groupMetadata.del(groupId)
+
+    return await Database.groupMetadata.delete({ where: { groupId } })
   } catch {
     return null
   }

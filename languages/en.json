@@ -5,6 +5,27 @@
       "block": "Sorry, I will block you!",
       "ban": "Sorry, I will ban you!"
     },
+    "group-participant": {
+      "promote": "{{@ADM}} has promoted {{@PPL}} become Admins Group",
+      "demote": "{{@ADM}} has demoted {{@PPL}} become Members Group"
+    },
+    "group": {
+      "subject": "{{@PPL}} has changed the Group Name to {{@TTL}}",
+      "icon": {
+        "change": "{{@PPL}} has changed the Group Profile Picture",
+        "remove": "{{@PPL}} has removed the Group Profile Picture"
+      },
+      "invite_link": "{{@PPL}} has updated the Group URL",
+      "description": "{{@PPL}} has updated the Group Description to {{@TTL}}",
+      "restrict": {
+        "on": "{{@PPL}} has changed the Group Settings, only the Group Admin can change the settings",
+        "off": "{{@PPL}} has changed the Group Settings, now Group Members can change the settings"
+      },
+      "announce": {
+        "on": "{{@PPL}} has changed the Group Settings, only Group Admins can send messages",
+        "off": "{{@PPL}} has changed the Group Settings, now Group Members can send messages"
+      }
+    },
     "message": {
       "cooldown": "Command is on cooldown, please wait for {{@SKNDS}}",
       "maintenance": "The command is under maintenance, you can't use it at the moment",

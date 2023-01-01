@@ -1,9 +1,9 @@
 import { WAMessage } from "@adiwajshing/baileys"
-import Client from "../../../libs/whatsapp"
+import WAClient from "../../../libs/whatsapp"
 import { MessageSerialize } from "../../../types/serialize"
 import { database } from "../../whatsapp"
 
-export const message = async (aruga: Client, msg: WAMessage): Promise<MessageSerialize> => {
+export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageSerialize> => {
   const m = <MessageSerialize>{}
   m.message = msg.message?.viewOnceMessage
     ? msg.message.viewOnceMessage?.message

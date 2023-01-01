@@ -60,3 +60,13 @@ export const updateUser = async (userId: string, userInput: Partial<Omit<User, "
     return null
   }
 }
+
+export const deleteUser = async (userId: string) => {
+  try {
+    if (user.has(userId)) user.del(userId)
+
+    return await Database.user.delete({ where: { userId } })
+  } catch {
+    return null
+  }
+}

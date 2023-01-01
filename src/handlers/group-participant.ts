@@ -1,37 +1,51 @@
+import type { Participants } from "@prisma/client"
 import { WAMessageStubType } from "@adiwajshing/baileys"
-import WAClient from "../libs/whatsapp"
-import color from "../utils/color"
+import type WAClient from "../libs/whatsapp"
 import { database } from "../libs/whatsapp"
+import i18n from "../libs/international"
+import color from "../utils/color"
+import config from "../utils/config"
 import type { GroupParticipantSerialize } from "../types/serialize"
 
+const findIndex = (participants: Participants[], jid: string) => {
+  for (let i = 0; i < participants.length; i++) {
+    if (participants[i].id === jid) {
+      return i
+    }
+  }
+}
+
 export const execute = async (aruga: WAClient, message: GroupParticipantSerialize): Promise<unknown> => {
-  const group = await database.getGroup(message.from)
+  const groupMetadata = (await database.getGroupMetadata(message.from)) ?? (await database.createGroupMetadata(message.from, (await aruga.groupMetadata(message.from)) as unknown))
+  const group = (await database.getGroup(message.from)) ?? (await database.createGroup(message.from, { name: groupMetadata.subject }))
   const botNumber = aruga.decodeJid(aruga.user.id)
   const isBot = message.body === botNumber || message.sender === botNumber
 
   try {
-    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-      console.log(isBot)
+    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD || message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
+      groupMetadata.participants.push({ id: message.body, admin: null })
+      await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
-    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE) {
-      console.log(isBot)
+    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
+      if (isBot) {
+        await Promise.all([database.deleteGroup(message.body), database.deleteGroupMetadata(message.body)])
+      } else {
+        groupMetadata.participants.slice(findIndex(groupMetadata.participants, message.body), 1)
+        await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
+      }
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) {
-      console.log(isBot)
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.promote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, config.language))
+      groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = "admin"
+      await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE) {
-      console.log(isBot)
-    }
-
-    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-      console.log(isBot)
-    }
-
-    if (message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
-      console.log(isBot)
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.demote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, config.language))
+      groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = null
+      await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
     return aruga.log(
@@ -52,7 +66,7 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
             : ""
         } [${message.type}]`
       )} from ${color.blue(message.sender.replace(/\D+/g, "") ?? "unknown")} in ${color.blue(group.name || "unknown")}`.trim(),
-      "success",
+      "info",
       message.timestamps
     )
   } catch {

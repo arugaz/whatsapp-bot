@@ -1,3 +1,3 @@
 export * from "./group"
-export * from "./groupMetadata"
+export * from "./group-metadata"
 export * from "./user"
