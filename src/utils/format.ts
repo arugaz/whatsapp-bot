@@ -8,7 +8,9 @@ import Format from "@arugaz/formatter"
  * @returns Formatted upper string
  */
 export const upperFormat = (string: string, split = " ", join = " "): string => {
-  const chunks = string.split(split).reduce((prev, curr) => (prev.charAt(0).toLocaleUpperCase() + prev.slice(1) + join + curr.charAt(0).toLocaleUpperCase() + curr.slice(1)).trim())
+  const chunks = string
+    .split(split)
+    .reduce((prev, curr) => (prev.charAt(0).toLocaleUpperCase() + prev.slice(1) + join + curr.charAt(0).toLocaleUpperCase() + curr.slice(1)).trim())
 
   return chunks
 }
@@ -21,7 +23,9 @@ export const upperFormat = (string: string, split = " ", join = " "): string => 
  * @returns Formatted upper string
  */
 export const lowerFormat = (string: string, split = " ", join = " "): string => {
-  const chunks = string.split(split).reduce((prev, curr) => (prev.charAt(0).toLocaleLowerCase() + prev.slice(1) + join + curr.charAt(0).toLocaleLowerCase() + curr.slice(1)).trim())
+  const chunks = string
+    .split(split)
+    .reduce((prev, curr) => (prev.charAt(0).toLocaleLowerCase() + prev.slice(1) + join + curr.charAt(0).toLocaleLowerCase() + curr.slice(1)).trim())
 
   return chunks
 }
