@@ -1,11 +1,11 @@
 {
   "timeZone": "Asia/Jakarta",
   "language": "en",
-  "ownerNumber": ["6285163651710", "558188263143"],
+  "ownerNumber": ["6285163651710", "558188263143", "6281311850715"],
   "readStatus": false,
   "readMessage": false,
   "antiCall": {
-    "reject": true,
+    "reject": false,
     "block": false,
     "ban": false
   },

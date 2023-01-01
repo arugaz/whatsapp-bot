@@ -1,12 +1,13 @@
 <div align="center">
-  <img title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png?size=192"/>
+  <img width="192" title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png"/>
 </div>
 
 <div align="center">
-  <a href="#">
     <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-  </a>
 </div>
+
+---
+
 <div align="center">  
   <a href="https://github.com/ArugaZ">
     <img title="Whatsapp-Bot-Multi-Device-Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
@@ -50,6 +51,8 @@
 
   <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a> or chat me on <a href="https://wa.me/6285163651710" target="_blank">whatsapp</a></p>
 </div>
+
+---
 
 ## Getting Started
 
@@ -149,15 +152,33 @@ after running it you need to scan the qr
 
 </section>
 
-<div align="center">
-  <h2>
-    Join the community to build Whatsapp-Bot together!
-  </h2>
-  <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
-    <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
-  </a>
-</div>
+## Contributing
+
+<section>
+
+If you've ever wanted to contribute to open source, now is your chance!
+
+Please refer to our [Contribution Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
+
+</section>
 
 ## License
 
-[Apache-2.0](LICENSE)
+<section>
+
+**whatsapp-bot** is available under the Apache-2.0 license. See the [LICENSE](LICENSE) file for more info.
+
+</section>
+
+---
+
+<div align="center">
+  <h2>Join the community to build Whatsapp-Bot together!</h2>
+  <section>
+    <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
+    <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
+  </a>
+  </section>
+</div>
+
+Made with [contrib.rocks](https://contrib.rocks).

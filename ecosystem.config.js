@@ -4,7 +4,7 @@ module.exports = {
       name: "whatsappbot",
       script: "./dist/main.js",
       // Restart after memory hit 1GB
-      max_memory_restart: "1024M",
+      max_memory_restart: "1G",
       args: ["--color"]
     }
   ]

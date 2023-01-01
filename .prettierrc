@@ -7,7 +7,7 @@
   "trailingComma": "none",
   "overrides": [
     {
-      "files": ["src/types/**/*.ts", "src/commands/**/*.ts"],
+      "files": ["src/types/**/*.ts", "src/commands/**/*.ts", "src/utils/**/*.ts"],
       "options": {
         "printWidth": 150
       }

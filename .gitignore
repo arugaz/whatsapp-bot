@@ -25,10 +25,6 @@ languages/*
 !languages/id.json
 !languages/en.json
 
-# prevent temporary files
-temp/*
-!temp/.gitkeep
-
 #my private files
 werewolf*.ts
 test*.js
