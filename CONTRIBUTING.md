@@ -40,7 +40,6 @@ Fork the **whatsapp-bot** repository to your GitHub organization. This means tha
 
 ```
 git clone https://github.com/{your-GitHub-username}/whatsapp-bot.git
-
 ```
 
 ## Step 3: Prepare the development environment
