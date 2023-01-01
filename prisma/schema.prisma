@@ -25,6 +25,8 @@ model Group {
   groupId      String      @unique
   /// Group Name
   name         String
+  /// Whatsapp group default language
+  language     String
   /// Opts for notify all group events
   notify       Boolean     @default(false)
   /// Opts for notify welcome message
