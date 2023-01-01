@@ -3,7 +3,6 @@ import type WAClient from "../libs/whatsapp"
 import { database } from "../libs/whatsapp"
 import i18n from "../libs/international"
 import color from "../utils/color"
-import config from "../utils/config"
 import type { GroupSerialize } from "../types/serialize"
 
 export const execute = async (aruga: WAClient, message: GroupSerialize): Promise<unknown> => {
@@ -14,30 +13,30 @@ export const execute = async (aruga: WAClient, message: GroupSerialize): Promise
 
   try {
     if (message.type === WAMessageStubType.GROUP_CHANGE_SUBJECT) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.subject", {}, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.subject", {}, group.language))
       await Promise.all([database.updateGroup(message.from, { name: message.body }), database.updateGroupMetadata(message.from, { subject: message.body })])
     }
 
     if (message.type === WAMessageStubType.GROUP_CHANGE_ICON) {
-      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.icon.${message.body ? "change" : "remove"}`, { "@PPL": `@${senderNumber}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.icon.${message.body ? "change" : "remove"}`, { "@PPL": `@${senderNumber}` }, group.language))
     }
 
     if (message.type === WAMessageStubType.GROUP_CHANGE_INVITE_LINK) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.invite_link", { "@PPL": `@${senderNumber}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.invite_link", { "@PPL": `@${senderNumber}` }, group.language))
     }
 
     if (message.type === WAMessageStubType.GROUP_CHANGE_DESCRIPTION) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.description", { "@PPL": `@${senderNumber}`, "@TTL": `\n\n${message.body}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.description", { "@PPL": `@${senderNumber}`, "@TTL": `\n\n${message.body}` }, group.language))
       await database.updateGroupMetadata(message.from, { desc: message.body })
     }
 
     if (message.type === WAMessageStubType.GROUP_CHANGE_RESTRICT) {
-      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.restrict.${message.body}`, { "@PPL": `@${senderNumber}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.restrict.${message.body}`, { "@PPL": `@${senderNumber}` }, group.language))
       await database.updateGroupMetadata(message.from, { restrict: message.body === "on" })
     }
 
     if (message.type === WAMessageStubType.GROUP_CHANGE_ANNOUNCE) {
-      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.announce.${message.body}`, { "@PPL": `@${senderNumber}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate(`handlers.group.announce.${message.body}`, { "@PPL": `@${senderNumber}` }, group.language))
       await database.updateGroupMetadata(message.from, { announce: message.body === "on" })
     }
 

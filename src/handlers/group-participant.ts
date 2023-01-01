@@ -4,7 +4,6 @@ import type WAClient from "../libs/whatsapp"
 import { database } from "../libs/whatsapp"
 import i18n from "../libs/international"
 import color from "../utils/color"
-import config from "../utils/config"
 import type { GroupParticipantSerialize } from "../types/serialize"
 
 const findIndex = (participants: Participants[], jid: string) => {
@@ -37,13 +36,13 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.promote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.promote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
       groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = "admin"
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.demote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, config.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.demote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
       groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = null
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
