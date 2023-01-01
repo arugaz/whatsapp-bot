@@ -3,11 +3,7 @@
 </div>
 
 <div align="center">
-  <h2>
-    <a>
-      <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
-    </a>
-  </h2>
+  <h2>Whatsapp Bot Multi Device</h2>
 </div>
 <div align="center">  
   <a href="https://github.com/ArugaZ">
