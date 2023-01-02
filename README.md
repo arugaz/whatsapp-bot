@@ -185,5 +185,3 @@ Please refer to our [Contribution Guidelines](CONTRIBUTING.md) and [Code of Cond
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 </div>
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
