@@ -27,7 +27,7 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "git+https://github.com/arugaz/Baileys",
+    "@adiwajshing/baileys": "git+https://github.com/arugaz/Baileys#wabot",
     "@arugaz/ai2d": "^1.0.1-z.8",
     "@arugaz/collection": "^1.0.0-z.1",
     "@arugaz/eventemitter": "^1.0.0-z.2",
