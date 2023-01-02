@@ -1,5 +1,6 @@
 import type { User } from "@prisma/client"
 import NodeCache from "node-cache"
+import { parsePhoneNumber } from "awesome-phonenumber"
 import Database from "../../../libs/database"
 import config from "../../../utils/config"
 
@@ -28,11 +29,18 @@ export const createUser = async (userId: string, metadata: Partial<Omit<User, "i
   try {
     if (user.has(userId)) return user.get(userId) as User
 
+    const userNumber = parsePhoneNumber(`+${userId.replace(/\D+/g, "")}`, {})
+
     const userData = await Database.user.create({
       data: {
         userId,
         name: metadata?.name || "",
         language: config.language,
+        number: {
+          international: `${userNumber.number.international}`,
+          regionCode: `${userNumber.regionCode}`.toLowerCase(),
+          countryCode: `${userNumber.countryCode}`
+        },
         limit: config.user.limit || 30,
         ban: metadata?.ban || false
       }
