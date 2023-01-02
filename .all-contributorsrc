@@ -10,5 +10,16 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true,
-  "commitConvention": "eslint"
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "TobyG74",
+      "name": "Tobi Saputra",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32604979?v=4",
+      "profile": "https://github.com/TobyG74",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
 }
