@@ -1,18 +1,9 @@
-import type { Participants } from "@prisma/client"
 import { WAMessageStubType } from "@adiwajshing/baileys"
 import type WAClient from "../libs/whatsapp"
 import { database } from "../libs/whatsapp"
 import i18n from "../libs/international"
 import color from "../utils/color"
 import type { GroupParticipantSerialize } from "../types/serialize"
-
-const findIndex = (participants: Participants[], jid: string) => {
-  for (let i = 0; i < participants.length; i++) {
-    if (participants[i].id === jid) {
-      return i
-    }
-  }
-}
 
 export const execute = async (aruga: WAClient, message: GroupParticipantSerialize): Promise<unknown> => {
   const groupMetadata = (await database.getGroupMetadata(message.from)) ?? (await database.createGroupMetadata(message.from, (await aruga.groupMetadata(message.from)) as unknown))
@@ -30,20 +21,23 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
       if (isBot) {
         await Promise.all([database.deleteGroup(message.body), database.deleteGroupMetadata(message.body)])
       } else {
-        groupMetadata.participants.slice(findIndex(groupMetadata.participants, message.body), 1)
+        groupMetadata.participants.slice(
+          groupMetadata.participants.findIndex((x) => x.id === message.body),
+          1
+        )
         await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
       }
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) {
       if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.promote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
-      groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = "admin"
+      groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === message.body)].admin = "admin"
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE) {
       if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.demote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
-      groupMetadata.participants[findIndex(groupMetadata.participants, message.body)].admin = null
+      groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === message.body)].admin = null
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
