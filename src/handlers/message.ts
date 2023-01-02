@@ -26,22 +26,22 @@ const getGroup = database.getGroup
 const createGroup = database.createGroup
 
 export const execute = async (aruga: WAClient, message: MessageSerialize): Promise<unknown> => {
-  // parse
-  const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0]
-  const cmd = message.body && !!prefix && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
-  const args = message.body.trim().split(/ +/).slice(1) || []
-  const arg = message.body.indexOf(" ") !== -1 ? message.body.trim().substring(message.body.indexOf(" ") + 1) : ""
-  const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd))
-  const isOwner = message.sender && config.ownerNumber.includes(message.sender.replace(/\D+/g, ""))
-
   const group = message.isGroupMsg && ((await getGroup(message.from)) ?? (await createGroup(message.from, { name: message.groupMetadata.subject })))
   const user = message.sender && ((await getUser(message.sender)) ?? (await createUser(message.sender, { name: message.pushname })))
+  const isOwner = message.sender && config.ownerNumber.includes(message.sender.replace(/\D+/g, ""))
 
   // ignore user that got banned by bot owner
   if (message.sender && user.ban && !isOwner) return
 
   // ignore group that got banned by bot owner
   if (message.isGroupMsg && group.ban && !isOwner) return
+
+  // parse
+  const prefix = message.body && ([[new RegExp("^[" + (config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-").replace(/[|\\{}()[\]^$+*?.\-^]/g, "\\$&") + "]").exec(message.body), config.prefix || "/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-"]].find((p) => p[1])[0] || [""])[0]
+  const cmd = message.body && !!prefix && message.body.startsWith(prefix) && message.body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase()
+  const args = message.body.trim().split(/ +/).slice(1) || []
+  const arg = message.body.indexOf(" ") !== -1 ? message.body.trim().substring(message.body.indexOf(" ") + 1) : ""
+  const command = commands.get(cmd) ?? commands.find((v) => v.aliases && v.aliases.includes(cmd))
 
   // parse group members
   const groupAdmins: Participants[] = message.isGroupMsg && message.groupMetadata.participants.reduce((memberAdmin, memberNow) => (memberNow.admin ? memberAdmin.push({ id: memberNow.id, admin: memberNow.admin }) : [...memberAdmin]) && memberAdmin, [])
