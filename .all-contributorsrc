@@ -1,0 +1,14 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributorsPerLine": 7,
+  "projectName": "whatsapp-bot",
+  "projectOwner": "arugaz",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true,
+  "commitConvention": "eslint"
+}
