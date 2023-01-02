@@ -22,10 +22,19 @@
       ]
     },
     {
-     "login": "arugaz",
+      "login": "arugaz",
       "name": "ArugaZ",
       "avatar_url": "https://avatars.githubusercontent.com/u/53950128?v=4",
       "profile": "https://github.com/arugaz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "GuckTubeYT",
+      "name": "Muhammad Kevin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56192597?v=4",
+      "profile": "https://youtube.com/GuckTubeYT",
       "contributions": [
         "code"
       ]
