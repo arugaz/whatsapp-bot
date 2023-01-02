@@ -13,7 +13,16 @@
   "commitConvention": "eslint",
   "contributors": [
     {
-      "login": "arugaz",
+      "login": "TobyG74",
+      "name": "Tobi Saputra",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32604979?v=4",
+      "profile": "https://github.com/TobyG74",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+     "login": "arugaz",
       "name": "ArugaZ",
       "avatar_url": "https://avatars.githubusercontent.com/u/53950128?v=4",
       "profile": "https://github.com/arugaz",
