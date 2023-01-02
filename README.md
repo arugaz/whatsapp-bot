@@ -178,6 +178,13 @@ Please refer to our [Contribution Guidelines](CONTRIBUTING.md) and [Code of Cond
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/arugaz"><img src="https://avatars.githubusercontent.com/u/53950128?v=4?s=100" width="100px;" alt="ArugaZ"/><br /><sub><b>ArugaZ</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/commits?author=arugaz" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
