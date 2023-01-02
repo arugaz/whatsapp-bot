@@ -174,11 +174,16 @@ Please refer to our [Contribution Guidelines](CONTRIBUTING.md) and [Code of Cond
 
 <div align="center">
   <h2>Join the community to build Whatsapp-Bot together!</h2>
-  <section>
-    <a href="https://github.com/ArugaZ/whatsapp-bot/graphs/contributors">
-    <img title="Whatsapp-Bot-Multi-Device-Contributors" src="https://contrib.rocks/image?repo=arugaz/whatsapp-bot&columns=8&anon=1"/>
-  </a>
-  </section>
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 </div>
 
-Made with [contrib.rocks](https://contrib.rocks).
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
