@@ -1,4 +1,5 @@
 import Format from "@arugaz/formatter"
+import { parsePhoneNumber } from "awesome-phonenumber"
 
 /**
  * Format string to Upper Case, "test string" becomes "Test String"
@@ -7,10 +8,10 @@ import Format from "@arugaz/formatter"
  * @param join Join the string, default " "
  * @returns Formatted upper string
  */
-export const upperFormat = (string: string, split = " ", join = " "): string => {
+export const upperFormat = (string: string, split = " ", join = " ") => {
   const chunks = string
     .split(split)
-    .reduce((prev, curr) => (prev.charAt(0).toLocaleUpperCase() + prev.slice(1) + join + curr.charAt(0).toLocaleUpperCase() + curr.slice(1)).trim())
+    .reduce((prev, curr) => (prev.charAt(0).toUpperCase() + prev.slice(1) + join + curr.charAt(0).toUpperCase() + curr.slice(1)).trim())
 
   return chunks
 }
@@ -22,10 +23,10 @@ export const upperFormat = (string: string, split = " ", join = " "): string => 
  * @param join Join the string, default " "
  * @returns Formatted upper string
  */
-export const lowerFormat = (string: string, split = " ", join = " "): string => {
+export const lowerFormat = (string: string, split = " ", join = " ") => {
   const chunks = string
     .split(split)
-    .reduce((prev, curr) => (prev.charAt(0).toLocaleLowerCase() + prev.slice(1) + join + curr.charAt(0).toLocaleLowerCase() + curr.slice(1)).trim())
+    .reduce((prev, curr) => (prev.charAt(0).toLowerCase() + prev.slice(1) + join + curr.charAt(0).toLowerCase() + curr.slice(1)).trim())
 
   return chunks
 }
@@ -37,7 +38,7 @@ export const lowerFormat = (string: string, split = " ", join = " "): string => 
  * @param join Join the string, default " "
  * @returns Formatted upper string
  */
-export const segmentCharFormat = (string: string, count = 1, join = " "): string => {
+export const segmentCharFormat = (string: string, count = 1, join = " ") => {
   const chunks = []
   if (count <= 0) count = 1
 
@@ -55,7 +56,7 @@ export const segmentCharFormat = (string: string, count = 1, join = " "): string
  * @param join Join the string, default "\n"
  * @returns Formatted upper string
  */
-export const segmentWordFormat = (string: string, count = 2, split = " ", join = "\n"): string => {
+export const segmentWordFormat = (string: string, count = 2, split = " ", join = "\n") => {
   const strings = string.split(split)
   const chunks = []
 
@@ -71,7 +72,7 @@ export const segmentWordFormat = (string: string, count = 2, split = " ", join =
  * @param number Number that you want to format
  * @returns string Formatted Size
  */
-export const sizeFormat = (number: number): string => {
+export const sizeFormat = (number: number) => {
   const chunks = Format.sizeFormatter<string>()
 
   return chunks(number)
@@ -82,8 +83,24 @@ export const sizeFormat = (number: number): string => {
  * @param number Number that you want to format
  * @returns Formatted Time
  */
-export const timeFormat = (number: number): string => {
+export const timeFormat = (number: number) => {
   const chunks = Format.durationFormatter<string>()
 
   return chunks(number)
+}
+
+/**
+ * Format phone number
+ * @param number Number that you want to format
+ * @return "{@link PhoneFormat}"
+ */
+export const phoneFormat = (number: string) => {
+  const chunks = parsePhoneNumber(`+${number.replace(/\D+/g, "")}`)
+  if (!chunks.valid) return null
+
+  return {
+    countryCode: `${chunks.countryCode}`,
+    regionCode: `${chunks.regionCode}`.toLowerCase(),
+    international: `${chunks.number.international}`
+  } as PhoneFormat
 }

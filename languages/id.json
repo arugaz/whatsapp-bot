@@ -6,24 +6,25 @@
       "ban": "Maaf, aku akan ban kamu!"
     },
     "group-participant": {
-      "promote": "{{@ADM}} telah mempromosikan {{@PPL}} menjadi Admin Grup",
-      "demote": "{{@ADM}} telah mendemosikan {{@PPL}} menjadi Anggota Grup"
+      "anticountry": "Maaf {{@PPL}}, di grup ini dilarang untuk nomor telepon dengan awalan {{@NUM}}",
+      "promote": "{{@ADM}} telah mempromosikan {{@PPL}} menjadi admin grup",
+      "demote": "{{@ADM}} telah mendemosikan {{@PPL}} menjadi anggota grup"
     },
     "group": {
-      "subject": "{{@PPL}} telah mengubah Nama Grup menjadi {{@TTL}}",
+      "subject": "{{@PPL}} telah mengubah nama grup menjadi {{@TTL}}",
       "icon": {
-        "change": "{{@PPL}} telah mengubah Gambar Profil Grup",
-        "remove": "{{@PPL}} telah menghapus Gambar Profil Grup"
+        "change": "{{@PPL}} telah mengubah gambar profil grup",
+        "remove": "{{@PPL}} telah menghapus gambar profil grup"
       },
-      "invite_link": "{{@PPL}} telah memperbarui URL Grup",
-      "description": "{{@PPL}} telah memperbarui Deskripsi Grup menjadi {{@TTL}}",
+      "invite_link": "{{@PPL}} telah memperbarui URL grup",
+      "description": "{{@PPL}} telah memperbarui deskripsi grup menjadi {{@TTL}}",
       "restrict": {
-        "on": "{{@PPL}} telah mengubah Pengaturan Grup, hanya Admin Grup yang dapat mengubah pengaturan tersebut",
-        "off": "{{@PPL}} telah mengubah Pengaturan Grup, sekarang Anggota Grup dapat mengubah pengaturan tersebut"
+        "on": "{{@PPL}} telah mengubah pengaturan grup, hanya admin grup yang dapat mengubah pengaturan tersebut",
+        "off": "{{@PPL}} telah mengubah pengaturan grup, sekarang anggota grup dapat mengubah pengaturan tersebut"
       },
       "announce": {
-        "on": "{{@PPL}} telah mengubah Pengaturan Grup, hanya Admin Grup yang dapat mengirim pesan",
-        "off": "{{@PPL}} telah mengubah Pengaturan Grup, sekarang Anggota Grup dapat mengirim pesan"
+        "on": "{{@PPL}} telah mengubah pengaturan grup, hanya admin grup yang dapat mengirim pesan",
+        "off": "{{@PPL}} telah mengubah pengaturan grup, sekarang anggota grup dapat mengirim pesan"
       }
     },
     "message": {

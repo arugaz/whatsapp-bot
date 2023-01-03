@@ -6,24 +6,25 @@
       "ban": "Sorry, I will ban you!"
     },
     "group-participant": {
-      "promote": "{{@ADM}} has promoted {{@PPL}} become Admins Group",
-      "demote": "{{@ADM}} has demoted {{@PPL}} become Members Group"
+      "anticountry": "Sorry {{@PPL}}, this group is prohibited for phone numbers with the prefix {{@NUM}}",
+      "promote": "{{@ADM}} has promoted {{@PPL}} become admins group",
+      "demote": "{{@ADM}} has demoted {{@PPL}} become members group"
     },
     "group": {
-      "subject": "{{@PPL}} has changed the Group Name to {{@TTL}}",
+      "subject": "{{@PPL}} has changed the group name to {{@TTL}}",
       "icon": {
-        "change": "{{@PPL}} has changed the Group Profile Picture",
-        "remove": "{{@PPL}} has removed the Group Profile Picture"
+        "change": "{{@PPL}} has changed the group profile picture",
+        "remove": "{{@PPL}} has removed the group Profile picture"
       },
-      "invite_link": "{{@PPL}} has updated the Group URL",
-      "description": "{{@PPL}} has updated the Group Description to {{@TTL}}",
+      "invite_link": "{{@PPL}} has updated the group URL",
+      "description": "{{@PPL}} has updated the group description to {{@TTL}}",
       "restrict": {
-        "on": "{{@PPL}} has changed the Group Settings, only the Group Admin can change the settings",
-        "off": "{{@PPL}} has changed the Group Settings, now Group Members can change the settings"
+        "on": "{{@PPL}} has changed the group settings, only the group admins can change the settings",
+        "off": "{{@PPL}} has changed the group settings, now group members can change the settings"
       },
       "announce": {
-        "on": "{{@PPL}} has changed the Group Settings, only Group Admins can send messages",
-        "off": "{{@PPL}} has changed the Group Settings, now Group Members can send messages"
+        "on": "{{@PPL}} has changed the group settings, only group admins can send messages",
+        "off": "{{@PPL}} has changed the group settings, now group members can send messages"
       }
     },
     "message": {

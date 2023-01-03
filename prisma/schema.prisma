@@ -41,9 +41,9 @@ model Group {
   antilink     Boolean     @default(false)
   /// Opts for anti other whatsapp bot
   antibot      Boolean     @default(false)
-  // Opts for anti viewonce message
+  /// Opts for anti viewonce message
   antiviewonce Boolean     @default(false)
-  // Opts for anti other country, by country number code
+  /// Opts for anti other country, by country number code
   anticountry  AntiCountry
 }
 
@@ -88,32 +88,21 @@ enum GroupAdmin {
 
 /// Storing users session
 model User {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   /// Whatsapp user Jid
-  userId   String     @unique
+  userId   String  @unique
   /// Whatsapp user Name
   name     String
   /// Whatsapp user language
   language String
-  /// Whatsapp user Number
-  number   UserNumber
   /// Whatsapp user limit
   limit    Int
   /// Is user got ban?
-  ban      Boolean    @default(false)
+  ban      Boolean @default(false)
   /// User role
-  role     Role       @default(basic)
+  role     Role    @default(basic)
   /// User role expired if has role (premium, vip)
-  expire   Int        @default(0)
-}
-
-type UserNumber {
-  /// User number international format
-  international String
-  /// User number region code
-  regionCode    String
-  /// User number country code
-  countryCode   String
+  expire   Int     @default(0)
 }
 
 enum Role {

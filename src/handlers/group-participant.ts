@@ -4,6 +4,7 @@ import { database } from "../libs/whatsapp"
 import i18n from "../libs/international"
 import color from "../utils/color"
 import type { GroupParticipantSerialize } from "../types/serialize"
+import { phoneFormat } from "../utils/format"
 
 export const execute = async (aruga: WAClient, message: GroupParticipantSerialize): Promise<unknown> => {
   const groupMetadata = (await database.getGroupMetadata(message.from)) ?? (await database.createGroupMetadata(message.from, (await aruga.groupMetadata(message.from)) as unknown))
@@ -13,8 +14,13 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
 
   try {
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD || message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-      groupMetadata.participants.push({ id: message.body, admin: null })
-      await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
+      if (group.anticountry.active && group.anticountry.number.includes(phoneFormat(message.body).countryCode) && !!groupMetadata.participants.find((member) => member.id === botNumber && !!member.admin)) {
+        await message.reply(i18n.translate("handlers.group-participant.anticountry", { "@PPL": `@${message.body.replace(/\D+/g, "")}`, "@NUM": group.anticountry.number.join(", ").trim() }, group.language))
+        await aruga.groupParticipantsUpdate(message.from, [aruga.decodeJid(message.body)], "remove")
+      } else {
+        groupMetadata.participants.push({ id: message.body, admin: null })
+        await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
+      }
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
