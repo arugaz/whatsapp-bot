@@ -1,7 +1,7 @@
 import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
 import { randomBytes } from "crypto"
-import ffmpeg from "../../utils/ffmpeg"
+import { ffmpeg } from "../../utils/cli"
 import { StickerOptions, StickerCategories } from "../../types/sticker"
 
 const defaultOptions: StickerOptions = {
@@ -39,7 +39,7 @@ export class WASticker {
     return exif
   }
 
-  #$_convert(bufferData: Buffer) {
+  #$_convert(bufferData: Buffer, type: string) {
     const bufferSize = bufferData.byteLength
     return new Promise<Buffer>((resolve, reject) =>
       ffmpeg(bufferData, [
@@ -47,12 +47,14 @@ export class WASticker {
         `scale='min(${this.#opts.width},iw)':min'(${this.#opts.width},ih)':force_original_aspect_ratio=decrease,fps=fps=${this.#opts.fps}, pad=${this.#opts.width}:${this.#opts.width}:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
         "-loop",
         this.#opts.loop ? "0" : "1",
+        "-lossless",
+        type === "image" ? "1" : "0",
         "-compression_level",
         `${this.#opts.compress}`,
         "-quality",
-        `${bufferSize < 300000 ? 20 : bufferSize < 400000 ? 15 : 10}`,
+        type === "image" ? "75" : `${bufferSize < 300000 ? 30 : bufferSize < 400000 ? 20 : 15}`,
         "-preset",
-        "default",
+        "drawing",
         "-an",
         "-vsync",
         "0",
@@ -109,9 +111,9 @@ export class WASticker {
    * @param bufferData Media Buffer
    * @returns Webp Buffer
    */
-  public async ConvertMedia(bufferData: Buffer): Promise<Buffer> {
+  public async ConvertMedia(bufferData: Buffer, type: "image" | "video" = "image"): Promise<Buffer> {
     this.#exif = this.#exif ? this.#exif : this.#$_createExif()
-    const result = await this.#$_convert(bufferData)
+    const result = await this.#$_convert(bufferData, type)
     return result
   }
 
