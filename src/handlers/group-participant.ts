@@ -15,8 +15,8 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
   try {
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD || message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
       if (group.anticountry.active && group.anticountry.number.includes(phoneFormat(message.body).countryCode) && !!groupMetadata.participants.find((member) => member.id === botNumber && !!member.admin)) {
+        process.nextTick(async () => await aruga.groupParticipantsUpdate(message.from, [aruga.decodeJid(message.body)], "remove"))
         await message.reply(i18n.translate("handlers.group-participant.anticountry", { "@PPL": `@${message.body.replace(/\D+/g, "")}`, "@NUM": group.anticountry.number.join(", ").trim() }, group.language))
-        await aruga.groupParticipantsUpdate(message.from, [aruga.decodeJid(message.body)], "remove")
       } else {
         groupMetadata.participants.push({ id: message.body, admin: null })
         await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
@@ -24,10 +24,10 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
-      if (isBot) {
+      if (message.body === botNumber) {
         await Promise.all([database.deleteGroup(message.body), database.deleteGroupMetadata(message.body)])
       } else {
-        groupMetadata.participants.slice(
+        groupMetadata.participants.splice(
           groupMetadata.participants.findIndex((x) => x.id === message.body),
           1
         )
