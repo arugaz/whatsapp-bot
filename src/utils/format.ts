@@ -96,7 +96,6 @@ export const timeFormat = (number: number) => {
  */
 export const phoneFormat = (number: string) => {
   const chunks = parsePhoneNumber(`+${number.replace(/\D+/g, "")}`)
-  if (!chunks.valid) return null
 
   return {
     countryCode: `${chunks.countryCode}`,
