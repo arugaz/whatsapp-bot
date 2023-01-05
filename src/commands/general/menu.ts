@@ -25,7 +25,17 @@ export default <Command>{
         }\n` +
         `┃ *${i18n.translate("commands.general.menu.cmd.two", {}, user.language)} :* ${cmd.category || "-"}\n` +
         `┃ *${i18n.translate("commands.general.menu.cmd.three", {}, user.language)} :* ${cmd.desc || "-"}\n` +
-        `┃ *${i18n.translate("commands.general.menu.cmd.four", {}, user.language)} :* ${prefix}${name} ${cmd.example || ``}\n` +
+        `┃ *${i18n.translate("commands.general.menu.cmd.four", {}, user.language)} :* ${
+          cmd.example
+            ? cmd.example
+                .replace(/@PREFIX/g, prefix)
+                .replace(/@CMD/g, name)
+                .trimEnd()
+                .split(/\r\n|\r|\n/)
+                .join("\n┃ ")
+                .trimEnd()
+            : `${prefix}${name}`
+        }\n` +
         `┃ *${i18n.translate("commands.general.menu.cmd.five", {}, user.language)} :* ${cmd.groupOnly ? "✔️" : "✖️"}\n` +
         (message.isGroupMsg
           ? `┃ *${i18n.translate("commands.general.menu.cmd.six", {}, user.language)}:* ${cmd.adminGroup ? "✔️" : "✖️"}\n` +

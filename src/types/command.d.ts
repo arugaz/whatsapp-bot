@@ -17,7 +17,7 @@ declare type Command = {
    * @example
    * category: 'general'
    */
-  category: "convert" | "general" | "misc" | "owner"
+  category: "convert" | "general" | "misc" | "owner" | "group"
 
   /**
    * Set commands cooldown, every user will have their own cooldown, every command also have their own cooldown
@@ -109,9 +109,11 @@ declare type Command = {
 
   /**
    * To write how to use the command
+   * You can use @PREFIX for replace with current prefix
+   * and @CMD for command name
    * @type {string}
    * @example
-   * example: "/ping 69"
+   * example: "@PREFIX@CMD 69" //=> "/ping 69"
    */
   example?: string
 

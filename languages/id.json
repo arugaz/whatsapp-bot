@@ -82,6 +82,20 @@
         "bottom": "Berikut ini adalah beberapa fitur yang terdapat dalam bot.",
         "buttonText": "DAFTAR MENU"
       }
+    },
+    "group": {
+      "anticountry": {
+        "add": "Berhasil menambahkan kode negara, berikut daftar yang ada di grup: {{@NUM}}",
+        "remove": "Berhasil menghapus kode negara, berikut daftar yang ada di grup: {{@NUM}}",
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan menendang anggota grup dengan awalan kode negara: {{@NUM}}",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi menendang anggota grup dengan awalan kode negara: {{@NUM}}",
+        "status": {
+          "text": "Saring anggota yang masuk dan tendang yang tidak diizinkan",
+          "isActive": "Tendang kode negara lain: {{@STS}}",
+          "numList": "Daftar kode negara di grup: {{@NUM}}"
+        },
+        "list": "Daftar semua kode negara yang tersedia berdasarkan {{@URL}}"
+      }
     }
   }
 }

@@ -82,6 +82,20 @@
         "bottom": "The following are some of the features found in the bot.",
         "buttonText": "LIST MENU"
       }
+    },
+    "group": {
+      "anticountry": {
+        "add": "Added country code successfully, here's a list of those in the group: {{@NUM}}",
+        "remove": "Removed country code successfully, here's a list of those in the group: {{@NUM}}",
+        "enable": "Successfully activate {{@CMD}}, bot will immediately kick group member with country code prefix: {{@NUM}}",
+        "disable": "Successfully deactivate {{@CMD}}, bots no longer kick group members with country code prefix: {{@NUM}}",
+        "status": {
+          "text": "Filter incoming members and kick those that are not allowed",
+          "isActive": "Kick other country code: {{@STS}}",
+          "numList": "List of country code in the group: {{@NUM}}"
+        },
+        "list": "List of all available country codes based on {{@URL}}"
+      }
     }
   }
 }
