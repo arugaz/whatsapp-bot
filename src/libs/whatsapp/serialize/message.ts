@@ -1,7 +1,7 @@
 import { WAMessage } from "@adiwajshing/baileys"
 import WAClient from "../../../libs/whatsapp"
-import { MessageSerialize } from "../../../types/serialize"
 import { database } from "../../whatsapp"
+import type { MessageSerialize } from "../../../types/serialize"
 
 export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageSerialize> => {
   const m = <MessageSerialize>{}
@@ -65,13 +65,6 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
       return aruga.resendMessage(jid, m, opts)
     }
     m.resend = resend
-    function download(): Promise<Buffer>
-    function download(filepath: string): Promise<string>
-    function download(filepath?: string): Promise<string | Buffer> {
-      if (filepath) return aruga.downloadAndSaveMediaMessage(m.message, filepath)
-      else return aruga.downloadMediaMessage(m.message)
-    }
-    m.download = download
   }
 
   m.timestamps = (typeof msg.messageTimestamp === "number" ? msg.messageTimestamp : msg.messageTimestamp.low ? msg.messageTimestamp.low : msg.messageTimestamp.high) * 1000 || Date.now()
@@ -146,13 +139,6 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
       return aruga.resendMessage(jid, m.quoted, opts)
     }
     m.quoted.resend = resend
-    function download(): Promise<Buffer>
-    function download(filepath: string): Promise<string>
-    function download(filepath?: string): Promise<Buffer | string> {
-      if (filepath) return aruga.downloadAndSaveMediaMessage(m.quoted.message, filepath)
-      else return aruga.downloadMediaMessage(m.quoted.message)
-    }
-    m.quoted.download = download
   } else m.quoted = null
 
   return m

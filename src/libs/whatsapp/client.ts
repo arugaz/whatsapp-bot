@@ -1,8 +1,6 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
-import { join as pathJoin } from "path"
 import EventEmitter from "@arugaz/eventemitter"
-import { writeFile as fsWriteFile } from "fs/promises"
 import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMessageStubType } from "@adiwajshing/baileys"
 
 import { auth } from "../libs/../whatsapp"
@@ -197,18 +195,6 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       audioMessage: "audio"
     }
     return await toBuffer(await downloadContentFromMessage(message[type], mime[type]))
-  }
-
-  /**
-   * Download media message and save to local storage
-   * @param {proto.IMessage} message:proto.IMessage
-   * @param {string} filename=filename
-   */
-  public async downloadAndSaveMediaMessage(message: proto.IMessage, filename: string): Promise<string> {
-    const buffer = await this.downloadMediaMessage(message)
-    const filePath = pathJoin(__dirname, "..", "..", "temp", filename)
-    await fsWriteFile(filePath, buffer)
-    return filePath
   }
 
   public async resendMessage(jid: string, message: Partial<MessageSerialize>, opts: Omit<MessageGenerationOptionsFromContent, "userJid">) {

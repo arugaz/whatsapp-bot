@@ -22,7 +22,7 @@ export default <Command>{
   `,
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
-      const buffer = message.quoted ? await message.quoted.download() : await message.download()
+      const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)
       const result = await wasticker.ConvertMedia(buffer, "image")
 
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
@@ -34,7 +34,7 @@ export default <Command>{
         : (message.message[message.type].seconds as number)
       if (duration && !isNaN(duration) && duration > 10) throw "Video duration is too long! Maximum duration of 10 seconds"
 
-      const buffer = message.quoted ? await message.quoted.download() : await message.download()
+      const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)
       const result = await wasticker.ConvertMedia(buffer, "video")
 
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })

@@ -132,23 +132,6 @@ declare type MessageSerialize = {
    */
   resend: (jid?: string, opts?: Omit<MessageGenerationOptionsFromContent, "userJid">) => Promise<proto.WebMessageInfo>
 
-  /**
-   * Download message content
-   * @param {string} filename?: Filepath to save the message content
-   * @returns {Promise<string | Buffer>} if filename is empty return buffers otherwise return file path
-   */
-  download: {
-    /**
-     * @returns {Promise<Buffer>} Returns media buffer
-     */
-    (): Promise<Buffer>
-    /**
-     * @param {string} filepath File path where you want to save buffer
-     * @returns {Promise<Buffer>} Returns media buffer
-     */
-    (filepath: string): Promise<string>
-  }
-
   // additional properties
   /** Message timestamps */
   timestamps?: number
