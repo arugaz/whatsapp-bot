@@ -1,8 +1,9 @@
 import fs from "fs"
 import path from "path"
 import { inspect } from "util"
-import type { Participants } from "@prisma/client"
+import { exec } from "child_process"
 import { TimeoutError } from "@arugaz/queue"
+import type { Participants } from "@prisma/client"
 
 import International from "../libs/international"
 import type WAClient from "../libs/whatsapp"
@@ -112,7 +113,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
         }
       )
 
-      return aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps)
+      return aruga.log(`${color.green("[CMDS]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps)
     } catch (e: unknown) {
       if (typeof e === "string" && e === "noCmd") {
         await message.reply(i18n.translate("handlers.message.errorMessage.noCmd", { "@CMD": `"${prefix}menu ${cmd}"` }, user.language), true)
@@ -143,6 +144,24 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
       .then((res: unknown) => message.reply(inspect(res, true)))
       .catch((err: unknown) => message.reply(inspect(err, true)))
       .finally(() => aruga.log(`${color.purple("[EVAL]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
+  }
+
+  /**
+   * Exec command for development purposes, only for bot owner
+   * @example
+   * $ cat LICENSE
+   */
+  if (message.body.startsWith("$") && isOwner) {
+    return new Promise<string>((resolve, reject) => {
+      exec(`${arg}`, (err, stdout, stderr) => {
+        if (err) return reject(err)
+        if (stderr) return reject(stderr)
+        resolve(stdout)
+      })
+    })
+      .then((res: string) => message.reply(res))
+      .catch((err: unknown) => message.reply(inspect(err, true)))
+      .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
 }
 

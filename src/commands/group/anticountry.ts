@@ -170,5 +170,7 @@ export default <Command>{
         `┗━━「 ꗥ${config.name}ꗥ 」`
       return await message.reply(text, true)
     }
+
+    throw "noCmd"
   }
 }
