@@ -36,7 +36,13 @@
       "groupOnly": "Perintah hanya dapat digunakan dalam obrolan grup, kamu tidak dapat menggunakannya dalam obrolan pribadi",
       "botGroupAdmin": "Perintah hanya dapat digunakan jika bot merupakan salah satu admin grup",
       "ownerGroup": "Perintah hanya dapat digunakan oleh pemilik grup, kamu tidak dapat menggunakannya",
-      "adminGroup": "Perintah hanya dapat digunakan oleh admin grup, kamu tidak dapat menggunakannya"
+      "adminGroup": "Perintah hanya dapat digunakan oleh admin grup, kamu tidak dapat menggunakannya",
+      "errorMessage": {
+        "noCmd": "Sepertinya perintah penggunaannya salah. Silakan ketik {{@CMD}} untuk melihat contoh.",
+        "timeout": "Sepertinya perintah membutuhkan waktu lama untuk merespons. Silakan coba beberapa saat lagi",
+        "error": "Sepertinya perintah mengalami kesalahan: {{@ERRMSG}}. Silakan coba beberapa saat lagi",
+        "unknown": "Sepertinya perintah mengalami kesalahan yang tidak diketahui. Silakan coba beberapa saat lagi"
+      }
     }
   },
   "commands": {

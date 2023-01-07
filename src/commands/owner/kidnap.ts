@@ -13,11 +13,17 @@ import type { Command } from "../../types/command"
 export default <Command>{
   category: "owner",
   desc: "Kidnap other group members to your group",
-  example: "https://chat.whatsapp.com/code, change with target group url",
+  groupOnly: true,
   ownerOnly: true,
-  execute: async ({ aruga, message, prefix, command, arg }) => {
-    if (!arg) return await message.reply(`${prefix}info ${command}`)
-    const url = arg.match(/chat.whatsapp.com\/([\w\d]*)/g)
+  example: `
+  Make bot as admin on your group
+  and on your group type @PREFIX@CMD url
+
+  eg, @PREFIX@CMD https://chat(.)whatsapp.com/Id4A2eoegx6Hg7Il54sEnn
+  --------
+  `,
+  execute: async ({ aruga, message, arg }) => {
+    const url = arg.length && arg.match(/chat.whatsapp.com\/([\w\d]*)/g)
     if (url && url.length >= 1) {
       const code = url[0].replace("chat.whatsapp.com/", "")
       const result = await aruga.groupGetInviteInfo(code)
@@ -27,15 +33,16 @@ export default <Command>{
         })
       await aruga.groupAcceptInvite(code)
       const fetchGroups = await aruga.groupFetchAllParticipating()
-      const getGroups = Object.entries(fetchGroups)
-        .slice(0)
-        .map((entry) => entry[1])
-      const participants = getGroups
-        .filter((v) => v.id === result.id)
-        .map((x) => x.participants)[0]
-        .map((v) => v.id)
+      const participants = Object.values(fetchGroups).find((v) => v.id === result.id).participants
 
-      return await aruga.groupParticipantsUpdate(message.from, participants, "add")
-    } else return await message.reply("Invalid url", true)
+      // for (const participant of participants) await aruga.groupParticipantsUpdate(message.from, [participant.id], "add")
+      return await aruga.groupParticipantsUpdate(
+        message.from,
+        participants.map((v) => v.id),
+        "add"
+      )
+    }
+
+    throw "noCmd"
   }
 }

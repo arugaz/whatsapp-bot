@@ -12,6 +12,14 @@ export default <Command>{
   category: "convert",
   cd: 10,
   desc: "Create sticker from photo or video!",
+  example: `
+  Send a image/video message with caption
+  @PREFIX@CMD
+  --------
+  or Reply a image/video message with text
+  @PREFIX@CMD
+  --------
+  `,
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await message.quoted.download() : await message.download()
@@ -31,5 +39,7 @@ export default <Command>{
 
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
+
+    throw "noCmd"
   }
 }

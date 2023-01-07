@@ -52,7 +52,29 @@ declare type GroupSerialize = {
 /**
  * Group Participant serialize
  */
-declare type GroupParticipantSerialize = GroupSerialize
+declare type GroupParticipantSerialize = {
+  /** Group Jid */
+  from: string
+
+  /** Message sender  */
+  sender: string
+
+  /** Message */
+  body: string[]
+
+  /** Message type  */
+  type: number
+
+  /** Message Timestamps */
+  timestamps: number
+
+  /**
+   * Reply a message
+   * @param {string} text: Message text
+   * @returns {Promise<proto.WebMessageInfo>} send messages
+   */
+  reply: (text: string) => Promise<proto.WebMessageInfo>
+}
 
 /**
  * Message serialize

@@ -82,9 +82,9 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
             this.log("Session deleted!", "error")
           }
           if (reason === DisconnectReason.serviceUnavailable) {
-            throw new Error("Your WhatsApp account has been banned!")
+            throw new Error("Your WhatsApp account has been banned!?")
           }
-          await this.logout("You have to re-scan QR Code! code: " + reason)
+          throw new Error("You have to re-scan QR Code! code: " + reason)
         } else {
           this.log("Reconnecting...", "warning")
           setTimeout(() => this.startClient(), 1500)

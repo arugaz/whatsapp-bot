@@ -36,7 +36,13 @@
       "groupOnly": "Commands can only be used in group chats, you cannot use them in private chats",
       "botGroupAdmin": "The command can only be used if the bot is an admin of the group",
       "ownerGroup": "Commands can only be used by the group owner, you cannot use them",
-      "adminGroup": "Commands can only be used by group admins, you cannot use them"
+      "adminGroup": "Commands can only be used by group admins, you cannot use them",
+      "errorMessage": {
+        "noCmd": "It looks like the usage command is wrong. Please type {{@CMD}} to see an example.",
+        "timeout": "Looks like the command is taking to long to respond. Please try again in a while",
+        "error": "Looks like the command has an error: {{@ERRMSG}}. Please try again in a while",
+        "unknown": "Looks like the command has encountered an unknown error. Please try again in a while"
+      }
     }
   },
   "commands": {

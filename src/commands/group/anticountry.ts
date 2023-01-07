@@ -35,7 +35,7 @@ export default <Command>{
   @PREFIX@CMD list
   --------
   `,
-  execute: async ({ aruga, message, args, group, user, isBotGroupAdmin }) => {
+  execute: async ({ aruga, message, args, group, user, command, isBotGroupAdmin }) => {
     if (args[0] === "add" && args.length >= 2) {
       const supportCode: unknown[] = getSupportedCallingCodes()
       for (const numberCode of args.slice(1)) {
@@ -108,7 +108,11 @@ export default <Command>{
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.anticountry.enable", {}, user.language)}\n` +
+        `┃ ${i18n.translate(
+          "commands.group.anticountry.enable",
+          { "@CMD": command, "@NUM": group.anticountry.number.length ? group.anticountry.number.join(", ").trim() : "➰" },
+          user.language
+        )}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
       return await message.reply(text, true)
@@ -126,7 +130,11 @@ export default <Command>{
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.anticountry.disable", {}, user.language)}\n` +
+        `┃ ${i18n.translate(
+          "commands.group.anticountry.disable",
+          { "@CMD": command, "@NUM": group.anticountry.number.length ? group.anticountry.number.join(", ").trim() : "➰" },
+          user.language
+        )}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
       return await message.reply(text, true)

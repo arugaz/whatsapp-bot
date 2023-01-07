@@ -114,17 +114,26 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
       return aruga.log(`${color.green("[EXEC]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "success", message.timestamps)
     } catch (e: unknown) {
-      await message.reply(typeof e === "string" ? e : e instanceof TimeoutError ? "Timeout error occurred" : e instanceof Error ? e.message : "Unknown error occurred")
+      if (typeof e === "string" && e === "noCmd") {
+        await message.reply(i18n.translate("handlers.message.errorMessage.noCmd", { "@CMD": `"${prefix}menu ${cmd}"` }, user.language), true)
+      } else if (e instanceof TimeoutError) {
+        await message.reply(i18n.translate("handlers.message.errorMessage.timeout", {}, user.language), true)
+      } else if (typeof e === "string" || e instanceof Error) {
+        await message.reply(i18n.translate("handlers.message.errorMessage.error", { "@ERRMSG": typeof e === "string" ? e : e.message }, user.language), true)
+      } else {
+        await message.reply(i18n.translate("handlers.message.errorMessage.unknown", {}, user.language), true)
+      }
       return aruga.log(`${color.red("[ERRR]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps)
     }
   }
+
   /**
    * Eval command for development purposes, only for bot owner
    * @example
    * >> return 123 // bot will reply 123
    */
   if (message.body.startsWith(">>") && isOwner) {
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         resolve(eval("(async() => {" + arg + "})()"))
       } catch (err: unknown) {

@@ -10,40 +10,96 @@ export const execute = async (aruga: WAClient, message: GroupParticipantSerializ
   const groupMetadata = (await database.getGroupMetadata(message.from)) ?? (await database.createGroupMetadata(message.from, (await aruga.groupMetadata(message.from)) as unknown))
   const group = (await database.getGroup(message.from)) ?? (await database.createGroup(message.from, { name: groupMetadata.subject }))
   const botNumber = aruga.decodeJid(aruga.user.id)
-  const isBot = message.body === botNumber || message.sender === botNumber
+  const isBot = message.body.includes(botNumber) || message.sender === botNumber
 
   try {
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_ADD || message.type === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-      if (group.anticountry.active && group.anticountry.number.includes(phoneFormat(message.body).countryCode) && !!groupMetadata.participants.find((member) => member.id === botNumber && !!member.admin)) {
-        process.nextTick(async () => await aruga.groupParticipantsUpdate(message.from, [aruga.decodeJid(message.body)], "remove"))
-        await message.reply(i18n.translate("handlers.group-participant.anticountry", { "@PPL": `@${message.body.replace(/\D+/g, "")}`, "@NUM": group.anticountry.number.join(", ").trim() }, group.language))
+      if (group.anticountry.active && groupMetadata.participants.find((member) => member.id === botNumber && member.admin)) {
+        process.nextTick(async () => {
+          for (const participant of message.body) {
+            if (group.anticountry.number.includes(phoneFormat(participant).countryCode)) {
+              await aruga.groupParticipantsUpdate(message.from, [participant], "remove")
+            }
+          }
+        })
+        await message.reply(
+          i18n.translate(
+            "handlers.group-participant.anticountry",
+            {
+              "@PPL": `${message.body
+                .map((participant) => `@${participant.replace(/\D+/g, "")}`)
+                .join(" ")
+                .trimEnd()}`,
+              "@NUM": group.anticountry.number.join(", ").trim()
+            },
+            group.language
+          )
+        )
       } else {
-        groupMetadata.participants.push({ id: message.body, admin: null })
+        for (const participant of message.body) {
+          if (!groupMetadata.participants.map((v) => v.id).includes(participant)) {
+            groupMetadata.participants.push({ id: participant, admin: null })
+          }
+        }
         await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
       }
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || message.type === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) {
-      if (message.body === botNumber) {
-        await Promise.all([database.deleteGroup(message.body), database.deleteGroupMetadata(message.body)])
+      if (message.body.includes(botNumber)) {
+        await Promise.all([database.deleteGroup(message.from), database.deleteGroupMetadata(message.from)])
       } else {
-        groupMetadata.participants.splice(
-          groupMetadata.participants.findIndex((x) => x.id === message.body),
-          1
-        )
+        for (const participant of message.body) {
+          if (groupMetadata.participants.map((v) => v.id).includes(participant)) {
+            groupMetadata.participants.splice(
+              groupMetadata.participants.findIndex((x) => x.id === participant),
+              1
+            )
+          }
+        }
         await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
       }
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.promote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
-      groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === message.body)].admin = "admin"
+      if (!isBot && group.notify)
+        await message.reply(
+          i18n.translate(
+            "handlers.group-participant.promote",
+            {
+              "@ADM": `@${message.sender.replace(/\D+/g, "")}`,
+              "@PPL": `${message.body
+                .map((participant) => `@${participant.replace(/\D+/g, "")}`)
+                .join(" ")
+                .trimEnd()}`
+            },
+            group.language
+          )
+        )
+      for (const participant of message.body) {
+        groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === participant)].admin = "admin"
+      }
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
     if (message.type === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group-participant.demote", { "@ADM": `@${message.sender.replace(/\D+/g, "")}`, "@PPL": `@${message.body.replace(/\D+/g, "")}` }, group.language))
-      groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === message.body)].admin = null
+      if (!isBot && group.notify)
+        await message.reply(
+          i18n.translate(
+            "handlers.group-participant.demote",
+            {
+              "@ADM": `@${message.sender.replace(/\D+/g, "")}`,
+              "@PPL": `${message.body
+                .map((participant) => `@${participant.replace(/\D+/g, "")}`)
+                .join(" ")
+                .trimEnd()}`
+            },
+            group.language
+          )
+        )
+      for (const participant of message.body) {
+        groupMetadata.participants[groupMetadata.participants.findIndex((x) => x.id === participant)].admin = null
+      }
       await database.updateGroupMetadata(message.from, { participants: groupMetadata.participants })
     }
 
