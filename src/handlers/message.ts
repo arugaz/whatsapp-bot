@@ -161,7 +161,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
     })
       .then((res: string) => message.reply(res))
       .catch((err: unknown) => message.reply(inspect(err, true)))
-      .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
+      .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`$ [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
 }
 
