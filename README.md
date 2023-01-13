@@ -19,6 +19,7 @@
   <a href="https://github.com/arugaz/whatsapp-bot/issues">
     <img title="Whatsapp-Bot-Multi-Device-Issues" src="https://img.shields.io/github/issues-raw/arugaz/whatsapp-bot?label=Issues&color=%23ff9aa2&style=flat-square" />
   </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Farugaz%2Fwhatsapp-bot?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Farugaz%2Fwhatsapp-bot.svg?type=shield"/></a>
 </div>
 <div align="center">
   <a href="https://github.com/arugaz/followers">
@@ -53,6 +54,9 @@
 </div>
 
 ---
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Farugaz%2Fwhatsapp-bot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Farugaz%2Fwhatsapp-bot?ref=badge_large)
 
 ## Getting Started
 
