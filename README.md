@@ -85,7 +85,7 @@
 
 This project require
 
-- [NodeJS](https://nodejs.org/dist/) v16 or greater
+- [NodeJS](https://nodejs.org/en/download/) [v16 or greater](https://nodejs.org/dist/)
 - [FFMPEG](https://ffmpeg.org/download.html)
 
 ## Install
