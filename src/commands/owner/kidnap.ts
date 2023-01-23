@@ -21,16 +21,13 @@ export default <Command>{
 
   eg, @PREFIX@CMD https://chat(.)whatsapp.com/Id4A2eoegx6Hg7Il54sEnn
   --------
-  `,
+  `.trimEnd(),
   execute: async ({ aruga, message, arg }) => {
-    const url = arg.length && arg.match(/chat.whatsapp.com\/([\w\d]*)/g)
-    if (url && url.length >= 1) {
-      const code = url[0].replace("chat.whatsapp.com/", "")
+    const url = arg.length && arg.match(/chat.whatsapp.com\/(?:invite\/)?([\w\d]*)/)
+    if (url && url.length === 2) {
+      const code = url[1]
       const result = await aruga.groupGetInviteInfo(code)
-      if (!result)
-        return await aruga.sendMessage(message.from, {
-          text: "Invalid url or it was revoked"
-        })
+      if (!result) return
       await aruga.groupAcceptInvite(code)
       const fetchGroups = await aruga.groupFetchAllParticipating()
       const participants = Object.values(fetchGroups).find((v) => v.id === result.id).participants

@@ -1,4 +1,10 @@
-import type { SocketConfig, WACallEvent, WAMessage, WASocket } from "@adiwajshing/baileys"
+import type { AuthenticationState, SocketConfig, WACallEvent, WAMessage, WASocket } from "@adiwajshing/baileys"
+
+declare type ArugaAuth = {
+  state: AuthenticationState
+  saveState: () => Promise<void>
+  clearState: () => Promise<void>
+}
 
 declare type Aruga = Partial<WASocket>
 

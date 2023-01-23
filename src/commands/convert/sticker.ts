@@ -10,8 +10,9 @@ const wasticker = new WASticker({
 
 export default <Command>{
   category: "convert",
-  cd: 10,
-  desc: "Create sticker from photo or video!",
+  aliases: ["stiker", "s"],
+  cd: 5,
+  desc: "Create sticker from photo or video",
   example: `
   Send a image/video message with caption
   @PREFIX@CMD
@@ -19,7 +20,7 @@ export default <Command>{
   or Reply a image/video message with text
   @PREFIX@CMD
   --------
-  `,
+  `.trimEnd(),
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)
@@ -29,9 +30,7 @@ export default <Command>{
     }
 
     if (message.type.includes("video") || (message.quoted && message.quoted.type.includes("video"))) {
-      const duration = message.quoted
-        ? (message.quoted.message[message.quoted.type].seconds as number)
-        : (message.message[message.type].seconds as number)
+      const duration = message.quoted ? message.quoted.message.videoMessage.seconds : message.message.videoMessage.seconds
       if (duration && !isNaN(duration) && duration > 10) throw "Video duration is too long! Maximum duration of 10 seconds"
 
       const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)

@@ -3,8 +3,8 @@ import type { Command } from "../../types/command"
 
 export default <Command>{
   category: "convert",
-  cd: 20,
-  desc: "Generate a hyper-realistic photo an anime style!",
+  cd: 10,
+  desc: "Generate a hyper-realistic photo an anime style",
   example: `
   Send a image message with caption
   @PREFIX@CMD
@@ -12,7 +12,7 @@ export default <Command>{
   or Reply a image message with text
   @PREFIX@CMD
   --------
-  `,
+  `.trimEnd(),
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)

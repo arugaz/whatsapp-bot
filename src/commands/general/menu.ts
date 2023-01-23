@@ -58,6 +58,7 @@ export default <Command>{
         command.commands
           .map((v) => v.category)
           .filter((v) => (!isOwner && v === "owner" ? null : v))
+          .filter((v) => (!message.isGroupMsg && v === "group" ? null : v))
           .sort()
       )
     ]) {
@@ -104,12 +105,15 @@ export default <Command>{
       "┃\n" +
       `┗━━「 ꗥ${config.name}ꗥ 」`
 
-    return await aruga.sendMessage(message.from, {
-      text,
-      footer: config.footer,
-      sections,
-      buttonText: i18n.translate("commands.general.menu.buttonText", {}, user.language),
-      viewOnce: true
-    })
+    return await aruga.sendMessage(
+      message.from,
+      {
+        text,
+        footer: config.footer,
+        sections,
+        buttonText: i18n.translate("commands.general.menu.buttonText", {}, user.language)
+      },
+      { ephemeralExpiration: message.expiration }
+    )
   }
 }

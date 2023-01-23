@@ -8,7 +8,7 @@ import { spawn } from "child_process"
  */
 export const ffmpeg = (bufferData: Buffer, options: string[]) =>
   new Promise<Buffer>((resolve, reject) => {
-    const result = new Array<Uint8Array>()
+    const result: Uint8Array[] = []
     options = ["-hide_banner", "-loglevel", "error", "-i", "pipe:0", ...options, "-y", "pipe:1"]
     const spawner = spawn("ffmpeg", options, { windowsHide: true })
     spawner.stdout.on("data", (data: Uint8Array) => result.push(data))

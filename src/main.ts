@@ -1,3 +1,5 @@
+import { inspect } from "util"
+
 import cfonts from "cfonts"
 import qrcode from "qrcode"
 import NodeCache from "node-cache"
@@ -32,7 +34,7 @@ const aruga = new WAClient({
 })
 
 /** Handler Event */
-setTimeout(() => {
+;(() => {
   // handle call event
   aruga.on("call", (call) =>
     serialize
@@ -72,7 +74,7 @@ setTimeout(() => {
       .then((qrResult) => console.log(qrResult))
       .catch(() => void 0)
   )
-}, 0)
+})()
 
 /** Pretty Sexy :D */
 const clearProcess = () => {
@@ -84,6 +86,7 @@ const clearProcess = () => {
     .catch(() => process.exit(1))
 }
 for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, clearProcess)
+for (const signal of ["unhandledRejection", "uncaughtException"]) process.on(signal, (reason: unknown) => aruga.log(inspect(reason, true), "error"))
 
 /** Start Client */
 setImmediate(async () => {
@@ -112,7 +115,7 @@ setImmediate(async () => {
       gradient: ["red", "#ee82f8" as HexColor]
     })
   } catch (err: unknown) {
-    console.error(err)
+    aruga.log(inspect(err, true), "error")
     clearProcess()
   }
 })
