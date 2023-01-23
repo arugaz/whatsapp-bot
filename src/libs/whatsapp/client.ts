@@ -225,38 +225,49 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
     // credentials
     aruga.ev.on("creds.update", saveState)
 
-    /** forwarded to the main event */
-
     // call events
-    aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]))
+    aruga.ev.on("call", (calls) => {
+      for (const call of calls) {
+        this.emit("call", call)
+      }
+    })
+
     // message event
-    aruga.ev.on("messages.upsert", (msg) => msg.messages.length >= 1 && !msg.messages[0]?.messageStubType && msg.messages[0]?.message && this.emit("message", msg.messages[0]))
+    aruga.ev.on("messages.upsert", (msg) => {
+      for (const message of msg.messages) {
+        if (message.message) this.emit("message", message)
+      }
+    })
+
     // group event
-    aruga.ev.on(
-      "messages.upsert",
-      (msg) =>
-        msg.messages.length >= 1 &&
-        (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_SUBJECT ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_ICON ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_INVITE_LINK ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_DESCRIPTION ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_RESTRICT ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_CHANGE_ANNOUNCE) &&
-        this.emit("group", msg.messages[0])
-    )
+    aruga.ev.on("messages.upsert", (msg) => {
+      for (const message of msg.messages) {
+        if (
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_SUBJECT ||
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_ICON ||
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_INVITE_LINK ||
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_DESCRIPTION ||
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_RESTRICT ||
+          message.messageStubType === WAMessageStubType.GROUP_CHANGE_ANNOUNCE
+        )
+          this.emit("group", message)
+      }
+    })
+
     // group participant event
-    aruga.ev.on(
-      "messages.upsert",
-      (msg) =>
-        msg.messages.length >= 1 &&
-        (msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE ||
-          msg.messages[0]?.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE) &&
-        this.emit("group.participant", msg.messages[0])
-    )
+    aruga.ev.on("messages.upsert", (msg) => {
+      for (const message of msg.messages) {
+        if (
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD ||
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_PROMOTE ||
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_DEMOTE ||
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE ||
+          message.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
+        )
+          this.emit("group.participant", message)
+      }
+    })
 
     /** wait, lemme ignore them */
     for (const events of [

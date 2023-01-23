@@ -29,7 +29,7 @@ export default <Command>{
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.leave.enable", { "@CMD": command }, user.language)}\n` +
+        `┃ ${i18n.translate("commands.group.member-leave.enable", { "@CMD": command }, user.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 
@@ -46,7 +46,7 @@ export default <Command>{
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.leave.disable", { "@CMD": command }, user.language)}\n` +
+        `┃ ${i18n.translate("commands.group.member-leave.disable", { "@CMD": command }, user.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 

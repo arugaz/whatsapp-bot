@@ -1,15 +1,17 @@
 import i18n from "../../libs/international"
-import { database } from "../../libs/whatsapp"
+import { command, database } from "../../libs/whatsapp"
 import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
-export const name = "welcome"
+export const name = "gnotify"
 
 export default <Command>{
   category: "group",
-  desc: "Set welcome message for incoming member",
+  aliases: ["gcnotify"],
+  desc: "Detects group updates",
   groupOnly: true,
   adminGroup: true,
+  botGroupAdmin: true,
   example: `
   Turn on / Activate @CMD
   @PREFIX@CMD on
@@ -18,18 +20,18 @@ export default <Command>{
   @PREFIX@CMD off
   --------
   `.trimEnd(),
-  execute: async ({ message, args, user, group, command }) => {
+  execute: async ({ message, args, user, group }) => {
     if (args[0] && (args[0].toLowerCase() === "on" || args[0].toLowerCase() === "enable")) {
-      if (!group.welcome) {
+      if (!group.notify) {
         await database.updateGroup(message.from, {
-          welcome: true
+          notify: true
         })
       }
 
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.member-welcome.enable", { "@CMD": command }, user.language)}\n` +
+        `┃ ${i18n.translate("commands.group.group-notify.enable", { "@CMD": command }, user.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 
@@ -37,16 +39,16 @@ export default <Command>{
     }
 
     if (args[0] && (args[0].toLowerCase() === "off" || args[0].toLowerCase() === "disable")) {
-      if (group.welcome) {
+      if (group.notify) {
         await database.updateGroup(message.from, {
-          welcome: false
+          notify: false
         })
       }
 
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.member-welcome.disable", { "@CMD": command }, user.language)}\n` +
+        `┃ ${i18n.translate("commands.group.group-notify.disable", { "@CMD": command }, user.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 

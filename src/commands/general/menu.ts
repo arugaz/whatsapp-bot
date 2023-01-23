@@ -86,7 +86,7 @@ export default <Command>{
       "┃\n" +
       `┃ ${i18n.translate(
         "commands.general.menu.detail.one",
-        { "@SZEE": `${sizeFormat(os.totalmem() - os.freemem())} / ${sizeFormat(os.totalmem())}` },
+        { "@SZEE": `${sizeFormat(process.memoryUsage().heapTotal)} / ${sizeFormat(os.totalmem())}` },
         user.language
       )}\n` +
       `┃ ${i18n.translate("commands.general.menu.detail.two", { "@CMDS": command.commands.size }, user.language)}\n` +

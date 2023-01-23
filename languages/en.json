@@ -1,4 +1,7 @@
 {
+  "default": {
+    "onWhatsApp": "{{@NUM}} not registered on whatsapp"
+  },
   "handlers": {
     "call": {
       "reject": "Sorry, I can't take calls!",
@@ -112,11 +115,28 @@
         "enable": "Successfully activate {{@CMD}}, bot will resend messages that send as view once",
         "disable": "Successfully deactivate {{@CMD}}, bot no longer resend messages that send as view once"
       },
-      "leave": {
+      "change-description": "{{@ADM}} changed the group description to",
+      "change-name": "{{@ADM}} changed the group title to",
+      "change-picture": "{{@ADM}} has changed the group title",
+      "group-add": {
+        "add": "Successfully added {{@NUM}} to the group",
+        "invite": "Successfully invited {{@NUM}} to the group"
+      },
+      "group-demote": "Successfully demoted {{@ADM}} to become a member",
+      "group-kick": {
+        "success": "Successfully removed {{@NUM}} from the group",
+        "failed": "{{@NUM}} does not exist in the group"
+      },
+      "group-notify": {
+        "enable": "Successfully activate {{@CMD}}, bot will send a message when there is an update on the group",
+        "disable": "Successfully deactivated {{@CMD}}, bot no longer send a message when there is an update on the group"
+      },
+      "group-promote": "Successfully promote {{@ADM}} to become an admin",
+      "member-leave": {
         "enable": "Successfully activate {{@CMD}}, bot will send a goodbye message when a participant leaves the group",
         "disable": "Successfully deactivated {{@CMD}}, bot no longer sends goodbye messages when a participant leaves the group"
       },
-      "welcome": {
+      "member-welcome": {
         "enable": "Successfully activate {{@CMD}}, bot will send a welcome message when a new participant join the group",
         "disable": "Successfully deactivate {{@CMD}}, bot no send a welcome message when a new participant join the group"
       }
