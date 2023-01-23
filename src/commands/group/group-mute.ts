@@ -3,11 +3,11 @@ import { command, database } from "../../libs/whatsapp"
 import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
-export const name = "gnotify"
+export const name = "gmute"
 
 export default <Command>{
   category: "group",
-  aliases: ["gcnotify"],
+  aliases: ["gcmute"],
   desc: "Mute/Unmute bot on group",
   groupOnly: true,
   adminGroup: true,

@@ -136,6 +136,7 @@
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirimkan pesan ketika ada update di grup"
       },
       "group-promote": "Berhasil mempromosikan {{@ADM}} untuk menjadi admin",
+      "group-url": "URL grup: {{@URL}}",
       "member-leave": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat tinggal saat ada peserta yang keluar dari grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat tinggal saat ada peserta yang keluar dari grup"
