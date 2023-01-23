@@ -38,7 +38,7 @@
     <img title="Whatsapp-Bot-Multi-Device-Watching" src="https://img.shields.io/github/watchers/arugaz/whatsapp-bot?label=Watchers&color=%23e2f0cb&style=flat-square">
   </a>
   <a href="https://github.com/arugaz/whatsapp-bot/blob/master/LICENSE">
-    <img title="Whatsapp-Bot-Multi-Device-License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?color=%23b5ead7&style=flat-square"/>
+    <img title="Whatsapp-Bot-Multi-Device-License" src="https://img.shields.io/badge/License-GPL_3.0_or_later-blue.svg?color=%23b5ead7&style=flat-square"/>
   </a>
   <a href="https://hits.seeyoufarm.com">
     <img title="Whatsapp-Bot-Multi-Device-Hits" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FArugaZ%2Fwhatsapp-bot&count_bg=%23c7ceea&title_bg=%23555555&icon=probot.svg&icon_color=%23c7ceea&title=Hits&edge_flat=true"/>
@@ -63,7 +63,7 @@
 ---
 
 <p align="center">
-  <b>whatsapp-bot</b> out-of-the-box support on...
+  <a href="https://github.com/arugaz/whatsapp-bot"><b>whatsapp-bot</b></a> out-of-the-box support on...
 </p>
 
 <p align="center">
