@@ -1,16 +1,16 @@
 <div align="center">
+  
   <img width="192" title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png"/>
-</div>
 
-<div align="center">
-    <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
+  <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
+
 </div>
 
 ---
 
 <div align="center">  
   <a href="https://github.com/ArugaZ">
-    <img title="Whatsapp-Bot-Multi-Device-Author" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
+    <img title="ArugaZ" src="https://img.shields.io/badge/AUTHOR-ARUGAZ-orange.svg?style=for-the-badge&logo=github"></a>
 </div>
 <div align="center">
   <a href="https://www.codefactor.io/repository/github/arugaz/whatsapp-bot/overview/master">
@@ -41,16 +41,21 @@
   </a>
 </div>
 <div align="center">
-  <details>
-    <summary>🥟 Help me!</summary>
-    <p><a href="https://ko-fi.com/arugaz">Ko-Fi</a></p>
-    <p><a href="https://trakteer.id/arugaz/tip">Trakteer</a></p>
-  </details>
-
   <p>Don't forget to click ⭐️ and fork this repository</p>
-
-  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a> or chat me on <a href="https://wa.me/6285163651710" target="_blank">whatsapp</a></p>
+  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a></p>
 </div>
+
+---
+
+<p align="center"> This whatsapp bot project (now) use 
+  <a href="https://github.com/adiwajshing/Baileys">Baileys Multi-Device.</a>
+</p>
+
+<p align="center">
+  <img title="Whatsapp-Bot-Typescript" src="https://img.shields.io/badge/Typescript-031b36?style=for-the-badge&logo=typescript&logoColor=3178C6"></img>
+  <img title="Whatsapp-Bot-Prisma" src="https://img.shields.io/badge/prisma-29245c?style=for-the-badge&logo=prisma&logoColor=F7DF1E"></img>
+  <img title="Whatsapp-Bot-Mongo" src="https://img.shields.io/badge/mongoDB-033604?style=for-the-badge&logo=mongodb&logoColor=47A248"></img>
+</p>
 
 ---
 
@@ -58,8 +63,8 @@
 
 This project require
 
-- NodeJS v16 or greater [Install](https://nodejs.org/dist/)
-- FFMPEG [Install](https://ffmpeg.org/download.html)
+- [NodeJS](https://nodejs.org/dist/) v16 or greater
+- [FFMPEG](https://ffmpeg.org/download.html)
 
 ## Install
 
@@ -166,7 +171,7 @@ Please refer to our [Contribution Guidelines](CONTRIBUTING.md) and [Code of Cond
 
 <section>
 
-**whatsapp-bot** is available under the Apache-2.0 license. See the [LICENSE](LICENSE) file for more info.
+since **whatsapp-bot** use [baileys](https://github.com/adiwajshing/Baileys) is now available under the GPL-3.0 license. See the [LICENSE](LICENSE) file for more info.
 
 </section>
 
