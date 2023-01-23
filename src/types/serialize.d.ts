@@ -1,4 +1,4 @@
-import type { proto, WACallUpdateType, MessageGenerationOptionsFromContent } from "@adiwajshing/baileys"
+import type { proto, WACallUpdateType } from "@adiwajshing/baileys"
 import type { GroupMetadata } from "@prisma/client"
 
 /**
@@ -124,14 +124,6 @@ declare type MessageSerialize = {
    */
   reply: (text: string, quoted?: boolean) => Promise<proto.WebMessageInfo>
 
-  /**
-   * Resends a message
-   * @param {string} jid: Chat Jid
-   * @param {boolean} quoted?: Wanna reply to client?
-   * @returns {Promise<proto.WebMessageInfo>} if quoted is set to true will reply the message otherwise just typing back..
-   */
-  resend: (jid?: string, opts?: Omit<MessageGenerationOptionsFromContent, "userJid">) => Promise<proto.WebMessageInfo>
-
   // additional properties
   /** Message timestamps */
   timestamps?: number
@@ -139,9 +131,11 @@ declare type MessageSerialize = {
   expiration?: number
   /** Nickname for users */
   pushname?: string
+  /** WebMessageInfo status */
+  status?: number
   /** Group Metadata */
   groupMetadata?: GroupMetadata
 
   /** Properties of a Quoted Message. */
-  quoted?: MessageSerialize
+  quoted: MessageSerialize | null
 }

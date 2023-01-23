@@ -6,7 +6,9 @@
       "ban": "Maaf, aku akan ban kamu!"
     },
     "group-participant": {
+      "welcome": "Halo {{@PPL}} 👋, Terima kasih banyak telah bergabung dengan {{@GRP}} sebagai salah satu anggota terbaru kami. Senang menyambut kamu di grup kami!",
       "anticountry": "Maaf {{@PPL}}, di grup ini dilarang untuk nomor telepon dengan awalan {{@NUM}}",
+      "leave": "Suatu kehormatan bisa bertemu dengan {{@PPL}}. Anda hanya berhak mendapatkan yang terbaik! Selamat tinggal 👋",
       "promote": "{{@ADM}} telah mempromosikan {{@PPL}} menjadi admin grup",
       "demote": "{{@ADM}} telah mendemosikan {{@PPL}} menjadi anggota grup"
     },
@@ -101,6 +103,22 @@
           "numList": "Daftar kode negara di grup: {{@NUM}}"
         },
         "list": "Daftar semua kode negara yang tersedia berdasarkan {{@URL}}"
+      },
+      "antilink": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan langsung menendang anggota grup yang mengirimkan tautan grup whatsapp",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi menendang anggota grup yang mengirim tautan grup whatsapp"
+      },
+      "antiviewonce": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirim ulang pesan yang dikirim sebagai tampilan sekali",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim ulang pesan yang dikirim sebagai tampilan sekali"
+      },
+      "leave": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat tinggal saat ada peserta yang keluar dari grup",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat tinggal saat ada peserta yang keluar dari grup"
+      },
+      "welcome": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat datang saat ada peserta baru yang bergabung ke grup",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat datang saat ada peserta baru yang bergabung ke grup"
       }
     }
   }

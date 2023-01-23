@@ -1,6 +1,5 @@
 import { WAMessage } from "@adiwajshing/baileys"
-import WAClient from "../../../libs/whatsapp"
-import { database } from "../../whatsapp"
+import WAClient, { database } from "../../../libs/whatsapp"
 import type { MessageSerialize } from "../../../types/serialize"
 
 export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageSerialize> => {
@@ -21,11 +20,11 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
   if (m.message) {
     m.key = msg.key
     m.id = m.key.id
-    m.isBotMsg = (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12) || (m.id.startsWith("ARUGAZ") && m.id.length === 18)
+    m.isBotMsg = (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12) || (m.id.startsWith("ARUGAZ") && m.id.length === 20)
     m.isGroupMsg = m.key.remoteJid.endsWith("g.us")
     m.from = aruga.decodeJid(m.key.remoteJid)
     m.fromMe = m.key.fromMe
-    m.type = Object.keys(m.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    m.type = Object.keys(m.message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
     m.sender = aruga.decodeJid(m.fromMe ? aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from)
     m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant
     m.body =
@@ -61,16 +60,13 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
       )
     }
     m.reply = reply
-    function resend(jid = m.from, opts: unknown) {
-      return aruga.resendMessage(jid, m, opts)
-    }
-    m.resend = resend
   }
 
   m.timestamps = (typeof msg.messageTimestamp === "number" ? msg.messageTimestamp : msg.messageTimestamp.low ? msg.messageTimestamp.low : msg.messageTimestamp.high) * 1000 || Date.now()
   m.expiration = m.message[m.type]?.contextInfo?.expiration || 0
-  m.pushname = msg.pushName || "unknown"
-  m.groupMetadata = m.type !== "stickerMessage" && m.isGroupMsg && ((await database.getGroupMetadata(m.from)) ?? (await database.createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)))
+  m.pushname = msg.pushName || "anonymous"
+  m.status = msg.status || 0
+  m.groupMetadata = m.isGroupMsg && ((await database.getGroupMetadata(m.from)) ?? (await database.createGroupMetadata(m.from, (await aruga.groupMetadata(m.from)) as unknown)))
 
   m.quoted = <MessageSerialize>{}
   m.quoted.message = m.message[m.type]?.contextInfo?.quotedMessage
@@ -96,12 +92,13 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
       id: m.message[m.type].contextInfo.stanzaId
     }
     m.quoted.id = m.quoted.key.id
-    m.quoted.isBotMsg = (m.quoted.id.startsWith("BAE5") && m.quoted.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12) || (m.quoted.id.startsWith("ARUGAZ") && m.quoted.id.length === 18)
+    m.quoted.isBotMsg = (m.quoted.id.startsWith("BAE5") && m.quoted.id.length === 16) || (m.id.startsWith("3EB0") && m.key.id.length === 12) || (m.quoted.id.startsWith("ARUGAZ") && m.quoted.id.length === 20)
     m.quoted.isGroupMsg = m.quoted.key.remoteJid.endsWith("g.us")
     m.quoted.from = aruga.decodeJid(m.quoted.key.remoteJid)
     m.quoted.fromMe = m.quoted.key.fromMe
-    m.quoted.type = Object.keys(m.quoted.message).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    m.quoted.type = Object.keys(m.quoted.message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
     m.quoted.sender = m.quoted.key.participant
+    m.quoted.key.participant = !m.quoted.key.participant ? m.sender : m.quoted.key.participant
     m.quoted.body =
       m.quoted.message.conversation && m.quoted.type === "conversation"
         ? m.quoted.message.conversation
@@ -135,10 +132,6 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
       )
     }
     m.quoted.reply = reply
-    function resend(jid = m.from, opts: unknown) {
-      return aruga.resendMessage(jid, m.quoted, opts)
-    }
-    m.quoted.resend = resend
   } else m.quoted = null
 
   return m

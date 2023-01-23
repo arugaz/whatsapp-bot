@@ -2,7 +2,7 @@ import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
 import { randomBytes } from "crypto"
 import { ffmpeg } from "../../utils/cli"
-import { StickerOptions, StickerCategories } from "../../types/sticker"
+import type { StickerOptions, StickerCategories } from "../../types/sticker"
 
 const defaultOptions: StickerOptions = {
   author: "arugaz",
@@ -44,7 +44,7 @@ export class WASticker {
     return new Promise<Buffer>((resolve, reject) =>
       ffmpeg(bufferData, [
         "-vf",
-        `scale='min(${this.#opts.width},iw)':min'(${this.#opts.width},ih)':force_original_aspect_ratio=decrease,fps=fps=${this.#opts.fps}, pad=${this.#opts.width}:${this.#opts.width}:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+        `scale='min(${this.#opts.width},iw)':min'(${this.#opts.width},ih)':force_original_aspect_ratio=decrease,fps=${this.#opts.fps}, pad=${this.#opts.width}:${this.#opts.width}:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
         "-loop",
         this.#opts.loop ? "0" : "1",
         "-lossless",

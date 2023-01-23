@@ -13,7 +13,7 @@ export const execute = async (aruga: WAClient, message: GroupSerialize): Promise
 
   try {
     if (message.type === WAMessageStubType.GROUP_CHANGE_SUBJECT) {
-      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.subject", {}, group.language))
+      if (!isBot && group.notify) await message.reply(i18n.translate("handlers.group.subject", { "@PPL": `@${senderNumber}`, "@TTL": `\n\n${message.body}` }, group.language))
       await Promise.all([database.updateGroup(message.from, { name: message.body }), database.updateGroupMetadata(message.from, { subject: message.body })])
     }
 

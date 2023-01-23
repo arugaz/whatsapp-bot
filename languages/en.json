@@ -6,7 +6,9 @@
       "ban": "Sorry, I will ban you!"
     },
     "group-participant": {
+      "welcome": "Hello {{@PPL}} 👋, Thank you so much for joining {{@GRP}} as one of our newest members. It's a pleasure to welcome you to our group!",
       "anticountry": "Sorry {{@PPL}}, this group is prohibited for phone numbers with the prefix {{@NUM}}",
+      "leave": "It was an honor to meet with a {{@PPL}}. You deserve nothing but the best! Good bye 👋",
       "promote": "{{@ADM}} has promoted {{@PPL}} become admins group",
       "demote": "{{@ADM}} has demoted {{@PPL}} become members group"
     },
@@ -14,7 +16,7 @@
       "subject": "{{@PPL}} has changed the group name to {{@TTL}}",
       "icon": {
         "change": "{{@PPL}} has changed the group profile picture",
-        "remove": "{{@PPL}} has removed the group Profile picture"
+        "remove": "{{@PPL}} has removed the group profile picture"
       },
       "invite_link": "{{@PPL}} has updated the group URL",
       "description": "{{@PPL}} has updated the group description to {{@TTL}}",
@@ -101,6 +103,22 @@
           "numList": "List of country code in the group: {{@NUM}}"
         },
         "list": "List of all available country codes based on {{@URL}}"
+      },
+      "antilink": {
+        "enable": "Successfully activate {{@CMD}}, bot will kick group member that send whatsapp group link",
+        "disable": "Successfully deactivate {{@CMD}}, bot no longer kick group members that send whatsapp group link"
+      },
+      "antiviewonce": {
+        "enable": "Successfully activate {{@CMD}}, bot will resend messages that send as view once",
+        "disable": "Successfully deactivate {{@CMD}}, bot no longer resend messages that send as view once"
+      },
+      "leave": {
+        "enable": "Successfully activate {{@CMD}}, bot will send a goodbye message when a participant leaves the group",
+        "disable": "Successfully deactivated {{@CMD}}, bot no longer sends goodbye messages when a participant leaves the group"
+      },
+      "welcome": {
+        "enable": "Successfully activate {{@CMD}}, bot will send a welcome message when a new participant join the group",
+        "disable": "Successfully deactivate {{@CMD}}, bot no send a welcome message when a new participant join the group"
       }
     }
   }

@@ -34,9 +34,9 @@ export default <Command>{
   Get all country code list
   @PREFIX@CMD list
   --------
-  `,
+  `.trimEnd(),
   execute: async ({ aruga, message, args, group, user, command, isBotGroupAdmin }) => {
-    if (args[0] === "add" && args.length >= 2) {
+    if (args[0] && args[0].toLowerCase() === "add" && args.length >= 2) {
       const supportCode: unknown[] = getSupportedCallingCodes()
       for (const numberCode of args.slice(1)) {
         if (supportCode.includes(parseInt(numberCode, 10)) && !group.anticountry.number.includes(numberCode))
@@ -58,7 +58,7 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    if (args[0] === "remove" && args.length >= 2) {
+    if (args[0] && args[0].toLowerCase() === "remove" && args.length >= 2) {
       const supportCode: unknown[] = getSupportedCallingCodes()
       for (const numberCode of args.slice(1)) {
         if (supportCode.includes(parseInt(numberCode, 10)) && group.anticountry.number.includes(numberCode))
@@ -87,7 +87,7 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    if (args[0] === "on" || args[0] === "enable") {
+    if (args[0] && (args[0].toLowerCase() === "on" || args[0].toLowerCase() === "enable")) {
       if (!group.anticountry.active) {
         await database.updateGroup(message.from, {
           anticountry: {
@@ -97,9 +97,9 @@ export default <Command>{
         })
 
         process.nextTick(async () => {
-          for (const participant of message.groupMetadata.participants
-            .filter((user) => !user.admin)
-            .filter((user) => group.anticountry.number.includes(phoneFormat(user.id).countryCode))) {
+          for (const participant of message.groupMetadata.participants.filter(
+            (user) => !user.admin && group.anticountry.number.includes(phoneFormat(user.id).countryCode)
+          )) {
             if (isBotGroupAdmin) await aruga.groupParticipantsUpdate(message.from, [participant.id], "remove")
           }
         })
@@ -118,7 +118,7 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    if (args[0] === "off" || args[0] === "disable") {
+    if (args[0] && (args[0].toLowerCase() === "off" || args[0].toLowerCase() === "disable")) {
       if (group.anticountry.active)
         await database.updateGroup(message.from, {
           anticountry: {
@@ -140,7 +140,7 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    if (args[0] === "status") {
+    if (args[0] && args[0].toLowerCase() === "status") {
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
@@ -157,7 +157,7 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    if (args[0] === "list") {
+    if (args[0] && args[0].toLowerCase() === "list") {
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +

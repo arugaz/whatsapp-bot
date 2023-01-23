@@ -1,21 +1,145 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
 import EventEmitter from "@arugaz/eventemitter"
-import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMessageStubType } from "@adiwajshing/baileys"
+import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "@adiwajshing/baileys"
 
-import { auth } from "../libs/../whatsapp"
-import Database from "../libs/../database"
+import { auth, database } from "../../libs/whatsapp"
+import Database from "../../libs/database"
+import { WAProfile } from "../../libs/convert"
 import color from "../../utils/color"
 import config from "../../utils/config"
 import type { Aruga, ArugaConfig, ArugaEventEmitter } from "../../types/client"
 import type { MessageSerialize } from "../../types/serialize"
 
 let first = !0
-export default class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
+class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
   #cfg: ArugaConfig
+  #status: "close" | "idle" | "open"
+  /** whatsapp client */
   constructor(cfg: ArugaConfig) {
     super()
     this.#cfg = cfg
+    this.#status = "close"
+  }
+
+  /**
+   * Decode jid to make it correctly formatted
+   * @param {string} jid: user/group jid
+   */
+  public decodeJid(jid: string): string {
+    if (/:\d+@/gi.test(jid)) {
+      const decode = jidDecode(jid)
+      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid
+    } else return jid
+  }
+
+  /**
+   * Download media message and return buffer
+   * @param {proto.IMessage} message:proto.IMessage
+   */
+  public async downloadMediaMessage(message: proto.IMessage): Promise<Buffer> {
+    const type = Object.keys(message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
+    const mime = {
+      imageMessage: "image",
+      videoMessage: "video",
+      stickerMessage: "sticker",
+      documentMessage: "document",
+      audioMessage: "audio"
+    }
+    return await toBuffer(await downloadContentFromMessage(message[type], mime[type]))
+  }
+
+  public async resendMessage(jid: string, message: Partial<MessageSerialize>, opts?: Omit<MessageGenerationOptionsFromContent, "userJid">) {
+    message.message = message.message?.viewOnceMessage ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2 ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2Extension ? message.message.viewOnceMessageV2Extension?.message : message.message
+    if (message.message[message.type]?.viewOnce) delete message.message[message.type].viewOnce
+    const content = generateForwardMessageContent(proto.WebMessageInfo.fromObject(message), false)
+
+    if (content.listMessage) content.listMessage.listType = 1
+    const contentType = Object.keys(content).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
+    if (content[contentType]?.contextInfo) {
+      delete content[contentType]?.contextInfo.forwardingScore
+      delete content[contentType]?.contextInfo.isForwarded
+    }
+    content[contentType].contextInfo = {
+      ...(message.message[message.type]?.contextInfo ? message.message[message.type].contextInfo : {}),
+      ...content[contentType].contextInfo
+    }
+
+    const waMessage = generateWAMessageFromContent(jid, content, {
+      userJid: this.decodeJid(this.user.id),
+      ...opts
+    })
+
+    if (waMessage?.message?.buttonsMessage?.contentText) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.EMPTY
+    if (waMessage?.message?.buttonsMessage?.imageMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.IMAGE
+    if (waMessage?.message?.buttonsMessage?.videoMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.VIDEO
+    if (waMessage?.message?.buttonsMessage?.documentMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.DOCUMENT
+    if (waMessage?.message?.buttonsMessage?.locationMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.LOCATION
+
+    process.nextTick(() => this.upsertMessage(waMessage, "append"))
+    await this.relayMessage(jid, waMessage.message, {
+      ...opts,
+      messageId: waMessage.key.id,
+      cachedGroupMetadata: (jid) => database.getGroupMetadata(jid)
+    })
+    return waMessage
+  }
+
+  public async updateProfilePicture(jid: string, content: WAMediaUpload, crop = false) {
+    let bufferOrFilePath: Buffer | string
+    if (Buffer.isBuffer(content)) {
+      bufferOrFilePath = content
+    } else if ("url" in content) {
+      bufferOrFilePath = content.url.toString()
+    } else {
+      bufferOrFilePath = await toBuffer(content.stream)
+    }
+
+    const img = WAProfile(bufferOrFilePath as Buffer, crop)
+
+    await this.query({
+      tag: "iq",
+      attrs: {
+        to: this.decodeJid(jid),
+        type: "set",
+        xmlns: "w:profile:picture"
+      },
+      content: [
+        {
+          tag: "picture",
+          attrs: { type: "image" },
+          content: await img
+        }
+      ]
+    })
+  }
+
+  public async sendAcceptInviteV4(jid: string, participants: string, caption = "Invitation to join my WhatsApp group") {
+    if (!jid.endsWith("g.us")) throw new TypeError("Invalid jid")
+    const inviteCode = await this.groupInviteCode(jid)
+    const groupName = (await database.getGroup(jid)).name
+
+    const content = proto.Message.fromObject({
+      groupInviteMessage: proto.Message.GroupInviteMessage.fromObject({
+        inviteCode,
+        inviteExpiration: Date.now() + 3 * 24 * 60 * 60 * 1000,
+        groupJid: jid,
+        groupName: groupName,
+        caption
+      })
+    })
+
+    const waMessage = generateWAMessageFromContent(participants, content, {
+      userJid: this.decodeJid(this.user.id),
+      ephemeralExpiration: 3 * 24 * 60 * 60
+    })
+
+    process.nextTick(() => this.upsertMessage(waMessage, "append"))
+    await this.relayMessage(participants, waMessage.message, {
+      messageId: waMessage.key.id,
+      cachedGroupMetadata: (jid) => database.getGroupMetadata(jid)
+    })
+    return waMessage
   }
 
   /** Start Whatsapp Client */
@@ -25,7 +149,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     const { saveState, clearState, state } = (this.#cfg.authType === "single" && (await auth.useSingleAuthState(Database))) || (this.#cfg.authType === "multi" && (await auth.useMultiAuthState(Database)))
     const { version, isLatest } = await fetchLatestBaileysVersion()
 
-    const aruga = makeWASocket({
+    const aruga: Aruga = makeWASocket({
       ...this.#cfg,
       auth: {
         creds: state.creds,
@@ -37,8 +161,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       browser: ["whatsapp-bot", "Safari", "3.0.0"],
       logger,
       patchMessageBeforeSending: (message) => {
-        const requiresPatch = !!(message.buttonsMessage || message.listMessage)
-        if (requiresPatch) {
+        if (message.buttonsMessage || message.templateMessage || message.listMessage) {
           message = {
             viewOnceMessage: {
               message: {
@@ -57,13 +180,6 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       version
     })
 
-    for (const method of Object.keys(aruga)) {
-      if (method !== "ws" && method !== "ev") {
-        this[method as keyof WAClient] = aruga[method as keyof Aruga]
-        delete aruga[method]
-      }
-    }
-
     // connection
     aruga.ev.on("connection.update", async ({ qr, connection, lastDisconnect }) => {
       if (qr) {
@@ -71,29 +187,28 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
       }
 
       if (connection === "close") {
+        this.#status = "close"
         const reason = new Boom(lastDisconnect?.error)?.output?.statusCode
         this.log("Disconnected!", "error")
-        if (reason === DisconnectReason.loggedOut || reason === DisconnectReason.multideviceMismatch || reason === DisconnectReason.badSession || reason === DisconnectReason.serviceUnavailable) {
-          if (clearState) {
-            this.log("Deleting session...", "error")
-            await clearState()
-            this.log("Session deleted!", "error")
-          }
-          if (reason === DisconnectReason.serviceUnavailable) {
-            throw new Error("Your WhatsApp account has been banned!?")
-          }
+        if (reason === DisconnectReason.loggedOut || reason === DisconnectReason.multideviceMismatch || reason === DisconnectReason.badSession) {
+          this.log("Deleting session...", "error")
+          await clearState()
+          this.log("Session deleted!", "error")
+
           throw new Error("You have to re-scan QR Code! code: " + reason)
         } else {
           this.log("Reconnecting...", "warning")
-          setTimeout(() => this.startClient(), 1500)
+          setTimeout(() => this.startClient().catch(() => this.startClient()), 1500)
         }
       }
 
       if (connection === "connecting") {
+        this.#status = "idle"
         this.log("Connecting...", "warning")
       }
 
       if (connection === "open") {
+        this.#status = "open"
         this.log("Connected!")
         if (first) {
           console.log(" ")
@@ -111,6 +226,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     aruga.ev.on("creds.update", saveState)
 
     /** forwarded to the main event */
+
     // call events
     aruga.ev.on("call", (call) => call.length >= 1 && this.emit("call", call[0]))
     // message event
@@ -168,66 +284,14 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     ]) {
       if (events !== "call" && events !== "connection.update" && events !== "creds.update" && events !== "messages.upsert") aruga.ev.removeAllListeners(events as keyof BaileysEventMap)
     }
-  }
 
-  /**
-   * Decode jid to make it correctly formatted
-   * @param {string} jid: user/group jid
-   */
-  public decodeJid(jid: string): string {
-    if (/:\d+@/gi.test(jid)) {
-      const decode = jidDecode(jid)
-      return (decode.user && decode.server && decode.user + "@" + decode.server) || jid
-    } else return jid
-  }
-
-  /**
-   * Download media message and return buffer
-   * @param {proto.IMessage} message:proto.IMessage
-   */
-  public async downloadMediaMessage(message: proto.IMessage): Promise<Buffer> {
-    const type = Object.keys(message)[0]
-    const mime = {
-      imageMessage: "image",
-      videoMessage: "video",
-      stickerMessage: "sticker",
-      documentMessage: "document",
-      audioMessage: "audio"
+    // Set client functionality
+    for (const method of Object.keys(aruga)) {
+      if (method !== "ev") {
+        if (method !== "ws" && method !== "updateProfilePicture") this[method as keyof Omit<WAClient, "status" | "ws" | "ev" | "updateProfilePicture">] = aruga[method as keyof Aruga]
+        delete aruga[method]
+      }
     }
-    return await toBuffer(await downloadContentFromMessage(message[type], mime[type]))
-  }
-
-  public async resendMessage(jid: string, message: Partial<MessageSerialize>, opts: Omit<MessageGenerationOptionsFromContent, "userJid">) {
-    message.message = message.message?.viewOnceMessage ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2 ? message.message.viewOnceMessage?.message : message.message?.viewOnceMessageV2Extension ? message.message.viewOnceMessageV2Extension?.message : message.message
-    delete message.message[message.type].viewOnce as unknown
-    const content = generateForwardMessageContent(proto.WebMessageInfo.fromObject(message), false)
-
-    if (content.listMessage) content.listMessage.listType = 1
-    const contentType = Object.keys(content).find((x) => x !== "senderKeyDistributionMessage" && x !== "messageContextInfo" && x !== "inviteLinkGroupTypeV2")
-    delete content[contentType].contextInfo.forwardingScore as unknown
-    delete content[contentType].contextInfo.isForwarded as unknown
-    content[contentType].contextInfo = {
-      ...(message.message[message.type]?.contextInfo ? message.message[message.type].contextInfo : {}),
-      ...content[contentType].contextInfo
-    }
-
-    const waMessage = generateWAMessageFromContent(jid, content, {
-      userJid: this.decodeJid(this.user.id),
-      ...opts
-    })
-
-    if (waMessage?.message?.buttonsMessage?.contentText) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.EMPTY
-    if (waMessage?.message?.buttonsMessage?.imageMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.IMAGE
-    if (waMessage?.message?.buttonsMessage?.videoMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.VIDEO
-    if (waMessage?.message?.buttonsMessage?.documentMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.DOCUMENT
-    if (waMessage?.message?.buttonsMessage?.locationMessage) waMessage.message.buttonsMessage.headerType = proto.Message.ButtonsMessage.HeaderType.LOCATION
-
-    process.nextTick(() => this.upsertMessage(waMessage, "append"))
-    await this.relayMessage(jid, waMessage.message, {
-      messageId: waMessage.key.id,
-      cachedGroupMetadata: async (jid) => await Database.groupMetadata.findUnique({ where: { groupId: jid } })
-    })
-    return waMessage
   }
 
   /**
@@ -248,7 +312,14 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
     )
   }
 
-  /** I will comment out the functions I dont use */
+  /**
+   * Connection status
+   */
+  public get status() {
+    return this.#status
+  }
+
+  // I will comment out the functions I dont use
   public getOrderDetails: Aruga["getOrderDetails"]
   public getCatalog: Aruga["getCatalog"]
   public getCollections: Aruga["getCollections"]
@@ -292,7 +363,7 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
   public onWhatsApp: Aruga["onWhatsApp"]
   public fetchBlocklist: Aruga["fetchBlocklist"]
   public fetchStatus: Aruga["fetchStatus"]
-  public updateProfilePicture: Aruga["updateProfilePicture"]
+  // public updateProfilePicture: Aruga["updateProfilePicture"]
   public updateProfileStatus: Aruga["updateProfileStatus"]
   public updateProfileName: Aruga["updateProfileName"]
   public updateBlockStatus: Aruga["updateBlockStatus"]
@@ -317,3 +388,5 @@ export default class WAClient extends (EventEmitter as new () => ArugaEventEmitt
   public uploadPreKeysToServerIfRequired: Aruga["uploadPreKeysToServerIfRequired"]
   public waitForConnectionUpdate: Aruga["waitForConnectionUpdate"]
 }
+
+export default WAClient

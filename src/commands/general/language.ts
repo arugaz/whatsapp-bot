@@ -6,7 +6,6 @@ import { database } from "../../libs/whatsapp"
 import type { Command } from "../../types/command"
 
 export default <Command>{
-  aliases: ["setlanguage"],
   category: "general",
   desc: "Show/Set user language",
   privateOnly: true,
@@ -19,7 +18,7 @@ export default <Command>{
     if (args.length >= 1 && !!listLanguages.find((value) => value.iso === args[0])) {
       const lang = listLanguages.find((value) => value.iso === args[0])
       const user = await database.updateUser(message.sender, { language: lang.iso })
-      return await message.reply(`${i18n.translate("commands.general.language.changed", { "@LANGUAGE": lang.lang }, user.language)}`, true)
+      return await message.reply(i18n.translate("commands.general.language.changed", { "@LANGUAGE": lang.lang }, user.language), true)
     }
 
     const text =
@@ -31,25 +30,28 @@ export default <Command>{
       `┗━━「 ꗥ${config.name}ꗥ 」` +
       "\n\n"
 
-    return await aruga.sendMessage(message.from, {
-      title: `*${i18n.translate("commands.general.language.title", {}, user.language)}*`,
-      text,
-      footer: config.footer,
-      buttonText: i18n.translate("commands.general.language.buttonText", {}, user.language),
-      sections: [
-        {
-          rows: listLanguages
-            .filter((v) => i18n.listLanguage().includes(v.iso))
-            .sort((first, last) => first.lang.localeCompare(last.lang))
-            .map((value) => {
-              return {
-                title: value.lang,
-                rowId: `${prefix}setlanguage ${value.iso}`
-              }
-            })
-        }
-      ],
-      viewOnce: true
-    })
+    return await aruga.sendMessage(
+      message.from,
+      {
+        title: `*${i18n.translate("commands.general.language.title", {}, user.language)}*`,
+        text,
+        footer: config.footer,
+        buttonText: i18n.translate("commands.general.language.buttonText", {}, user.language),
+        sections: [
+          {
+            rows: listLanguages
+              .filter((v) => i18n.listLanguage().includes(v.iso))
+              .sort((first, last) => first.lang.localeCompare(last.lang))
+              .map((value) => {
+                return {
+                  title: value.lang,
+                  rowId: `${prefix}language ${value.iso}`
+                }
+              })
+          }
+        ]
+      },
+      { ephemeralExpiration: message.expiration }
+    )
   }
 }
