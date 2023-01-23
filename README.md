@@ -2,6 +2,10 @@
   
   <img width="192" title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png"/>
 
+</div>
+
+<div align="center">
+
   <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
 
 </div>
