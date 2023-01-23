@@ -127,6 +127,10 @@
         "success": "Successfully removed {{@NUM}} from the group",
         "failed": "{{@NUM}} does not exist in the group"
       },
+      "group-mute": {
+        "enable": "Successfully activated {{@CMD}}, bot will not respond to future commands in this group",
+        "disable": "Successfully activated {{@CMD}}, bot will respond to future commands in this group"
+      },
       "group-notify": {
         "enable": "Successfully activate {{@CMD}}, bot will send a message when there is an update on the group",
         "disable": "Successfully deactivated {{@CMD}}, bot no longer send a message when there is an update on the group"

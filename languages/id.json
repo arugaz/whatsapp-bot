@@ -127,6 +127,10 @@
         "success": "Berhasil mengeluarkan {{@NUM}} dari grup",
         "failed": "{{@NUM}} tidak terdapat dalam grup"
       },
+      "group-mute": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot tidak akan merespons perintah selanjutnya di grup ini",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot akan merespons perintah selanjutnya di grup ini"
+      },
       "group-notify": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan ketika ada update di grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirimkan pesan ketika ada update di grup"
