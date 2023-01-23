@@ -127,6 +127,7 @@
         "success": "Successfully removed {{@NUM}} from the group",
         "failed": "{{@NUM}} does not exist in the group"
       },
+      "group-language": "You can change the group's language when interacting with me, here are some supported languages",
       "group-mute": {
         "enable": "Successfully activated {{@CMD}}, bot will not respond to future commands in this group",
         "disable": "Successfully activated {{@CMD}}, bot will respond to future commands in this group"

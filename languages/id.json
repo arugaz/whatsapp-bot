@@ -127,6 +127,7 @@
         "success": "Berhasil mengeluarkan {{@NUM}} dari grup",
         "failed": "{{@NUM}} tidak terdapat dalam grup"
       },
+      "group-language": "Kamu dapat mengubah bahasa grup saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
       "group-mute": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot tidak akan merespons perintah selanjutnya di grup ini",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot akan merespons perintah selanjutnya di grup ini"
