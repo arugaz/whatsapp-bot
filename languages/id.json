@@ -127,11 +127,17 @@
         "success": "Berhasil mengeluarkan {{@NUM}} dari grup",
         "failed": "{{@NUM}} tidak terdapat dalam grup"
       },
+      "group-language": "Kamu dapat mengubah bahasa grup saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
+      "group-mute": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot tidak akan merespons perintah selanjutnya di grup ini",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot akan merespons perintah selanjutnya di grup ini"
+      },
       "group-notify": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan ketika ada update di grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirimkan pesan ketika ada update di grup"
       },
       "group-promote": "Berhasil mempromosikan {{@ADM}} untuk menjadi admin",
+      "group-url": "URL grup: {{@URL}}",
       "member-leave": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat tinggal saat ada peserta yang keluar dari grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat tinggal saat ada peserta yang keluar dari grup"

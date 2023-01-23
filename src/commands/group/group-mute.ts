@@ -3,12 +3,12 @@ import { command, database } from "../../libs/whatsapp"
 import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
-export const name = "gnotify"
+export const name = "gmute"
 
 export default <Command>{
   category: "group",
-  aliases: ["gcnotify"],
-  desc: "Detects group updates",
+  aliases: ["gcmute"],
+  desc: "Mute/Unmute bot on group",
   groupOnly: true,
   adminGroup: true,
   botGroupAdmin: true,
@@ -22,16 +22,16 @@ export default <Command>{
   `.trimEnd(),
   execute: async ({ message, args, group }) => {
     if (args[0] && (args[0].toLowerCase() === "on" || args[0].toLowerCase() === "enable")) {
-      if (!group.notify) {
+      if (!group.mute) {
         await database.updateGroup(message.from, {
-          notify: true
+          mute: true
         })
       }
 
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.group-notify.enable", { "@CMD": command }, group.language)}\n` +
+        `┃ ${i18n.translate("commands.group.group-mute.enable", { "@CMD": command }, group.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 
@@ -39,16 +39,16 @@ export default <Command>{
     }
 
     if (args[0] && (args[0].toLowerCase() === "off" || args[0].toLowerCase() === "disable")) {
-      if (group.notify) {
+      if (group.mute) {
         await database.updateGroup(message.from, {
-          notify: false
+          mute: false
         })
       }
 
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
         "┃\n" +
-        `┃ ${i18n.translate("commands.group.group-notify.disable", { "@CMD": command }, group.language)}\n` +
+        `┃ ${i18n.translate("commands.group.group-mute.disable", { "@CMD": command }, group.language)}\n` +
         "┃\n" +
         `┗━━「 ꗥ${config.name}ꗥ 」`
 
