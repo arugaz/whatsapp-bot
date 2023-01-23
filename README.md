@@ -2,6 +2,10 @@
   
   <img width="192" title="Whatsapp-Bot-Multi-Device-Profile" src="https://github.com/ArugaZ.png"/>
 
+</div>
+
+<div align="center">
+
   <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
 
 </div>
@@ -42,7 +46,6 @@
 </div>
 <div align="center">
   <p>Don't forget to click ⭐️ and fork this repository</p>
-  <p>Need help? please create <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a></p>
 </div>
 
 ---
@@ -59,11 +62,30 @@
 
 ---
 
+<p align="center">
+  <b>whatsapp-bot</b> out-of-the-box support on...
+</p>
+
+<p align="center">
+  <img title="Whatsapp-Bot-Termux" src="https://img.shields.io/badge/Termux-302c2c?style=for-the-badge&logo=iterm2&logoColor=000000"></img>
+  <img title="Whatsapp-Bot-Server" src="https://img.shields.io/badge/self hosting-3d1513?style=for-the-badge&logo=serverless&logoColor=FD5750"></img>
+  <img title="Whatsapp-Bot-Railway" src="https://img.shields.io/badge/railway-362b2b?style=for-the-badge&logo=railway&logoColor=0B0D0E"></img>
+</p>
+<p align="center">
+  <img title="Whatsapp-Bot-Heroku" src="https://img.shields.io/badge/heroku-9d7acc?style=for-the-badge&logo=heroku&logoColor=430098"></img>
+  <img title="Whatsapp-Bot-Koyeb" src="https://img.shields.io/badge/koyeb-362b2b?style=for-the-badge&logo=koyeb&logoColor=121212"></img>
+  <img title="Whatsapp-Bot-Replit" src="https://img.shields.io/badge/replit-3b1903?style=for-the-badge&logo=replit&logoColor=F26207"></img>
+</p>
+
+<p align="center">Need help? please create an <a href="https://github.com/arugaz/whatsapp-bot/issues">issues</a></p>
+
+---
+
 ## Getting Started
 
 This project require
 
-- [NodeJS](https://nodejs.org/dist/) v16 or greater
+- [NodeJS](https://nodejs.org/en/download/) [v16 or greater](https://nodejs.org/dist/)
 - [FFMPEG](https://ffmpeg.org/download.html)
 
 ## Install

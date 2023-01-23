@@ -1,4 +1,7 @@
 {
+  "default": {
+    "onWhatsApp": "{{@NUM}} tidak terdaftar di whatsapp"
+  },
   "handlers": {
     "call": {
       "reject": "Maaf, aku tidak bisa menerima telepon!",
@@ -112,11 +115,28 @@
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirim ulang pesan yang dikirim sebagai tampilan sekali",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim ulang pesan yang dikirim sebagai tampilan sekali"
       },
-      "leave": {
+      "change-description": "{{@ADM}} mengubah deskripsi grup menjadi",
+      "change-name": "{{@ADM}} mengubah judul grup menjadi",
+      "change-picture": "{{@ADM}} telah mengubah judul grup",
+      "group-add": {
+        "add": "Berhasil menambahkan {{@NUM}} ke grup",
+        "invite": "Berhasil mengundang {{@NUM}} ke grup"
+      },
+      "group-demote": "Berhasil menurunkan jabatan {{@ADM}} untuk menjadi member",
+      "group-kick": {
+        "success": "Berhasil mengeluarkan {{@NUM}} dari grup",
+        "failed": "{{@NUM}} tidak terdapat dalam grup"
+      },
+      "group-notify": {
+        "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan ketika ada update di grup",
+        "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirimkan pesan ketika ada update di grup"
+      },
+      "group-promote": "Berhasil mempromosikan {{@ADM}} untuk menjadi admin",
+      "member-leave": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat tinggal saat ada peserta yang keluar dari grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat tinggal saat ada peserta yang keluar dari grup"
       },
-      "welcome": {
+      "member-welcome": {
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat datang saat ada peserta baru yang bergabung ke grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat datang saat ada peserta baru yang bergabung ke grup"
       }

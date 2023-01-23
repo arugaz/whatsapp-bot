@@ -1,3 +1,5 @@
+import i18n from "../../libs/international"
+import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
 export const name = "gpicture"
@@ -20,14 +22,23 @@ export default <Command>{
   @PREFIX@CMD crop
   --------
   `.trimEnd(),
-  execute: async ({ aruga, message, arg }) => {
+  execute: async ({ aruga, message, arg, group }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const imgBuffer: Buffer = message.quoted
         ? await aruga.downloadMediaMessage(message.quoted.message)
         : await aruga.downloadMediaMessage(message.message)
       const crop = arg && arg.toLowerCase() === "crop"
 
-      return await aruga.updateProfilePicture(message.from, imgBuffer, crop)
+      await aruga.updateProfilePicture(message.from, imgBuffer, crop)
+
+      const text =
+        "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
+        "┃\n" +
+        `┃ ${i18n.translate("commands.group.change-picture", { "@ADM": `@${message.sender.split("@")[0]}` }, group.language)}\n` +
+        "┃\n" +
+        `┗━━「 ꗥ${config.name}ꗥ 」`
+
+      return await message.reply(text, true)
     }
 
     throw "noCmd"
