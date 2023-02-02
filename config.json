@@ -10,7 +10,17 @@
     "ban": false
   },
   "user": {
-    "limit": 30
+    "basic": {
+      "limit": 30
+    },
+    "premium": {
+      "limit": 300,
+      "expires": 30
+    },
+    "vip": {
+      "limit": 3000,
+      "expires": 30
+    }
   },
   "prefix": "!#.",
   "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",

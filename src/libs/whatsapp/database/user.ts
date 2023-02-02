@@ -3,7 +3,7 @@ import NodeCache from "node-cache"
 import Database from "../../../libs/database"
 import config from "../../../utils/config"
 
-const user = new NodeCache({
+export const user = new NodeCache({
   stdTTL: 60 * 10, // 10 mins
   useClones: false
 })
@@ -33,7 +33,7 @@ export const createUser = async (userId: string, metadata: Partial<Omit<User, "i
         userId,
         name: metadata?.name || "",
         language: config.language,
-        limit: config.user.limit || 30,
+        limit: config.user.basic.limit || 30,
         ban: metadata?.ban || false
       }
     })
@@ -46,11 +46,11 @@ export const createUser = async (userId: string, metadata: Partial<Omit<User, "i
   }
 }
 
-export const updateUser = async (userId: string, userInput: Partial<Omit<User, "id" | "userId">>) => {
+export const updateUser = async (userId: string, metadata: Partial<Omit<User, "id" | "userId">>) => {
   try {
     const userData = await Database.user.update({
       where: { userId },
-      data: { ...userInput }
+      data: { ...metadata }
     })
 
     if (userData) user.set(userId, userData)
