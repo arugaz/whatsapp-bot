@@ -2,7 +2,7 @@ import type { GroupMetadata } from "@prisma/client"
 import NodeCache from "node-cache"
 import Database from "../../database"
 
-const groupMetadata = new NodeCache({
+export const groupMetadata = new NodeCache({
   stdTTL: 60 * 10, // 10 mins
   useClones: false
 })
