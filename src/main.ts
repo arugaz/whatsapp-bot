@@ -4,17 +4,22 @@ import cfonts from "cfonts"
 import qrcode from "qrcode"
 import NodeCache from "node-cache"
 
+import fastifyServer from "./libs/server"
+import WAClient, { serialize } from "./libs/whatsapp"
+import Database from "./libs/database"
+import { i18nInit } from "./libs/international"
+
 import * as callHandler from "./handlers/call"
 import * as groupHandler from "./handlers/group"
 import * as groupParticipantHandler from "./handlers/group-participant"
 import * as messageHandler from "./handlers/message"
 
-import WAClient from "./libs/whatsapp"
-import Database from "./libs/database"
-import { serialize } from "./libs/whatsapp"
-import { i18nInit } from "./libs/international"
-
 import { resetUserLimit, resetUserRole } from "./utils/cron"
+
+/** Initial Server */
+const server = fastifyServer({
+  trustProxy: true
+})
 
 /** Initial Client */
 const aruga = new WAClient({
@@ -81,6 +86,7 @@ const clearProcess = () => {
   aruga.log("Clear all process", "info")
   resetUserLimit.stop()
   resetUserRole.stop()
+  server.close()
   Database.$disconnect()
     .then(() => process.exit(0))
     .catch(() => process.exit(1))
@@ -93,12 +99,18 @@ setImmediate(async () => {
   try {
     // initialize
     await aruga.startClient()
+    await server.ready()
+
     process.nextTick(
       () =>
         messageHandler
           .registerCommand("commands")
           .then((size) => aruga.log(`Success Register ${size} commands`))
-          .catch(() => void 0),
+          .catch(clearProcess),
+      server
+        .listen({ host: "127.0.0.1", port: parseInt(process.env.PORT) || 3000 })
+        .then((address) => aruga.log(`Server run on ${address}`))
+        .catch(clearProcess),
       i18nInit()
     )
 
