@@ -1,7 +1,16 @@
 import Fastify, { FastifyServerOptions } from "fastify"
+import { config as loadEnvFile } from "dotenv"
+
+import fastifyWebsocket from "@fastify/websocket"
+
+loadEnvFile({
+  override: !1
+})
 
 const fastifyServer = (fastifyOpts?: FastifyServerOptions) => {
   const fastify = Fastify({ ...fastifyOpts })
+
+  fastify.register(fastifyWebsocket)
 
   fastify
     /**
@@ -19,3 +28,14 @@ const fastifyServer = (fastifyOpts?: FastifyServerOptions) => {
 }
 
 export default fastifyServer
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface ProcessEnv {
+      NODE_ENV?: "production"
+      PORT: number
+    }
+  }
+}

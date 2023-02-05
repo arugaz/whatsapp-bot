@@ -108,7 +108,7 @@ setImmediate(async () => {
           .then((size) => aruga.log(`Success Register ${size} commands`))
           .catch(clearProcess),
       server
-        .listen({ host: "127.0.0.1", port: parseInt(process.env.PORT) || 3000 })
+        .listen({ host: "127.0.0.1", port: process.env.PORT || 3000 })
         .then((address) => aruga.log(`Server run on ${address}`))
         .catch(clearProcess),
       i18nInit()
