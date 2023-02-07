@@ -1,8 +1,6 @@
 import Fastify, { FastifyServerOptions } from "fastify"
 import { config as loadEnvFile } from "dotenv"
 
-import fastifyWebsocket from "@fastify/websocket"
-
 loadEnvFile({
   override: !1
 })
@@ -10,9 +8,17 @@ loadEnvFile({
 const fastifyServer = (fastifyOpts?: FastifyServerOptions) => {
   const fastify = Fastify({ ...fastifyOpts })
 
-  fastify.register(fastifyWebsocket)
-
   fastify
+    /**
+     * Hello world!
+     */
+    .get("/", () => {
+      return {
+        message: "Hello world!",
+        error: "Success",
+        statusCode: 200
+      }
+    })
     /**
      * Health check
      */
@@ -36,6 +42,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV?: "production"
       PORT: number
+      SECRET_API: string
     }
   }
 }

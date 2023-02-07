@@ -34,7 +34,6 @@
     "@arugaz/formatter": "^1.0.0-z.1",
     "@arugaz/queue": "^1.0.1-z.1",
     "@arugaz/translator": "^1.0.0-z.4",
-    "@fastify/websocket": "git+https://github.com/arugaz/fastify-websocket",
     "@prisma/client": "^4.8.0",
     "awesome-phonenumber": "^4.2.0",
     "cfonts": "^3.1.1",
@@ -51,7 +50,6 @@
   "devDependencies": {
     "@types/node": "^18.11.18",
     "@types/qrcode": "^1.5.0",
-    "@types/ws": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "eslint": "^8.30.0",

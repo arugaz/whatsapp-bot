@@ -4,7 +4,7 @@ import cfonts from "cfonts"
 import qrcode from "qrcode"
 import NodeCache from "node-cache"
 
-import fastifyServer from "./libs/server"
+import fastifyServer, { whatsappRoutes } from "./libs/server"
 import WAClient, { serialize } from "./libs/whatsapp"
 import Database from "./libs/database"
 import { i18nInit } from "./libs/international"
@@ -17,7 +17,8 @@ import * as messageHandler from "./handlers/message"
 import { resetUserLimit, resetUserRole } from "./utils/cron"
 
 /** Initial Server */
-const server = fastifyServer({
+const fastify = fastifyServer({
+  // fastify options
   trustProxy: true
 })
 
@@ -86,7 +87,7 @@ const clearProcess = () => {
   aruga.log("Clear all process", "info")
   resetUserLimit.stop()
   resetUserRole.stop()
-  server.close()
+  fastify.close()
   Database.$disconnect()
     .then(() => process.exit(0))
     .catch(() => process.exit(1))
@@ -97,9 +98,12 @@ for (const signal of ["unhandledRejection", "uncaughtException"]) process.on(sig
 /** Start Client */
 setImmediate(async () => {
   try {
+    /** api routes */
+    whatsappRoutes(fastify, aruga)
+
     // initialize
     await aruga.startClient()
-    await server.ready()
+    await fastify.ready()
 
     process.nextTick(
       () =>
@@ -107,7 +111,7 @@ setImmediate(async () => {
           .registerCommand("commands")
           .then((size) => aruga.log(`Success Register ${size} commands`))
           .catch(clearProcess),
-      server
+      fastify
         .listen({ host: "127.0.0.1", port: process.env.PORT || 3000 })
         .then((address) => aruga.log(`Server run on ${address}`))
         .catch(clearProcess),
