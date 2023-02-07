@@ -299,7 +299,7 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
     // Set client functionality
     for (const method of Object.keys(aruga)) {
       if (method !== "ev") {
-        if (method !== "ws" && method !== "updateProfilePicture") this[method as keyof Omit<WAClient, "status" | "ws" | "ev" | "updateProfilePicture">] = aruga[method as keyof Aruga]
+        if (method !== "ws" && method !== "updateProfilePicture") this[method] = aruga[method]
         delete aruga[method]
       }
     }
