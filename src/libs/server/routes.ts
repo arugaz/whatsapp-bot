@@ -13,7 +13,7 @@ export const whatsappRoutes = (fastify: FastifyInstance, aruga: WAClient) => {
       })
 
       // http://127.0.0.1:PORT/api/status?secret=yoursecret
-      child.get("/status", async () => {
+      child.get("/status", () => {
         return {
           message: aruga.status,
           error: "Success",
