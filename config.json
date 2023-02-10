@@ -9,6 +9,10 @@
     "block": false,
     "ban": false
   },
+  "prefix": "!#.",
+  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
+  "footer": "arugaz/whatsapp-bot",
+  "self": true,
   "user": {
     "basic": {
       "limit": 30
@@ -21,8 +25,5 @@
       "limit": 3000,
       "expires": 30
     }
-  },
-  "prefix": "!#.",
-  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
-  "footer": "arugaz/whatsapp-bot"
+  }
 }

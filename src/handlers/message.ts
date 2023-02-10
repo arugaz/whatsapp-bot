@@ -11,7 +11,7 @@ import type WAClient from "../libs/whatsapp"
 import type { MessageSerialize } from "../types/serialize"
 import utilColor from "../utils/color"
 import utilConfig from "../utils/config"
-import { timeFormat as utilTimeFormat } from "../utils/format"
+import { rtfFormat as utilRTFormat } from "../utils/format"
 import { command, database } from "../libs/whatsapp"
 import type { Command, Event } from "../types/command"
 
@@ -28,7 +28,7 @@ const setTimeout = timerTimeout
 const i18n = International
 const color = utilColor
 const config = utilConfig
-const timeFormat = utilTimeFormat
+const timeFormat = utilRTFormat
 const commands = command.commands
 const events = command.events
 const cooldowns = command.cooldowns
@@ -41,7 +41,7 @@ const createGroup = database.createGroup
 export const execute = async (aruga: WAClient, message: MessageSerialize): Promise<unknown> => {
   const group = message.isGroupMsg && ((await getGroup(message.from)) ?? (await createGroup(message.from, { name: message.groupMetadata.subject })))
   const user = message.sender && ((await getUser(message.sender)) ?? (await createUser(message.sender, { name: message.pushname })))
-  const isOwner = message.sender && config.ownerNumber.concat([aruga.decodeJid(aruga.user.id).split("@")[0]]).includes(message.sender.replace(/\D+/g, ""))
+  const isOwner = message.sender && (config.self ? config.ownerNumber.concat([aruga.decodeJid(aruga.user.id).split("@")[0]]) : config.ownerNumber).includes(message.sender.replace(/\D+/g, ""))
 
   // ignore user that got banned by bot owner
   if (message.sender && user.ban && !isOwner) return
@@ -77,7 +77,7 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
   if (command) {
     // avoid spam messages
     if (cooldowns.has(message.sender + cmd)) {
-      await message.reply(i18n.translate("handlers.message.cooldown", { "@SKNDS": timeFormat((command.cd || 3) - (Date.now() - cooldowns.get(message.sender + cmd))).replace(/-/g, "") }, user.language), true)
+      await message.reply(i18n.translate("handlers.message.cooldown", { "@SKNDS": timeFormat(Math.abs((command.cd || 3) - (Date.now() - cooldowns.get(message.sender + cmd)) / 1000), "seconds").replace(/-/g, "") }, user.language), true)
       return aruga.log(`${color.yellow("[SPAM]")} ${color.cyan(`${cmd} [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "warning", message.timestamps)
     }
 

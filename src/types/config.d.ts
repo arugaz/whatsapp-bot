@@ -78,12 +78,6 @@ declare type Config = {
      */
     ban: boolean
   }
-  /** User config */
-  user: {
-    basic: UserConfig
-    premium: UserConfig
-    vip: UserConfig
-  }
   /**
    * Set a default prefix of bot! u can fill '#@' for double prefix or as much as you want '!@#$%^&/.'
    * @type {string}
@@ -105,4 +99,16 @@ declare type Config = {
    * footer: "@arugaz"
    */
   footer: string
+  /**
+   * Should the bot as the owner of the bot
+   * @example
+   * self: true
+   */
+  self: boolean
+  /** User config */
+  user: {
+    basic: UserConfig
+    premium: UserConfig
+    vip: UserConfig
+  }
 }

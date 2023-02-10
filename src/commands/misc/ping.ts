@@ -1,9 +1,11 @@
+import { rtfFormat } from "../../utils/format"
 import type { Command } from "../../types/command"
 
 export default <Command>{
   category: "misc",
   desc: "Ping bot",
-  execute: async ({ message, arg }) => {
-    return await message.reply(`pong! ${Date.now() - message.timestamps}ms ${arg}`, true)
+  execute: ({ message, arg }) => {
+    const ping = Date.now() - message.timestamps // time milliseconds
+    return message.reply(`pong!  ${rtfFormat(ping / 1000, "seconds")} ${arg}`, true)
   }
 }
