@@ -1,16 +1,16 @@
 {
   "timeZone": "Asia/Jakarta",
   "language": "en",
-  "ownerNumber": ["6285163651710", "558188263143", "6281311850715"],
+  "ownerNumber": ["212665486302", "558188263143", "6281311850715"],
   "readStatus": false,
-  "readMessage": false,
+  "readMessage": true,
   "antiCall": {
     "reject": false,
     "block": false,
     "ban": false
   },
   "prefix": "!#.",
-  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
+  "name": "Saban",
   "footer": "arugaz/whatsapp-bot",
   "self": true,
   "user": {
