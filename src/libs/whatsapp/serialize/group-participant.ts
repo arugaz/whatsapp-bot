@@ -1,4 +1,4 @@
-import { WAMessage } from "@adiwajshing/baileys"
+import { WAMessage } from "@whiskeysockets/baileys"
 import WAClient from "../../../libs/whatsapp"
 import config from "../../../utils/config"
 import type { GroupParticipantSerialize } from "../../../types/serialize"

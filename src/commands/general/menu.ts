@@ -1,4 +1,4 @@
-import type { proto } from "@adiwajshing/baileys"
+import type { proto } from "@whiskeysockets/baileys"
 import os from "os"
 import i18n from "../../libs/international"
 import config from "../../utils/config"

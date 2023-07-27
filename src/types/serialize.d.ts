@@ -1,4 +1,4 @@
-import type { proto, WACallUpdateType } from "@adiwajshing/baileys"
+import type { proto, WACallUpdateType } from "@whiskeysockets/baileys"
 import type { GroupMetadata } from "@prisma/client"
 
 /**

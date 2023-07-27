@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client"
-import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys"
-import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys"
+import { BufferJSON, initAuthCreds, proto } from "@whiskeysockets/baileys"
+import type { AuthenticationCreds, SignalDataTypeMap } from "@whiskeysockets/baileys"
 import type { ArugaAuth } from "../../types/client"
 
 export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
@@ -61,9 +61,13 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           const data: { [_: string]: SignalDataTypeMap[typeof type] } = {}
           await Promise.all(
             ids.map(async (id) => {
-              const value = await readData(`${type}-${id}`)
-              type === "app-state-sync-key" && value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value)
-            })
+              const value = await readData(`${type}-${id}`);
+              if (type === "app-state-sync-key" && value) {
+                  data[id] = (proto.Message.AppStateSyncKeyData.fromObject(value) as unknown) as SignalDataTypeMap[typeof type];
+              } else {
+                  data[id] = (value as unknown) as SignalDataTypeMap[typeof type];
+              }
+          })
           )
           return data
         },
