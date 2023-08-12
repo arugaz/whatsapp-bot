@@ -1,7 +1,7 @@
 {
-  "timeZone": "Asia/Jakarta",
+  "timeZone": "leon",
   "language": "en",
-  "ownerNumber": ["6285163651710", "558188263143", "6281311850715"],
+  "ownerNumber": ["8982860407"],
   "readStatus": false,
   "readMessage": false,
   "antiCall": {
@@ -10,8 +10,8 @@
     "ban": false
   },
   "prefix": "!#.",
-  "name": "𝙷ɪɢᴀꜱʜɪʏᴀᴍᴀ 𝙺ᴏʙᴇɴɪ",
-  "footer": "arugaz/whatsapp-bot",
+  "name": "LEONGAMER",
+  "footer": "leon/whatsapp-bot",
   "self": true,
   "user": {
     "basic": {
