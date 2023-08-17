@@ -1,5 +1,6 @@
 {
-  "name": "whatsapp-bot",
+  "name": "HARU",
+  "owner" "8982860407",
   "version": "3.0.0",
   "description": "Whatsapp Bot Multi Device - Node Js",
   "main": "./dist/main.js",
