@@ -4,7 +4,8 @@
 
 </div>
 
-<div align="center">
+<div align="center"
+>
 
   <img title="Whatsapp-Bot-Multi-Device" src="https://img.shields.io/badge/Whatsapp%20Bot%20Multi%20Device-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
 
@@ -211,7 +212,7 @@ since **whatsapp-bot** use [baileys](https://github.com/adiwajshing/Baileys) is 
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/TobyG74"><img src="https://avatars.githubusercontent.com/u/32604979?v=4?s=100" width="100px;" alt="Tobi Saputra"/><br /><sub><b>Tobi Saputra</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/commits?author=TobyG74" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/arugaz"><img src="https://avatars.githubusercontent.com/u/53950128?v=4?s=100" width="100px;" alt="ArugaZ"/><br /><sub><b>ArugaZ</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/commits?author=arugaz" title="Code">💻</a> <a href="#ideas-arugaz" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://youtube.com/GuckTubeYT"><img src="https://avatars.githubusercontent.com/u/56192597?v=4?s=100" width="100px;" alt="Muhammad Kevin"/><br /><sub><b>Muhammad Kevin</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/commits?author=GuckTubeYT" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/LSystemus-2"><img src="https://avatars.githubusercontent.com/u/90476449?v=4?s=100" width="100px;" alt="LSystemus-2"/><br /><sub><b>LSystemus-2</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/issues?q=author%3ALSystemus-2" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/LSystemus-2"><img src="https://avatars.githubusercontent.com/u/90476449?v=4?s=100" width="100px;" alt="LSystemus-2"/><br /><sub><b>LouisBeke2</b></sub></a><br /><a href="https://github.com/arugaz/whatsapp-bot/issues?q=author%3ALouisBeke2" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Issa2001"><img src="https://avatars.githubusercontent.com/u/89695452?v=4?s=100" width="100px;" alt="一茶"/><br /><sub><b>一茶</b></sub></a><br /><a href="#ideas-Issa2001" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
