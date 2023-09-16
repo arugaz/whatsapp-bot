@@ -54,9 +54,7 @@
     "general": {
       "language": {
         "changed": "Language has been changed to {{@LANGUAGE}}!",
-        "title": "Language support",
-        "text": "You can change your language when interacting with me, here are some supported languages",
-        "buttonText": "LIST LANGUAGES"
+        "text": "You can change your language when interacting with me, here are some supported languages"
       },
       "menu": {
         "cmd": {
@@ -90,8 +88,7 @@
           "two": "in private chats",
           "three": "by typing {{@COMMANDS}}"
         },
-        "bottom": "The following are some of the features found in the bot.",
-        "buttonText": "LIST MENU"
+        "bottom": "The following are some of the features found in the bot."
       }
     },
     "group": {

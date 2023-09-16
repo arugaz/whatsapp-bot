@@ -13,7 +13,7 @@ export default <Command>{
   desc: "Show/Set group language",
   groupOnly: true,
   adminGroup: true,
-  execute: async ({ aruga, message, prefix, args, group, command }) => {
+  execute: async ({ message, prefix, args, group, command }) => {
     const listLanguages: {
       iso: string
       lang: string
@@ -25,37 +25,24 @@ export default <Command>{
       return await message.reply(i18n.translate("commands.general.language.changed", { "@LANGUAGE": lang.lang }, group.language), true)
     }
 
+    let listLang = ""
+
+    for (const lang of listLanguages.filter((v) => i18n.listLanguage().includes(v.iso)).sort((first, last) => first.lang.localeCompare(last.lang))) {
+      listLang += `┃ > ${lang.lang}\n┃ ${prefix}${command} ${lang.iso}\n┃\n`
+    }
+
     const text =
-      "\n\n" +
       "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +
       "┃\n" +
       `┃ ${i18n.translate("commands.group.group-language", {}, group.language)}\n` +
       "┃\n" +
-      `┗━━「 ꗥ${config.name}ꗥ 」` +
-      "\n\n"
+      "┣━━━━━━━━━━━━━━━━━━\n" +
+      "┃\n" +
+      listLang +
+      "┣━━━━━━━━━━━━━━━━━━\n" +
+      "┃\n" +
+      `┗━━「 ꗥ${config.name}ꗥ 」`
 
-    return await aruga.sendMessage(
-      message.from,
-      {
-        title: `*${i18n.translate("commands.general.language.title", {}, group.language)}*`,
-        text,
-        footer: config.footer,
-        buttonText: i18n.translate("commands.general.language.buttonText", {}, group.language),
-        sections: [
-          {
-            rows: listLanguages
-              .filter((v) => i18n.listLanguage().includes(v.iso))
-              .sort((first, last) => first.lang.localeCompare(last.lang))
-              .map((value) => {
-                return {
-                  title: value.lang,
-                  rowId: `${prefix}${command} ${value.iso}`
-                }
-              })
-          }
-        ]
-      },
-      { ephemeralExpiration: message.expiration }
-    )
+    return await message.reply(text, true)
   }
 }

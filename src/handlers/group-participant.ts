@@ -1,4 +1,4 @@
-import { WAMessageStubType } from "@adiwajshing/baileys"
+import { WAMessageStubType } from "baileys"
 import type WAClient from "../libs/whatsapp"
 import { database } from "../libs/whatsapp"
 import i18n from "../libs/international"

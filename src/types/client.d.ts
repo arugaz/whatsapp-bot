@@ -1,4 +1,4 @@
-import type { AuthenticationState, SocketConfig, WACallEvent, WAMessage, WASocket } from "@adiwajshing/baileys"
+import type { AuthenticationState, SocketConfig, WACallEvent, WAMessage, WASocket } from "baileys"
 
 declare type ArugaAuth = {
   state: AuthenticationState

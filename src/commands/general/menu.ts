@@ -1,4 +1,3 @@
-import type { proto } from "@adiwajshing/baileys"
 import os from "os"
 import i18n from "../../libs/international"
 import config from "../../utils/config"
@@ -11,7 +10,7 @@ export default <Command>{
   category: "general",
   desc: "Landing menu",
   maintenance: false,
-  execute: async ({ aruga, message, prefix, user, args, isOwner }) => {
+  execute: async ({ message, prefix, user, args, isOwner }) => {
     if (args.length === 1) {
       const name = args[0].toLowerCase()
       const cmd = command.commands.get(name) ?? command.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name))
@@ -52,28 +51,21 @@ export default <Command>{
       return await message.reply(text, true)
     }
 
-    const sections = <proto.Message.ListMessage.ISection[]>[]
+    let listCmd = ""
+
     for (const category of [
       ...new Set(
         command.commands
           .map((v) => v.category)
-          .filter((v) => (!isOwner && v === "owner" ? null : v))
-          .filter((v) => (!message.isGroupMsg && v === "group" ? null : v))
+          .filter((v) => (!isOwner && v === "owner" ? null : v && (!message.isGroupMsg && v === "group" ? null : v)))
           .sort()
       )
     ]) {
-      const cmd = command.commands.map((v) => v.category === category && v).filter((v) => (!isOwner && v.ownerOnly ? null : v))
-      sections.push({
-        title: upperFormat(category),
-        rows: cmd.map((value) => {
-          const title = command.commands.findKey((v) => v === value)
-          return {
-            title,
-            rowId: `${prefix}menu ${title}`,
-            description: value.desc
-          }
-        })
-      })
+      listCmd += `┣━━━━━━━━━━━━━━━━━━\n┃\n┃${upperFormat(category + " ")}\n`
+      for (const eachCmd of command.commands.map((v) => v.category === category && v).filter((v) => (!isOwner && v.ownerOnly ? null : v))) {
+        const title = command.commands.findKey((v) => v === eachCmd)
+        listCmd += `┃ ${prefix}menu ${title}\n┃ > ${eachCmd.desc}\n┃\n`
+      }
     }
 
     const text =
@@ -103,17 +95,9 @@ export default <Command>{
       "┃\n" +
       `┃ ${i18n.translate("commands.general.menu.bottom", {}, user.language)}\n` +
       "┃\n" +
+      listCmd +
       `┗━━「 ꗥ${config.name}ꗥ 」`
 
-    return await aruga.sendMessage(
-      message.from,
-      {
-        text,
-        footer: config.footer,
-        sections,
-        buttonText: i18n.translate("commands.general.menu.buttonText", {}, user.language)
-      },
-      { ephemeralExpiration: message.expiration }
-    )
+    return await message.reply(text, true)
   }
 }

@@ -1,4 +1,4 @@
-import { WACallEvent } from "@adiwajshing/baileys"
+import { WACallEvent } from "baileys"
 import WAClient from "../../../libs/whatsapp"
 import config from "../../../utils/config"
 import type { CallSerialize } from "../../../types/serialize"
