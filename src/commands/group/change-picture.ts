@@ -24,9 +24,7 @@ export default <Command>{
   `.trimEnd(),
   execute: async ({ aruga, message, arg, group }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
-      const imgBuffer: Buffer = message.quoted
-        ? await aruga.downloadMediaMessage(message.quoted.message)
-        : await aruga.downloadMediaMessage(message.message)
+      const imgBuffer: Buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted) : await aruga.downloadMediaMessage(message)
       const crop = arg && arg.toLowerCase() === "crop"
 
       await aruga.updateProfilePicture(message.from, imgBuffer, crop)

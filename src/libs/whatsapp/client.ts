@@ -1,7 +1,7 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
 import EventEmitter from "@arugaz/eventemitter"
-import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
+import makeWASocket, { BaileysEventMap, DisconnectReason, downloadMediaMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
 
 import { auth, database } from "../../libs/whatsapp"
 import Database from "../../libs/database"
@@ -15,17 +15,13 @@ let first = !0
 class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements Aruga {
   #cfg: ArugaConfig
   #status: "close" | "idle" | "open"
-  /** whatsapp client */
+
   constructor(cfg: ArugaConfig) {
     super()
     this.#cfg = cfg
     this.#status = "close"
   }
 
-  /**
-   * Decode jid to make it correctly formatted
-   * @param {string} jid: user/group jid
-   */
   public decodeJid(jid: string): string {
     if (/:\d+@/gi.test(jid)) {
       const decode = jidDecode(jid)
@@ -33,20 +29,8 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
     } else return jid
   }
 
-  /**
-   * Download media message and return buffer
-   * @param {proto.IMessage} message:proto.IMessage
-   */
-  public async downloadMediaMessage(message: proto.IMessage): Promise<Buffer> {
-    const type = Object.keys(message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
-    const mime = {
-      imageMessage: "image",
-      videoMessage: "video",
-      stickerMessage: "sticker",
-      documentMessage: "document",
-      audioMessage: "audio"
-    }
-    return await toBuffer(await downloadContentFromMessage(message[type], mime[type]))
+  public async downloadMediaMessage(message: proto.IWebMessageInfo): Promise<Buffer> {
+    return (await downloadMediaMessage(message, "buffer", {}, { logger: this.#cfg.logger, reuploadRequest: this.updateMediaMessage })) as Buffer
   }
 
   public async resendMessage(jid: string, message: Partial<MessageSerialize>, opts?: Omit<MessageGenerationOptionsFromContent, "userJid">) {
@@ -145,6 +129,7 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
   /** Start Whatsapp Client */
   public async startClient(): Promise<void> {
     const logger = this.#cfg.logger || P({ level: "silent" }).child({ level: "silent" })
+    this.#cfg.logger = logger
 
     const { saveState, clearState, state } = (this.#cfg.authType === "single" && (await auth.useSingleAuthState(Database))) || (this.#cfg.authType === "multi" && (await auth.useMultiAuthState(Database)))
     const { version, isLatest } = await fetchLatestBaileysVersion()
@@ -219,24 +204,20 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
       }
     })
 
-    // credentials
     aruga.ev.on("creds.update", saveState)
 
-    // call events
     aruga.ev.on("call", (calls) => {
       for (const call of calls) {
         this.emit("call", call)
       }
     })
 
-    // message event
     aruga.ev.on("messages.upsert", (msg) => {
       for (const message of msg.messages) {
         if (message.message) this.emit("message", message)
       }
     })
 
-    // group event
     aruga.ev.on("messages.upsert", (msg) => {
       for (const message of msg.messages) {
         if (

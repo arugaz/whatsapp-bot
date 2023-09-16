@@ -1,13 +1,12 @@
 import webpmux from "node-webpmux"
 import { TextEncoder } from "util"
-import { randomBytes } from "crypto"
 import { ffmpeg } from "../../utils/cli"
 import type { StickerOptions, StickerCategories } from "../../types/sticker"
 
 const defaultOptions: StickerOptions = {
   author: "arugaz",
   pack: "whatsapp-bot",
-  id: "github.com/arugaz/whatsapp-bot " + randomBytes(4).toString("hex"),
+  id: "github.com/arugaz/whatsapp-bot",
   width: 512,
   fps: 25,
   loop: true,
@@ -28,11 +27,12 @@ export class WASticker {
       "sticker-pack-id": this.#opts.id,
       "sticker-pack-name": this.#opts.pack,
       "sticker-pack-publisher": this.#opts.author,
-      "sticker-pack-publisher-email": "arugaastri@gmail.com", //idk what is this for
-      "sticker-pack-publisher-website": `https://github.com/ArugaZ/whatsapp-bot`, //idk what is this for
+      "sticker-pack-publisher-email": "arugaastri@gmail.com",
+      "sticker-pack-publisher-website": "https://github.com/ArugaZ/whatsapp-bot",
       ...(this.#opts.categories && this.#opts.categories?.length >= 1 ? { emojis: this.#opts.categories } : {}),
-      "android-app-store-link": `https://play.google.com/store/apps/details?id=com.supercell.clashofclans`, //idk what is this for
-      "ios-app-store-link": `https://apps.apple.com/id/app/clash-of-clans/id529479190` //idk what is this for
+      "android-app-store-link": "https://play.google.com/store/apps/details?id=com.supercell.clashofclans",
+      "is-first-party-sticker": 1,
+      "ios-app-store-link": "https://apps.apple.com/id/app/clash-of-clans/id529479190"
     })
     const exif = Buffer.concat([Buffer.from([73, 73, 42, 0, 8, 0, 0, 0, 1, 0, 65, 87, 7, 0, 0, 0, 0, 0, 22, 0, 0, 0]), Buffer.from(data)])
     exif.writeUIntLE(new TextEncoder().encode(data).length, 14, 4)
