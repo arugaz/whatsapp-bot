@@ -27,7 +27,7 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@arugaz/ai2d": "^1.0.1-z.8",
+    "@arugaz/ai2d": "^1.0.1-z.9",
     "@arugaz/collection": "^1.0.0-z.1",
     "@arugaz/eventemitter": "^1.0.0-z.2",
     "@arugaz/formatter": "^1.0.0-z.1",

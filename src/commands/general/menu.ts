@@ -14,7 +14,7 @@ export default <Command>{
     if (args.length === 1) {
       const name = args[0].toLowerCase()
       const cmd = command.commands.get(name) ?? command.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name))
-      if ((!cmd || cmd.category === "owner") && !isOwner)
+      if (!cmd || (cmd.category === "owner" && !isOwner))
         return await message.reply(i18n.translate("commands.general.menu.cmd.zero", {}, user.language), true)
       const text =
         "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +

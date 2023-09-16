@@ -16,10 +16,11 @@ export default <Command>{
   execute: async ({ aruga, message }) => {
     if (message.type.includes("image") || (message.quoted && message.quoted.type.includes("image"))) {
       const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted.message) : await aruga.downloadMediaMessage(message.message)
-      // It works in my country (Indonesia), if it doesnt work in your country/server you may need a proxy
+      // if it doesnt work in your country/server you may need a proxy
       // refer to https://www.npmjs.com/package/@arugaz/ai2d#tldr
       const result = await AI2D(buffer, {
         crop: "SINGLE"
+        // proxy: "socks5://111.222.333.444:1234"
       })
       return await aruga.sendMessage(message.from, { image: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
