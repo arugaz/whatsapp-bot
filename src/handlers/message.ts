@@ -15,6 +15,9 @@ import { rtfFormat as utilRTFormat } from "../utils/format"
 import { command, database } from "../libs/whatsapp"
 import type { Command, Event } from "../types/command"
 
+/**
+ * For eval command purpose!
+ */
 const readdirSync = readDir
 const lstatSync = lStat
 const join = pathJoin
@@ -24,7 +27,6 @@ const inspect = utilInspect
 const exec = childExec
 const setImmediate = timerImmediate
 const setTimeout = timerTimeout
-
 const i18n = International
 const color = utilColor
 const config = utilConfig

@@ -54,9 +54,7 @@
     "general": {
       "language": {
         "changed": "Bahasa telah diubah menjadi {{@LANGUAGE}}!",
-        "title": "Dukungan bahasa",
-        "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung",
-        "buttonText": "DAFTAR BAHASA"
+        "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung"
       },
       "menu": {
         "cmd": {
@@ -90,8 +88,7 @@
           "two": "di obrolan pribadi",
           "three": "dengan mengetik {{@COMMANDS}}"
         },
-        "bottom": "Berikut ini adalah beberapa fitur yang terdapat dalam bot.",
-        "buttonText": "DAFTAR MENU"
+        "bottom": "Berikut ini adalah beberapa fitur yang terdapat dalam bot."
       }
     },
     "group": {

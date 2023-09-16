@@ -1,7 +1,7 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
 import EventEmitter from "@arugaz/eventemitter"
-import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "@adiwajshing/baileys"
+import makeWASocket, { BaileysEventMap, DisconnectReason, downloadContentFromMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
 
 import { auth, database } from "../../libs/whatsapp"
 import Database from "../../libs/database"
@@ -153,10 +153,7 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
       ...this.#cfg,
       auth: {
         creds: state.creds,
-        keys: makeCacheableSignalKeyStore(state.keys, logger, {
-          stdTTL: 60 * 10, // 10 mins
-          useClones: false
-        })
+        keys: makeCacheableSignalKeyStore(state.keys, logger)
       },
       browser: ["whatsapp-bot", "Safari", "3.0.0"],
       logger,

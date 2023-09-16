@@ -1,12 +1,12 @@
 import type { PrismaClient } from "@prisma/client"
-import { BufferJSON, initAuthCreds, proto } from "@adiwajshing/baileys"
-import type { AuthenticationCreds, SignalDataTypeMap } from "@adiwajshing/baileys"
+import { BufferJSON, initAuthCreds, proto } from "baileys"
+import type { AuthenticationCreds, SignalDataTypeMap } from "baileys"
 import type { ArugaAuth } from "../../types/client"
 
 export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAuth> => {
   const fixFileName = (fileName: string): string => fileName.replace(/\//g, "__")?.replace(/:/g, "-")
 
-  const writeData = async (data: unknown, fileName: string): Promise<void> => {
+  const writeData = async (data: unknown, fileName: string) => {
     try {
       const sessionId = fixFileName(fileName)
       const session = JSON.stringify(data, BufferJSON.replacer)
@@ -26,7 +26,7 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
     } catch {}
   }
 
-  const readData = async (fileName: string): Promise<AuthenticationCreds | null> => {
+  const readData = async (fileName: string) => {
     try {
       const sessionId = fixFileName(fileName)
       const data = await Database.session.findFirst({
@@ -34,7 +34,7 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           sessionId
         }
       })
-      return JSON.parse(data?.session, BufferJSON.reviver) as AuthenticationCreds
+      return JSON.parse(data?.session, BufferJSON.reviver)
     } catch {
       return null
     }
@@ -61,8 +61,9 @@ export const useMultiAuthState = async (Database: PrismaClient): Promise<ArugaAu
           const data: { [_: string]: SignalDataTypeMap[typeof type] } = {}
           await Promise.all(
             ids.map(async (id) => {
-              const value = await readData(`${type}-${id}`)
-              type === "app-state-sync-key" && value ? (data[id] = proto.Message.AppStateSyncKeyData.fromObject(value)) : (data[id] = value)
+              let value = await readData(`${type}-${id}`)
+              if (type === "app-state-sync-key" && value) value = proto.Message.AppStateSyncKeyData.fromObject(value)
+              data[id] = value
             })
           )
           return data
