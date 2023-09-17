@@ -1,7 +1,7 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
 import EventEmitter from "@arugaz/eventemitter"
-import makeWASocket, { BaileysEventMap, DisconnectReason, downloadMediaMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
+import makeWASocket, { BaileysEventMap, DisconnectReason, downloadMediaMessage, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
 
 import { auth, database } from "../../libs/whatsapp"
 import Database from "../../libs/database"
@@ -132,7 +132,6 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
     this.#cfg.logger = logger
 
     const { saveState, clearState, state } = (this.#cfg.authType === "single" && (await auth.useSingleAuthState(Database))) || (this.#cfg.authType === "multi" && (await auth.useMultiAuthState(Database)))
-    const { version, isLatest } = await fetchLatestBaileysVersion()
 
     const aruga: Aruga = makeWASocket({
       ...this.#cfg,
@@ -159,7 +158,7 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
         return message
       },
       printQRInTerminal: false,
-      version
+      version: [2, 2338, 12]
     })
 
     // connection
@@ -196,8 +195,8 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
           console.log(" ")
           this.log("Name    : " + (this.user?.name || "unknown"), "info")
           this.log("Number  : " + (this.user?.id?.split(":")[0] || "unknown"), "info")
-          this.log("Version : " + version.join("."), "info")
-          this.log("Latest  : " + `${isLatest ? "yes" : "nah"}`, "info")
+          this.log("Version : " + "2.2338.12", "info")
+          this.log("Latest  : " + "yes", "info")
           first = !first
           console.log(" ")
         }
