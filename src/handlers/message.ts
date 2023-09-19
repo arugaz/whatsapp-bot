@@ -66,13 +66,13 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
 
   // handle events
   setImmediate(() =>
-    events.forEach(
-      (event, key) =>
-        typeof event.execute === "function" &&
-        event
-          .execute({ aruga, message, command: cmd, prefix, args, arg, isGroupOwner, isGroupAdmin, isBotGroupAdmin, isOwner, user, group })
-          .catch(() => aruga.log(`${color.red("[ERRS]")} ${color.cyan(`${key} [${message.body.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps))
-    )
+    events.forEach((event, key) => {
+      try {
+        typeof event.execute === "function" && event.execute({ aruga, message, command: cmd, prefix, args, arg, isGroupOwner, isGroupAdmin, isBotGroupAdmin, isOwner, user, group })
+      } catch {
+        aruga.log(`${color.red("[ERRS]")} ${color.cyan(`${key} [${message.body.length}]`)} from ${color.blue(user.name)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "error", message.timestamps)
+      }
+    })
   )
 
   // handle commands
@@ -151,8 +151,8 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
         reject(err)
       }
     })
-      .then((res: unknown) => message.reply(inspect(res, true)))
-      .catch((err: unknown) => message.reply(inspect(err, true)))
+      .then((res) => message.reply(inspect(res, true)))
+      .catch((err) => message.reply(inspect(err, true)))
       .finally(() => aruga.log(`${color.purple("[EVAL]")} ${color.cyan(`>> [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
 
@@ -169,8 +169,8 @@ export const execute = async (aruga: WAClient, message: MessageSerialize): Promi
         resolve(stdout)
       })
     })
-      .then((res: string) => message.reply(inspect(res, true)))
-      .catch((err: unknown) => message.reply(inspect(err, true)))
+      .then((res) => message.reply(inspect(res, true)))
+      .catch((err) => message.reply(inspect(err, true)))
       .finally(() => aruga.log(`${color.purple("[EXEC]")} ${color.cyan(`$ [${arg.length}]`)} from ${color.blue(message.pushname)} ${message.isGroupMsg ? `in ${color.blue(message.groupMetadata.subject || "unknown")}` : ""}`.trim(), "info", message.timestamps))
   }
 }

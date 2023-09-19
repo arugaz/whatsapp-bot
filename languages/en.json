@@ -114,7 +114,7 @@
       },
       "change-description": "{{@ADM}} changed the group description to",
       "change-name": "{{@ADM}} changed the group title to",
-      "change-picture": "{{@ADM}} has changed the group title",
+      "change-picture": "{{@ADM}} has changed the group profile",
       "group-add": {
         "add": "Successfully added {{@NUM}} to the group",
         "invite": "Successfully invited {{@NUM}} to the group"

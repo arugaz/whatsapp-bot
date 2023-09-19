@@ -1,5 +1,5 @@
 import i18n from "../../libs/international"
-import { command, database } from "../../libs/whatsapp"
+import { database } from "../../libs/whatsapp"
 import config from "../../utils/config"
 import type { Command } from "../../types/command"
 
@@ -20,7 +20,7 @@ export default <Command>{
   @PREFIX@CMD off
   --------
   `.trimEnd(),
-  execute: async ({ message, args, group }) => {
+  execute: async ({ message, args, group, command }) => {
     if (args[0] && (args[0].toLowerCase() === "on" || args[0].toLowerCase() === "enable")) {
       if (!group.mute) {
         await database.updateGroup(message.from, {

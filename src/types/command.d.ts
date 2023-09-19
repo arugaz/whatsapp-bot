@@ -125,7 +125,7 @@ declare type Command = {
    *  await aruga.sendMessage(message.from, { text: `pong! ${arg}` })
    * }
    */
-  execute: (obj: CommandObject) => Promise<proto.WebMessageInfo> | never
+  execute: (obj: CommandObject) => unknown
 }
 
 declare type CommandObject = {
@@ -144,7 +144,7 @@ declare type CommandObject = {
 }
 
 declare type Event = {
-  execute: (obj: EventObject) => Promise<proto.WebMessageInfo> | never
+  execute: (obj: EventObject) => unknown
 }
 
 declare type EventObject = CommandObject

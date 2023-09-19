@@ -114,7 +114,7 @@
       },
       "change-description": "{{@ADM}} mengubah deskripsi grup menjadi",
       "change-name": "{{@ADM}} mengubah judul grup menjadi",
-      "change-picture": "{{@ADM}} telah mengubah judul grup",
+      "change-picture": "{{@ADM}} telah mengubah profil grup",
       "group-add": {
         "add": "Berhasil menambahkan {{@NUM}} ke grup",
         "invite": "Berhasil mengundang {{@NUM}} ke grup"

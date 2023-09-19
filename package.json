@@ -35,7 +35,7 @@
     "@arugaz/translator": "^1.0.0-z.4",
     "@prisma/client": "^5.3.0",
     "awesome-phonenumber": "^4.2.0",
-    "baileys": "git+https://github.com/whiskeysockets/baileys",
+    "baileys": "github:arugaz/node-whatsapp",
     "cfonts": "^3.1.1",
     "cheerio": "^1.0.0-rc.12",
     "croner": "^5.3.5",
