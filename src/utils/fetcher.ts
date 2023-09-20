@@ -26,10 +26,10 @@ export const fetcherGET = <T>(url: string, opts?: AxiosRequestConfig) =>
  * @param url url you want to fetch
  * @param opts axios options
  */
-export const fetcherPOST = <T>(url: string, opts?: AxiosRequestConfig) =>
+export const fetcherPOST = <T>(url: string, data: unknown, opts?: AxiosRequestConfig) =>
   new Promise<T>((resolve, reject) =>
     axios
-      .post(url, Object.assign(fetchDefaultOptions, opts))
+      .post(url, data, Object.assign(fetchDefaultOptions, opts))
       .then(({ data }) => resolve(data as T))
       .catch(reject)
   )
@@ -60,8 +60,7 @@ export const uploadMedia = (buffData: Buffer, ext: string) =>
   new Promise<string>((resolve, reject) => {
     const form = new FormData()
     form.append("file", buffData, `temp${generateRandString(16)}.${ext}`)
-    fetcherPOST<{ src: string }[]>("https://telegra.ph/upload", {
-      data: form,
+    fetcherPOST<{ src: string }[]>("https://telegra.ph/upload", form, {
       headers: {
         ...form.getHeaders()
       }
