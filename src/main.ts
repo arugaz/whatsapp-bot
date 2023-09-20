@@ -110,11 +110,17 @@ setImmediate(async () => {
         messageHandler
           .registerCommand("commands")
           .then((size) => aruga.log(`Success Register ${size} commands`))
-          .catch(clearProcess),
+          .catch((err) => {
+            aruga.log(inspect(err), "error")
+            clearProcess()
+          }),
       fastify
         .listen({ host: "127.0.0.1", port: process.env.PORT || 3000 })
         .then((address) => aruga.log(`Server run on ${address}`))
-        .catch(clearProcess),
+        .catch((err) => {
+          aruga.log(inspect(err), "error")
+          clearProcess()
+        }),
       i18nInit()
     )
 
