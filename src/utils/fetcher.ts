@@ -59,8 +59,8 @@ export const fetcherBuffer = (url: string, opts?: AxiosRequestConfig) =>
 export const uploadMedia = (buffData: Buffer, ext: string) =>
   new Promise<string>((resolve, reject) => {
     const form = new FormData()
-    form.append("file", buffData, `temp${generateRandString()}.${ext}`)
-    fetcherPOST("https://telegra.ph/upload", {
+    form.append("file", buffData, `temp${generateRandString(16)}.${ext}`)
+    fetcherPOST<{ src: string }[]>("https://telegra.ph/upload", {
       data: form,
       headers: {
         ...form.getHeaders()
