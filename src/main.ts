@@ -22,7 +22,7 @@ const fastify = fastifyServer({
   trustProxy: true
 })
 
-/** Initial Client */
+/** Initial Whatsapp Client */
 const aruga = new WAClient({
   // auth type "single" or "multi"
   authType: "single",
@@ -83,14 +83,17 @@ const aruga = new WAClient({
 })()
 
 /** Pretty Sexy :D */
-const clearProcess = () => {
+const clearProcess = async () => {
   aruga.log("Clear all process", "info")
-  resetUserLimit.stop()
-  resetUserRole.stop()
-  fastify.close()
-  Database.$disconnect()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1))
+  try {
+    resetUserLimit.stop()
+    resetUserRole.stop()
+    await fastify.close()
+    await Database.$disconnect()
+    process.exit(0)
+  } catch {
+    process.exit(1)
+  }
 }
 for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, clearProcess)
 for (const signal of ["unhandledRejection", "uncaughtException"]) process.on(signal, (reason: unknown) => aruga.log(inspect(reason, true), "error"))
@@ -111,14 +114,14 @@ setImmediate(async () => {
           .registerCommand("commands")
           .then((size) => aruga.log(`Success Register ${size} commands`))
           .catch((err) => {
-            aruga.log(inspect(err), "error")
+            aruga.log(inspect(err, true), "error")
             clearProcess()
           }),
       fastify
         .listen({ host: "127.0.0.1", port: process.env.PORT || 3000 })
         .then((address) => aruga.log(`Server run on ${address}`))
         .catch((err) => {
-          aruga.log(inspect(err), "error")
+          aruga.log(inspect(err, true), "error")
           clearProcess()
         }),
       i18nInit()

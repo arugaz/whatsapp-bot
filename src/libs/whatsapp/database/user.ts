@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client"
+import type { Prisma, User } from "@prisma/client"
 import NodeCache from "node-cache"
 import Database from "../../../libs/database"
 import config from "../../../utils/config"
@@ -17,6 +17,16 @@ export const getUser = async (userId: string) => {
     })
 
     if (userData) user.set(userId, userData)
+
+    return userData
+  } catch {
+    return null
+  }
+}
+
+export const getUsers = async (opts?: Prisma.UserFindManyArgs) => {
+  try {
+    const userData = await Database.user.findMany(opts)
 
     return userData
   } catch {

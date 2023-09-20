@@ -27,26 +27,27 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
     m.type = Object.keys(m.message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
     m.sender = aruga.decodeJid(m.fromMe ? aruga.user.id : m.isGroupMsg || m.from === "status@broadcast" ? m.key.participant || msg.participant : m.from)
     m.key.participant = !m.key.participant || m.key.participant === "status_me" ? m.sender : m.key.participant
-    m.body =
-      m.message.conversation && m.type === "conversation"
-        ? m.message.conversation
-        : m.message.extendedTextMessage && m.type === "extendedTextMessage"
-        ? m.message.extendedTextMessage.text
-        : m.message.imageMessage && m.type === "imageMessage"
-        ? m.message.imageMessage.caption
-        : m.message.videoMessage && m.type === "videoMessage"
-        ? m.message.videoMessage.caption
-        : m.message.documentMessage && m.type === "documentMessage"
-        ? m.message.documentMessage.caption
-        : m.message.buttonsResponseMessage && m.type === "buttonsResponseMessage"
-        ? m.message.buttonsResponseMessage.selectedButtonId
-        : m.message.listResponseMessage && m.type === "listResponseMessage"
-        ? m.message.listResponseMessage.singleSelectReply.selectedRowId
-        : m.message.templateButtonReplyMessage && m.type === "templateButtonReplyMessage"
-        ? m.message.templateButtonReplyMessage.selectedId
-        : m.message.reactionMessage && m.type === "reactionMessage"
-        ? m.message.reactionMessage.text
-        : ""
+    m.body = m.message.conversation
+      ? m.message.conversation
+      : m.message.extendedTextMessage
+      ? m.message.extendedTextMessage.text
+      : m.message.imageMessage
+      ? m.message.imageMessage.caption
+      : m.message.videoMessage
+      ? m.message.videoMessage.caption
+      : m.message.documentMessage
+      ? m.message.documentMessage.caption
+      : m.message.buttonsResponseMessage
+      ? m.message.buttonsResponseMessage.selectedButtonId
+      : m.message.listResponseMessage
+      ? m.message.listResponseMessage.singleSelectReply.selectedRowId
+      : m.message.templateButtonReplyMessage
+      ? m.message.templateButtonReplyMessage.selectedId
+      : m.message.reactionMessage
+      ? m.message.reactionMessage.text
+      : m.message.locationMessage
+      ? m.message.locationMessage.comment
+      : ""
     m.mentions = m.message[m.type]?.contextInfo?.mentionedJid || []
     m.viewOnce = !!msg.message?.viewOnceMessage || !!msg.message?.viewOnceMessageV2 || !!msg.message?.viewOnceMessageV2Extension
     function reply(text: string, quoted = false) {
@@ -99,26 +100,27 @@ export const message = async (aruga: WAClient, msg: WAMessage): Promise<MessageS
     m.quoted.type = Object.keys(m.quoted.message).find((type) => type !== "senderKeyDistributionMessage" && type !== "messageContextInfo")
     m.quoted.sender = m.quoted.key.participant
     m.quoted.key.participant = !m.quoted.key.participant ? m.sender : m.quoted.key.participant
-    m.quoted.body =
-      m.quoted.message.conversation && m.quoted.type === "conversation"
-        ? m.quoted.message.conversation
-        : m.quoted.message.extendedTextMessage && m.quoted.type === "extendedTextMessage"
-        ? m.quoted.message.extendedTextMessage.text
-        : m.quoted.message.imageMessage && m.quoted.type === "imageMessage"
-        ? m.quoted.message.imageMessage.caption
-        : m.quoted.message.videoMessage && m.quoted.type === "videoMessage"
-        ? m.quoted.message.videoMessage.caption
-        : m.quoted.message.documentMessage && m.quoted.type === "documentMessage"
-        ? m.quoted.message.documentMessage.caption
-        : m.quoted.message.buttonsResponseMessage && m.quoted.type === "buttonsResponseMessage"
-        ? m.quoted.message.buttonsResponseMessage.selectedButtonId
-        : m.quoted.message.listResponseMessage && m.quoted.type === "listResponseMessage"
-        ? m.quoted.message.listResponseMessage.singleSelectReply.selectedRowId
-        : m.quoted.message.templateButtonReplyMessage && m.quoted.type === "templateButtonReplyMessage"
-        ? m.quoted.message.templateButtonReplyMessage.selectedId
-        : m.quoted.message.reactionMessage && m.quoted.type === "reactionMessage"
-        ? m.quoted.message.reactionMessage.text
-        : ""
+    m.quoted.body = m.quoted.message.conversation
+      ? m.quoted.message.conversation
+      : m.quoted.message.extendedTextMessage
+      ? m.quoted.message.extendedTextMessage.text
+      : m.quoted.message.imageMessage
+      ? m.quoted.message.imageMessage.caption
+      : m.quoted.message.videoMessage
+      ? m.quoted.message.videoMessage.caption
+      : m.quoted.message.documentMessage
+      ? m.quoted.message.documentMessage.caption
+      : m.quoted.message.buttonsResponseMessage
+      ? m.quoted.message.buttonsResponseMessage.selectedButtonId
+      : m.quoted.message.listResponseMessage
+      ? m.quoted.message.listResponseMessage.singleSelectReply.selectedRowId
+      : m.quoted.message.templateButtonReplyMessage
+      ? m.quoted.message.templateButtonReplyMessage.selectedId
+      : m.quoted.message.reactionMessage
+      ? m.quoted.message.reactionMessage.text
+      : m.quoted.message.locationMessage
+      ? m.quoted.message.locationMessage.comment
+      : ""
     m.quoted.mentions = m.quoted.message[m.quoted.type]?.contextInfo?.mentionedJid || []
     m.quoted.viewOnce = !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessage || !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2 || !!m.message[m.type].contextInfo.quotedMessage?.viewOnceMessageV2Extension
     function reply(text: string, quoted = false) {

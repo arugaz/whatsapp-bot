@@ -43,7 +43,7 @@ export default <Command>{
       const add = (await aruga.groupParticipantsUpdate(message.from, [member.jid], "add"))[0]
 
       if (add.status === "403") {
-        await aruga.sendAcceptInviteV4(message.from, member.jid)
+        await aruga.sendAcceptInviteV4(message.from, add.content, member.jid, i18n.translate("commands.group.group-add.caption", {}, group.language))
 
         const text =
           "┏━━「 𓆩 𝐻ɪᴅᴅᴇɴ 𝐹ɪɴᴅᴇʀ ⁣𓆪 」\n" +

@@ -116,6 +116,7 @@
       "change-name": "{{@ADM}} changed the group title to",
       "change-picture": "{{@ADM}} has changed the group profile",
       "group-add": {
+        "caption": "Invitation to join my WhatsApp group",
         "add": "Successfully added {{@NUM}} to the group",
         "invite": "Successfully invited {{@NUM}} to the group"
       },
@@ -143,6 +144,10 @@
         "enable": "Successfully activate {{@CMD}}, bot will send a welcome message when a new participant join the group",
         "disable": "Successfully deactivate {{@CMD}}, bot no send a welcome message when a new participant join the group"
       }
+    },
+    "owner": {
+      "bot-name": "Successfully change bot profile name",
+      "bot-picture": "Successfully change bot profile picture"
     }
   }
 }

@@ -1,7 +1,23 @@
 import P from "pino"
 import { Boom } from "@hapi/boom"
 import EventEmitter from "@arugaz/eventemitter"
-import makeWASocket, { BaileysEventMap, DisconnectReason, downloadMediaMessage, fetchLatestBaileysVersion, generateForwardMessageContent, generateWAMessageFromContent, jidDecode, makeCacheableSignalKeyStore, MessageGenerationOptionsFromContent, proto, toBuffer, WAMediaUpload, WAMessageStubType } from "baileys"
+import makeWASocket, {
+  BaileysEventMap,
+  BinaryNode,
+  DisconnectReason,
+  downloadMediaMessage,
+  fetchLatestBaileysVersion,
+  generateForwardMessageContent,
+  generateWAMessageFromContent,
+  getBinaryNodeChild,
+  jidDecode,
+  makeCacheableSignalKeyStore,
+  MessageGenerationOptionsFromContent,
+  proto,
+  toBuffer,
+  WAMediaUpload,
+  WAMessageStubType
+} from "baileys"
 
 import { auth, database } from "../../libs/whatsapp"
 import Database from "../../libs/database"
@@ -98,15 +114,17 @@ class WAClient extends (EventEmitter as new () => ArugaEventEmitter) implements 
     })
   }
 
-  public async sendAcceptInviteV4(jid: string, participants: string, caption = "Invitation to join my WhatsApp group") {
+  public async sendAcceptInviteV4(jid: string, node: BinaryNode, participants: string, caption = "Invitation to join my WhatsApp group") {
     if (!jid.endsWith("g.us")) throw new TypeError("Invalid jid")
-    const inviteCode = await this.groupInviteCode(jid)
+    const result = getBinaryNodeChild(node, "add_request")
+    const inviteCode = result.attrs.code
+    const inviteExpiration = result.attrs.expration
     const groupName = (await database.getGroup(jid)).name
 
     const content = proto.Message.fromObject({
       groupInviteMessage: proto.Message.GroupInviteMessage.fromObject({
         inviteCode,
-        inviteExpiration: Date.now() + 3 * 24 * 60 * 60 * 1000,
+        inviteExpiration,
         groupJid: jid,
         groupName: groupName,
         caption

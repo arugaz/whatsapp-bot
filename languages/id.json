@@ -116,6 +116,7 @@
       "change-name": "{{@ADM}} mengubah judul grup menjadi",
       "change-picture": "{{@ADM}} telah mengubah profil grup",
       "group-add": {
+        "caption": "Undangan untuk bergabung dengan grup WhatsApp saya",
         "add": "Berhasil menambahkan {{@NUM}} ke grup",
         "invite": "Berhasil mengundang {{@NUM}} ke grup"
       },
@@ -143,6 +144,10 @@
         "enable": "Berhasil mengaktifkan {{@CMD}}, bot akan mengirimkan pesan selamat datang saat ada peserta baru yang bergabung ke grup",
         "disable": "Berhasil menonaktifkan {{@CMD}}, bot tidak lagi mengirim pesan selamat datang saat ada peserta baru yang bergabung ke grup"
       }
+    },
+    "owner": {
+      "bot-name": "Berhasil mengubah nama profil bot",
+      "bot-picture": "Berhasil mengubah gambar profil bot"
     }
   }
 }
