@@ -1,13 +1,18 @@
 import webpmux from "node-webpmux"
-import { TextEncoder } from "util"
 import { ffmpeg } from "../../utils/cli"
 import type { StickerOptions, StickerCategories } from "../../types/sticker"
 
-const defaultOptions: StickerOptions = {
+export const WebpToImage = (webp: Buffer) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    ffmpeg(webp, ["-f", "image2"]).then(resolve).catch(reject)
+  })
+}
+
+const defaultStickerOptions: StickerOptions = {
   author: "arugaz",
   pack: "whatsapp-bot",
-  id: "github.com/arugaz/whatsapp-bot",
-  width: 512,
+  id: "arugaz",
+  width: 256,
   fps: 25,
   loop: true,
   compress: 0
@@ -18,7 +23,7 @@ export class WASticker {
   #exif: Buffer | null
 
   constructor(opts?: StickerOptions) {
-    this.#opts = Object.assign(defaultOptions, opts || {})
+    this.#opts = Object.assign(defaultStickerOptions, opts || {})
     this.#exif = null
   }
 
@@ -54,7 +59,7 @@ export class WASticker {
         "-quality",
         type === "image" ? "75" : `${bufferSize < 300000 ? 30 : bufferSize < 400000 ? 20 : 15}`,
         "-preset",
-        "drawing",
+        "picture",
         "-an",
         "-vsync",
         "0",

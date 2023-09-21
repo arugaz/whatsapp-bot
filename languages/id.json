@@ -146,6 +146,7 @@
       }
     },
     "owner": {
+      "bot-desc": "Berhasil mengubah description profil bot",
       "bot-name": "Berhasil mengubah nama profil bot",
       "bot-picture": "Berhasil mengubah gambar profil bot"
     }

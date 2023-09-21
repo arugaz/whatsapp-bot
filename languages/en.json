@@ -146,6 +146,7 @@
       }
     },
     "owner": {
+      "bot-desc": "Successfully change bot profile description",
       "bot-name": "Successfully change bot profile name",
       "bot-picture": "Successfully change bot profile picture"
     }

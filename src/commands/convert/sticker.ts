@@ -39,6 +39,13 @@ export default <Command>{
       return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
 
+    if (message.type.includes("sticker") || (message.quoted && message.quoted.type.includes("sticker"))) {
+      const buffer = message.quoted ? await aruga.downloadMediaMessage(message.quoted) : await aruga.downloadMediaMessage(message)
+      const result = await wasticker.ConvertExif(buffer)
+
+      return await aruga.sendMessage(message.from, { sticker: result }, { quoted: message, ephemeralExpiration: message.expiration })
+    }
+
     throw "noCmd"
   }
 }

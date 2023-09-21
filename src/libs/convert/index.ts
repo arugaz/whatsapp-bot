@@ -1,2 +1,2 @@
 export * from "./profile"
-export * from "./sticker"
+export * from "./webp"

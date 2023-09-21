@@ -1,5 +1,5 @@
+import { WebpToImage } from "../../libs/convert"
 import type { Command } from "../../types/command"
-import { ffmpeg } from "../../utils/cli"
 
 export default <Command>{
   category: "convert",
@@ -16,7 +16,7 @@ export default <Command>{
       if (message.quoted.message.stickerMessage.isAnimated) throw "Not supported yet!"
       const buffer = await aruga.downloadMediaMessage(message.quoted)
 
-      const result = await ffmpeg(buffer, ["-f", "image2"])
+      const result = await WebpToImage(buffer)
 
       return await aruga.sendMessage(message.from, { image: result }, { quoted: message, ephemeralExpiration: message.expiration })
     }
