@@ -52,6 +52,10 @@
   },
   "commands": {
     "general": {
+      "didyoumean": {
+        "title": "The command you typed is not listed, maybe this is what you mean:",
+        "same": "similarity"
+      },
       "language": {
         "changed": "Language has been changed to {{@LANGUAGE}}!",
         "text": "You can change your language when interacting with me, here are some supported languages"

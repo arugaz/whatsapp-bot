@@ -52,6 +52,10 @@
   },
   "commands": {
     "general": {
+      "didyoumean": {
+        "title": "Perintah yang kamu ketik tidak tercantum, mungkin ini yang kamu maksud:",
+        "same": "kesamaan"
+      },
       "language": {
         "changed": "Bahasa telah diubah menjadi {{@LANGUAGE}}!",
         "text": "Kamu dapat mengubah bahasa saat berinteraksi dengan aku, berikut beberapa bahasa yang didukung"
