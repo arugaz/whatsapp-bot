@@ -29,7 +29,7 @@ export default <Event>{
     let addText = ""
     for (const cmd of listCmds) {
       addText += `┃ *${prefix}${cmd}*\n`
-      addText += `┃ ${i18n.translate("commands.general.didyoumean.same", {}, user.language)}: ${similarity(command, cmd)}\n`
+      addText += `┃ ${i18n.translate("commands.general.didyoumean.same", {}, user.language)}: ${(similarity(command, cmd) * 100).toFixed(2)}%\n`
       addText += `┃ \n`
     }
 
