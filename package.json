@@ -34,7 +34,7 @@
     "@arugaz/queue": "^1.0.1-z.1",
     "@arugaz/translator": "^1.0.0-z.4",
     "@hidden-finder/didyoumean": "^1.1.0",
-    "@prisma/client": "^5.3.0",
+    "@prisma/client": "^6.2.1",
     "awesome-phonenumber": "^6.1.0",
     "axios": "^1.5.0",
     "baileys": "github:arugaz/node-whatsapp",
